@@ -60,7 +60,13 @@
 #arena #actions{margin:7px auto 7px!important}
 #arena #bottom{margin:0 auto!important}
 #arena #details{margin:12px auto 0!important}
-#arena.versus .scores{display:none!important}#arena.versus #humanScore,#arena.versus #cpuScore{display:none!important}
+#arena.versus .scores{display:none!important}
+#arena.versus #humanZone>header,#arena.versus #cpuZone>header{display:flex!important;align-items:center;justify-content:center;gap:6px}
+#arena.versus #humanScore,#arena.versus #cpuScore{display:inline!important;font-variant-numeric:tabular-nums;color:#fff;font-weight:900}
+#arena.versus.timed-match #humanZone>header,#arena.versus.timed-match #cpuZone>header{gap:8px}
+#arena.versus.timed-match .score-leader{color:#ffe57c!important;text-shadow:0 0 8px #ffcf4eaa}
+#arena.versus.timed-match .score-trailer{color:#f2e5f7!important}
+#arena.versus:not(.timed-match) #humanScore,#arena.versus:not(.timed-match) #cpuScore{display:none!important}
 
 #victoryLayer{position:fixed;inset:0;z-index:12;pointer-events:none;overflow:hidden}
 #victoryCanvas{width:100%;height:100%;display:block}
@@ -913,10 +919,10 @@ function initMiniLeaderboard(){
  },3000);
 }
 let bpSoloStartedAt=0;
-function start(){bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
+function start(){bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
 $('start').onclick=()=>{if($('play').value==='versus'||$('play').value==='solo'&&$('diff').value==='super-easy')start();else promptPlayerName()};$('back').onclick=()=>{hideVictory();started=false;$('menu').hidden=false;$('arena').hidden=true;$('bpMini').hidden=true;$('human').removeAttribute('srcdoc');$('cpu').removeAttribute('srcdoc')};
 window.addEventListener('message',e=>{if(!started||!e.data?.bp)return;const d=e.data;if(d.bp==='ready'){ready.add(d.who);if(isVersus){if(ready.has('human')&&ready.has('cpu')){tell('human',{bp:'start',...settings,cpu:false});tell('cpu',{bp:'start',...settings,cpu:true})}}else{tell('human',{bp:'start',...settings,cpu:false});$('human').contentWindow.document.querySelector('.control-layout').style.display='none';$('human').contentWindow.document.querySelector('.game-actions').style.display='none';$('human').contentWindow.document.querySelector('.layout-setting').style.display='none'}}
-if(d.bp==='stats'){scores[d.who]=Number(d.score)||0;if(isVersus){$('humanScore').textContent=scores.human.toLocaleString();$('cpuScore').textContent=scores.cpu.toLocaleString()}if(d.who==='human'){$('roundClock').textContent=d.clock;$('soloTime').textContent=d.clock;$('soloScore').textContent=String(d.score??0);}}
+if(d.bp==='stats'){scores[d.who]=Number(d.score)||0;if(isVersus){$('humanScore').textContent=scores.human.toLocaleString();$('cpuScore').textContent=scores.cpu.toLocaleString();if(settings&&settings.mode==='timed'){$('humanScore').className=scores.human>scores.cpu?'score-leader':scores.human<scores.cpu?'score-trailer':'';$('cpuScore').className=scores.cpu>scores.human?'score-leader':scores.cpu<scores.human?'score-trailer':''}}if(d.who==='human'){$('roundClock').textContent=d.clock;$('soloTime').textContent=d.clock;$('soloScore').textContent=String(d.score??0);}}
 if(d.bp==='attack'&&isVersus&&settings.mode==='unlimited'){if(d.kind==='negative')tell(d.from,{bp:'attack',kind:'negativeBoost',count:1});else tell(d.from==='human'?'cpu':'human',{bp:'attack',kind:d.kind,count:d.count})}
 if(d.bp==='end'){
  scores[d.who]=Number.isFinite(Number(d.score))?Number(d.score):scores[d.who]||0;
