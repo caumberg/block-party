@@ -584,7 +584,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></details>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v1.9.60</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v1.9.61</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button></div></div>
 </div></div>
 
 <div id="bpLeaderboard" hidden><div class="bp-panel bp-leaderboard-panel">
@@ -741,43 +741,68 @@ const engineHTML=new TextDecoder().decode(Uint8Array.from(atob('PCFkb2N0eXBlIGh0
 const BP_AUDIO=(()=>{
  let ac=null,master=null,musicBus=null,sfxBus=null,timer=null,step=0,scene='menu',lastCue={},musicVol=.65,sfxVol=.8,muted=false;
  try{const saved=JSON.parse(localStorage.getItem('bp-audio-v1')||'{}');musicVol=Number.isFinite(saved.music)?saved.music:.65;sfxVol=Number.isFinite(saved.sfx)?saved.sfx:.8;muted=!!saved.muted}catch(e){}
- // Thirty-two-bar, melody-first original synthwave arrangements.
+ // Original dark-electronic compositions. All notes and synthesis are authored for Block Party.
+ // Sixteen-step bars, 32-bar form, with intentional rests and contrasting sections.
  const songs={
-  menu:{bpm:118,chords:[[57,60,64,67],[53,57,60,64],[48,52,55,60],[55,59,62,67],[57,60,64,67],[53,57,60,64],[50,53,57,62],[55,59,62,67]],
-   phrases:[[[76,2],[79,2],[81,3],[79,1],[76,2],[74,2],[72,4]],[[74,2],[76,2],[79,2],[83,2],[81,3],[79,1],[76,4]],[[72,2],[76,2],[79,3],[76,1],[74,2],[72,2],[69,4]],[[71,2],[74,2],[79,2],[81,2],[83,4],[79,4]],[[84,2],[83,2],[81,2],[79,2],[76,3],[79,1],[81,4]],[[79,2],[81,2],[84,3],[83,1],[81,2],[79,2],[76,4]],[[77,2],[81,2],[84,2],[81,2],[79,2],[77,2],[74,4]],[[74,2],[76,2],[79,2],[83,2],[81,4],[76,4]]]},
-  solo:{bpm:132,chords:[[60,64,67,72],[56,60,63,68],[53,57,60,65],[55,59,62,67],[60,64,67,72],[56,60,63,68],[58,62,65,70],[55,59,62,67]],
-   phrases:[[[79,2],[84,2],[86,2],[84,2],[79,2],[76,2],[79,4]],[[80,2],[84,2],[87,3],[84,1],[80,2],[75,2],[72,4]],[[77,2],[81,2],[84,2],[89,2],[84,2],[81,2],[77,4]],[[79,2],[83,2],[86,3],[83,1],[81,2],[79,2],[74,4]],[[84,2],[86,2],[88,2],[91,2],[88,2],[86,2],[84,4]],[[80,2],[84,2],[87,2],[92,2],[87,2],[84,2],[80,4]],[[82,2],[86,2],[89,3],[86,1],[82,2],[77,2],[74,4]],[[79,2],[83,2],[86,2],[91,2],[88,2],[86,2],[84,4]]]},
-  versus:{bpm:145,chords:[[57,60,64,69],[55,59,62,67],[53,57,60,65],[52,56,59,64],[57,60,64,69],[55,59,62,67],[50,53,57,62],[52,56,59,64]],
-   phrases:[[[81,2],[84,2],[88,2],[86,2],[84,2],[81,2],[79,4]],[[79,2],[83,2],[86,2],[91,2],[88,2],[86,2],[83,4]],[[77,2],[81,2],[84,3],[81,1],[77,2],[76,2],[72,4]],[[76,2],[80,2],[83,2],[88,2],[86,2],[83,2],[80,4]],[[88,2],[86,2],[84,2],[81,2],[84,2],[88,2],[93,4]],[[86,2],[83,2],[79,2],[83,2],[86,2],[91,2],[88,4]],[[89,2],[86,2],[81,2],[77,2],[81,2],[84,2],[86,4]],[[88,2],[86,2],[84,2],[80,2],[83,2],[88,2],[81,4]]]}
+ menu:{bpm:114,roots:[45,41,36,43,45,41,38,43],quality:[0,0,0,0,0,0,0,0],
+  melody:[[69,0,3],[72,4,2],[76,7,3],[74,12,3],[67,0,4],[69,6,3],[72,11,4],[64,0,3],[67,4,2],[72,8,4],[71,13,2],[67,0,4],[74,6,3],[72,11,4],[69,0,2],[76,4,3],[79,9,3],[76,13,2],[72,0,4],[69,6,2],[67,10,5],[65,0,3],[69,4,3],[74,9,5],[67,0,3],[71,4,3],[74,9,3],[72,13,2]]},
+ solo:{bpm:128,roots:[45,40,41,43,45,40,38,43],quality:[0,0,0,0,0,0,0,0],
+  melody:[[72,0,2],[76,3,2],[79,6,3],[76,11,2],[74,14,2],[71,0,3],[76,4,3],[74,9,2],[71,12,3],[69,0,2],[72,3,2],[77,7,3],[76,12,3],[71,0,3],[74,4,2],[79,8,3],[76,12,3],[76,0,3],[81,4,3],[79,9,2],[76,12,3],[71,0,3],[76,4,2],[83,8,3],[79,12,3],[74,0,3],[77,4,3],[81,9,2],[77,12,3]]},
+ versus:{bpm:142,roots:[42,38,40,37,42,38,35,37],quality:[0,0,0,0,0,0,0,0],
+  melody:[[78,0,2],[81,3,2],[85,7,3],[81,12,3],[76,0,3],[81,4,2],[83,8,2],[85,12,3],[76,0,2],[80,3,2],[83,7,3],[80,12,3],[73,0,3],[76,4,2],[80,8,3],[83,12,3],[85,0,3],[88,4,2],[85,8,3],[81,12,3],[83,0,2],[85,3,2],[90,7,3],[85,12,3],[80,0,3],[83,4,2],[85,8,3],[83,12,3],[81,0,3],[85,4,2],[88,8,3],[85,12,3]]}
  };
  let nextBeat=0;
  function save(){try{localStorage.setItem('bp-audio-v1',JSON.stringify({music:musicVol,sfx:sfxVol,muted}))}catch(e){}}
  function ensure(){if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;ac=new C();master=ac.createGain();master.gain.value=.7;master.connect(ac.destination);musicBus=ac.createGain();sfxBus=ac.createGain();musicBus.connect(master);sfxBus.connect(master)}if(ac.state==='suspended')ac.resume().catch(()=>{});volumes();return true}
- function volumes(){if(!ac)return;musicBus.gain.setTargetAtTime(muted?0:musicVol*.27,ac.currentTime,.035);sfxBus.gain.setTargetAtTime(muted?0:sfxVol*.48,ac.currentTime,.035)}
+ function volumes(){if(!ac)return;musicBus.gain.setTargetAtTime(muted?0:musicVol*.20,ac.currentTime,.035);sfxBus.gain.setTargetAtTime(muted?0:sfxVol*.38,ac.currentTime,.035)}
  function tone(freq,t,duration,kind='sawtooth',gain=.2,bus=musicBus,filter=0){if(!ac||!freq)return;const osc=ac.createOscillator(),env=ac.createGain();osc.type=kind;osc.frequency.setValueAtTime(freq,t);env.gain.setValueAtTime(.0001,t);env.gain.exponentialRampToValueAtTime(Math.max(.0002,gain),t+.009);env.gain.exponentialRampToValueAtTime(.0001,t+duration);if(filter){const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=filter;osc.connect(f);f.connect(env)}else osc.connect(env);env.connect(bus);osc.start(t);osc.stop(t+duration+.025)}
  function hz(note){return 440*Math.pow(2,(note-69)/12)}
  function kick(t){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(145,t);o.frequency.exponentialRampToValueAtTime(42,t+.14);g.gain.setValueAtTime(.35,t);g.gain.exponentialRampToValueAtTime(.0001,t+.18);o.connect(g);g.connect(musicBus);o.start(t);o.stop(t+.19)}
  function hat(t){if(!ac)return;const b=ac.createBuffer(1,Math.floor(ac.sampleRate*.04),ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=b;f.type='highpass';f.frequency.value=6500;g.gain.value=.085;s.connect(f);f.connect(g);g.connect(musicBus);s.start(t)}
+ // Analog-style layers: low-pass detuned bass, wide pads, subdued lead and noise drums.
+ function analog(note,t,dur,volume=.12,cutoff=1200,detune=7,bus=musicBus){
+  if(!ac)return;const filter=ac.createBiquadFilter();filter.type='lowpass';filter.frequency.setValueAtTime(cutoff,t);
+  const env=ac.createGain();env.gain.setValueAtTime(.0001,t);env.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),t+.025);
+  env.gain.setTargetAtTime(.0001,t+Math.max(.06,dur-.12),.075);filter.connect(env);env.connect(bus);
+  for(const cents of [-detune,detune]){const o=ac.createOscillator();o.type='sawtooth';o.frequency.value=hz(note);o.detune.value=cents;o.connect(filter);o.start(t);o.stop(t+dur+.14)}
+ }
+ function snare(t,amp=.13){
+  if(!ac)return;const b=ac.createBuffer(1,Math.floor(ac.sampleRate*.13),ac.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);
+  const src=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();src.buffer=b;f.type='highpass';f.frequency.value=1400;g.gain.value=amp;src.connect(f);f.connect(g);g.connect(musicBus);src.start(t);
+ }
+ function subBass(note,t,dur){
+  if(!ac)return;const o=ac.createOscillator(),f=ac.createBiquadFilter(),g=ac.createGain();o.type='sawtooth';o.frequency.value=hz(note);
+  f.type='lowpass';f.frequency.setValueAtTime(420,t);f.frequency.exponentialRampToValueAtTime(125,t+.15);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.32,t+.015);g.gain.setTargetAtTime(.0001,t+dur*.72,.06);
+  o.connect(f);f.connect(g);g.connect(musicBus);o.start(t);o.stop(t+dur+.14);
+ }
  function scheduleStep(n,t){
   const song=songs[scene==='danger'?'versus':scene]||songs.menu;
-  const bar=Math.floor(n/16)%32,pos=n%16,phrase=bar%8,section=Math.floor(bar/8);
-  const chord=song.chords[phrase],root=chord[0]-24,unit=60/song.bpm/4;
-  if(pos===0||pos===8)kick(t);
-  if(pos===4||pos===12)tone(175,t,.095,'triangle',.105,musicBus,1100);
-  if(pos%2===0)hat(t);
-  if(pos%4===0){const bass=[0,0,7,0][pos/4];tone(hz(root+bass),t,unit*3.4,'sawtooth',.24,musicBus,360)}
-  if(pos===0||pos===6||pos===10){for(const note of chord.slice(0,3))tone(hz(note-12),t,unit*(pos===0?5.4:2.6),'triangle',.042,musicBus,1150)}
-  // Independent 8-bar melodic phrases, repeated with octave and cadence variations over four sections.
-  let at=0;
-  for(const [note,length] of song.phrases[phrase]){
-   if(pos===at){const transpose=section===2&&bar%2===1?12:0;
-    tone(hz(note+transpose),t,unit*length*.83,'triangle',.19,musicBus,2450);
-    if(section===3&&length>=3)tone(hz(note-12),t,unit*length*.68,'sine',.055,musicBus,1500);
-    break;
-   }
-   at+=length;
+  const bar=Math.floor(n/16)%32,pos=n%16,phrase=bar%8,section=Math.floor(bar/8),unit=60/song.bpm/4;
+  const root=song.roots[phrase],intense=scene==='versus'||scene==='danger';
+  // Four arrangement sections: introduction, full groove, breakdown, final lift.
+  const active=section!==2||bar%2===1;
+  if(pos%4===0&&(section!==2||pos===0||pos===8))kick(t);
+  if((pos===4||pos===12)&&active)snare(t,intense?.20:.14);
+  if(pos%2===0&&active)hat(t);
+  if(section===3&&pos%4===2)hat(t);
+  if(pos===0||pos===6||pos===10||pos===14){
+   const step={0:0,6:0,10:7,14:0}[pos];
+   subBass(root-12+step,t,unit*(pos===14?1.6:3.4));
   }
-  if(section>=1&&pos===14)tone(hz(chord[2]+12),t,unit*1.6,'sine',.065,musicBus,1700);
+  if(pos===0||pos===8){
+   const chord=[root,root+3,root+7,root+10];
+   chord.forEach((note,i)=>analog(note+12,t,unit*(pos===0?7.5:6.5),section===2?.018:.026,850+i*140,4));
+  }
+  // Lead phrases are original, mostly mid-register, with rests and phrase variation.
+  const notes=song.melody.slice(phrase*4,phrase*4+4);
+  for(const [note,at,len] of notes){if(pos!==at)continue;
+   const variation=section===3&&bar%2===1?12:0;
+   analog(note+variation,t,unit*len*.95,section===2?.065:.10,intense?1550:1200,3);
+   if(section===1||section===3)tone(hz(note-12),t,unit*len*.72,'sine',.045,musicBus,850);
+  }
+  if(section===3&&pos===15&&bar%4===3)snare(t,.09);
  }
  function beat(){
   if(!ac||ac.state!=='running'||scene==='off'||muted||musicVol===0)return;
@@ -797,7 +822,24 @@ const BP_AUDIO=(()=>{
  function stopMusic(){scene='off';if(timer){clearInterval(timer);timer=null}}
  function effect(cue,detail=0){if(!ensure()||muted||sfxVol===0)return;const now=ac.currentTime,stamp=performance.now();if(lastCue[cue]&&stamp-lastCue[cue]<(cue==='swap'?55:cue==='match'?90:130))return;lastCue[cue]=stamp;
  const pl=(notes,spacing=.065,len=.13,type='triangle',amp=.25)=>notes.forEach((n,i)=>tone(hz(n),now+i*spacing,len,type,amp,sfxBus));
- switch(cue){case 'cursor':pl([79],0,.045,'sine',.12);break;case 'menu':pl([76,83],.055,.1,'triangle',.22);break;case 'swap':pl([70,79],.042,.085,'square',.13);break;case 'raise':pl([60,64,67],.03,.11,'sawtooth',.12);break;case 'match':pl([76,81,88],.055,.16,'triangle',.24);break;case 'bomb':pl([43,36,31],.045,.25,'sawtooth',.25);break;case 'shock':pl([90,82,94,78],.038,.09,'sawtooth',.15);break;case 'special':pl([77,84,89,96],.05,.17,'square',.15);break;case 'rainbow':pl([72,76,79,84,88,91],.07,.2,'triangle',.27);break;case 'poison':case 'skull':case 'negative':case 'attack':pl([66,63,58,54],.075,.2,'sawtooth',.16);break;case 'block':case 'garbage':pl([48,40],.055,.19,'square',.19);break;case 'win':pl([72,76,79,84,88,91,96],.115,.31,'triangle',.34);break;case 'lose':pl([76,71,67,64,60],.15,.28,'triangle',.23);break;case 'tie':pl([72,76,79,76],.12,.24,'triangle',.22);break;case 'warning':pl([84,77],.12,.1,'square',.2);break;default:break}
+ switch(cue){
+ case 'cursor':pl([59],0,.028,'sine',.065);break;
+ case 'menu':pl([57,64],.07,.10,'sine',.13);break;
+ case 'swap':pl([52,59],.028,.065,'triangle',.13);break;
+ case 'raise':pl([43,50],.045,.10,'sawtooth',.10);break;
+ case 'match':pl([64,69,76],.047,.13,'sine',.20);break;
+ case 'bomb':pl([40,33,28],.035,.23,'sawtooth',.24);break;
+ case 'shock':pl([66,78,61,73],.025,.065,'sawtooth',.12);break;
+ case 'special':pl([57,64,69,76],.045,.15,'triangle',.17);break;
+ case 'rainbow':pl([57,60,64,69,72,76],.05,.17,'sine',.22);break;
+ case 'poison':case 'skull':case 'negative':case 'attack':pl([54,49,45,40],.055,.15,'sawtooth',.13);break;
+ case 'block':case 'garbage':pl([40,33],.045,.16,'triangle',.19);break;
+ case 'win':pl([57,60,64,69,72,76,81],.095,.28,'triangle',.25);break;
+ case 'lose':pl([69,64,60,57,52],.12,.23,'sine',.20);break;
+ case 'tie':pl([57,60,64,60],.1,.19,'triangle',.16);break;
+ case 'warning':pl([64,57],.1,.08,'sine',.13);break;
+ default:break}
+
  }
  function initControls(){const m=document.getElementById('bpMusicVolume'),s=document.getElementById('bpSfxVolume'),mute=document.getElementById('bpMute');m.value=Math.round(musicVol*100);s.value=Math.round(sfxVol*100);mute.checked=muted;const display=()=>{document.getElementById('bpMusicValue').textContent=m.value+'%';document.getElementById('bpSfxValue').textContent=s.value+'%'};display();m.addEventListener('input',()=>{musicVol=Number(m.value)/100;display();save();volumes()});s.addEventListener('input',()=>{sfxVol=Number(s.value)/100;display();save();volumes()});mute.addEventListener('change',()=>{muted=mute.checked;save();volumes()});document.addEventListener('pointerdown',()=>{if(!ac){ensure();startMusic('menu')}},{once:true});document.addEventListener('keydown',()=>{if(!ac){ensure();startMusic('menu')}},{once:true})}
  return {initControls,startMusic,stopMusic,effect};
