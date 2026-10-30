@@ -584,7 +584,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></details>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v1.9.59</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v1.9.60</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button></div></div>
 </div></div>
 
 <div id="bpLeaderboard" hidden><div class="bp-panel bp-leaderboard-panel">
@@ -741,8 +741,16 @@ const engineHTML=new TextDecoder().decode(Uint8Array.from(atob('PCFkb2N0eXBlIGh0
 const BP_AUDIO=(()=>{
  let ac=null,master=null,musicBus=null,sfxBus=null,timer=null,step=0,scene='menu',lastCue={},musicVol=.65,sfxVol=.8,muted=false;
  try{const saved=JSON.parse(localStorage.getItem('bp-audio-v1')||'{}');musicVol=Number.isFinite(saved.music)?saved.music:.65;sfxVol=Number.isFinite(saved.sfx)?saved.sfx:.8;muted=!!saved.muted}catch(e){}
- const melodies={menu:[76,79,83,86,83,79,74,79,81,84,88,84,79,76,74,71],solo:[72,76,79,84,79,76,71,76,74,77,81,86,81,77,74,69],versus:[76,79,83,88,86,83,79,76,74,79,81,86,84,81,79,74],danger:[76,77,79,83,76,77,79,86,74,76,77,83,74,76,77,88]};
- const roots={menu:[45,45,41,43],solo:[45,41,43,40],versus:[45,43,41,40],danger:[45,43,41,40]};
+ // Thirty-two-bar, melody-first original synthwave arrangements.
+ const songs={
+  menu:{bpm:118,chords:[[57,60,64,67],[53,57,60,64],[48,52,55,60],[55,59,62,67],[57,60,64,67],[53,57,60,64],[50,53,57,62],[55,59,62,67]],
+   phrases:[[[76,2],[79,2],[81,3],[79,1],[76,2],[74,2],[72,4]],[[74,2],[76,2],[79,2],[83,2],[81,3],[79,1],[76,4]],[[72,2],[76,2],[79,3],[76,1],[74,2],[72,2],[69,4]],[[71,2],[74,2],[79,2],[81,2],[83,4],[79,4]],[[84,2],[83,2],[81,2],[79,2],[76,3],[79,1],[81,4]],[[79,2],[81,2],[84,3],[83,1],[81,2],[79,2],[76,4]],[[77,2],[81,2],[84,2],[81,2],[79,2],[77,2],[74,4]],[[74,2],[76,2],[79,2],[83,2],[81,4],[76,4]]]},
+  solo:{bpm:132,chords:[[60,64,67,72],[56,60,63,68],[53,57,60,65],[55,59,62,67],[60,64,67,72],[56,60,63,68],[58,62,65,70],[55,59,62,67]],
+   phrases:[[[79,2],[84,2],[86,2],[84,2],[79,2],[76,2],[79,4]],[[80,2],[84,2],[87,3],[84,1],[80,2],[75,2],[72,4]],[[77,2],[81,2],[84,2],[89,2],[84,2],[81,2],[77,4]],[[79,2],[83,2],[86,3],[83,1],[81,2],[79,2],[74,4]],[[84,2],[86,2],[88,2],[91,2],[88,2],[86,2],[84,4]],[[80,2],[84,2],[87,2],[92,2],[87,2],[84,2],[80,4]],[[82,2],[86,2],[89,3],[86,1],[82,2],[77,2],[74,4]],[[79,2],[83,2],[86,2],[91,2],[88,2],[86,2],[84,4]]]},
+  versus:{bpm:145,chords:[[57,60,64,69],[55,59,62,67],[53,57,60,65],[52,56,59,64],[57,60,64,69],[55,59,62,67],[50,53,57,62],[52,56,59,64]],
+   phrases:[[[81,2],[84,2],[88,2],[86,2],[84,2],[81,2],[79,4]],[[79,2],[83,2],[86,2],[91,2],[88,2],[86,2],[83,4]],[[77,2],[81,2],[84,3],[81,1],[77,2],[76,2],[72,4]],[[76,2],[80,2],[83,2],[88,2],[86,2],[83,2],[80,4]],[[88,2],[86,2],[84,2],[81,2],[84,2],[88,2],[93,4]],[[86,2],[83,2],[79,2],[83,2],[86,2],[91,2],[88,4]],[[89,2],[86,2],[81,2],[77,2],[81,2],[84,2],[86,4]],[[88,2],[86,2],[84,2],[80,2],[83,2],[88,2],[81,4]]]}
+ };
+ let nextBeat=0;
  function save(){try{localStorage.setItem('bp-audio-v1',JSON.stringify({music:musicVol,sfx:sfxVol,muted}))}catch(e){}}
  function ensure(){if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;ac=new C();master=ac.createGain();master.gain.value=.7;master.connect(ac.destination);musicBus=ac.createGain();sfxBus=ac.createGain();musicBus.connect(master);sfxBus.connect(master)}if(ac.state==='suspended')ac.resume().catch(()=>{});volumes();return true}
  function volumes(){if(!ac)return;musicBus.gain.setTargetAtTime(muted?0:musicVol*.27,ac.currentTime,.035);sfxBus.gain.setTargetAtTime(muted?0:sfxVol*.48,ac.currentTime,.035)}
@@ -750,8 +758,42 @@ const BP_AUDIO=(()=>{
  function hz(note){return 440*Math.pow(2,(note-69)/12)}
  function kick(t){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(145,t);o.frequency.exponentialRampToValueAtTime(42,t+.14);g.gain.setValueAtTime(.35,t);g.gain.exponentialRampToValueAtTime(.0001,t+.18);o.connect(g);g.connect(musicBus);o.start(t);o.stop(t+.19)}
  function hat(t){if(!ac)return;const b=ac.createBuffer(1,Math.floor(ac.sampleRate*.04),ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=b;f.type='highpass';f.frequency.value=6500;g.gain.value=.085;s.connect(f);f.connect(g);g.connect(musicBus);s.start(t)}
- function beat(){if(!ac||ac.state!=='running'||scene==='off'||muted||musicVol===0)return;const bpm=scene==='versus'?144:scene==='danger'?154:scene==='solo'?132:122,beatLength=60/bpm/4;const t=ac.currentTime+.025;for(let i=0;i<4;i++){const k=step+i,tt=t+i*beatLength,bar=Math.floor(k/16),pos=k%16,root=roots[scene][bar%4];if(pos%4===0)kick(tt);if(pos%4===2)tone(170,tt,.08,'triangle',.1);if(pos%2===0)hat(tt);if(pos%4===0)tone(hz(root-12),tt,beatLength*3.2,'sawtooth',.35,musicBus,420);if(pos%2===0)tone(hz(root+(pos===6?7:pos===10?3:0)),tt,beatLength*1.5,'square',.13,musicBus,850);if(pos%2===0){const note=melodies[scene][pos];tone(hz(note),tt,beatLength*1.65,'triangle',.17,musicBus,2900)}}step+=4}
- function startMusic(next){scene=next;step=0;if(!ensure())return;if(timer)clearInterval(timer);const bpm=next==='versus'?144:next==='danger'?154:next==='solo'?132:122;beat();timer=setInterval(beat,60/bpm*1000)}
+ function scheduleStep(n,t){
+  const song=songs[scene==='danger'?'versus':scene]||songs.menu;
+  const bar=Math.floor(n/16)%32,pos=n%16,phrase=bar%8,section=Math.floor(bar/8);
+  const chord=song.chords[phrase],root=chord[0]-24,unit=60/song.bpm/4;
+  if(pos===0||pos===8)kick(t);
+  if(pos===4||pos===12)tone(175,t,.095,'triangle',.105,musicBus,1100);
+  if(pos%2===0)hat(t);
+  if(pos%4===0){const bass=[0,0,7,0][pos/4];tone(hz(root+bass),t,unit*3.4,'sawtooth',.24,musicBus,360)}
+  if(pos===0||pos===6||pos===10){for(const note of chord.slice(0,3))tone(hz(note-12),t,unit*(pos===0?5.4:2.6),'triangle',.042,musicBus,1150)}
+  // Independent 8-bar melodic phrases, repeated with octave and cadence variations over four sections.
+  let at=0;
+  for(const [note,length] of song.phrases[phrase]){
+   if(pos===at){const transpose=section===2&&bar%2===1?12:0;
+    tone(hz(note+transpose),t,unit*length*.83,'triangle',.19,musicBus,2450);
+    if(section===3&&length>=3)tone(hz(note-12),t,unit*length*.68,'sine',.055,musicBus,1500);
+    break;
+   }
+   at+=length;
+  }
+  if(section>=1&&pos===14)tone(hz(chord[2]+12),t,unit*1.6,'sine',.065,musicBus,1700);
+ }
+ function beat(){
+  if(!ac||ac.state!=='running'||scene==='off'||muted||musicVol===0)return;
+  const song=songs[scene==='danger'?'versus':scene]||songs.menu;
+  const duration=60/song.bpm/4;
+  if(nextBeat<ac.currentTime-.15)nextBeat=ac.currentTime+.045;
+  let count=0;
+  while(nextBeat<ac.currentTime+.18&&count++<12){scheduleStep(step++,nextBeat);nextBeat+=duration;}
+  if(step>=512)step=0;
+ }
+ function startMusic(next){
+  scene=next;step=0;if(timer)clearInterval(timer);timer=null;
+  if(!ensure())return;
+  nextBeat=ac.currentTime+.07;
+  beat();timer=setInterval(beat,45);
+ }
  function stopMusic(){scene='off';if(timer){clearInterval(timer);timer=null}}
  function effect(cue,detail=0){if(!ensure()||muted||sfxVol===0)return;const now=ac.currentTime,stamp=performance.now();if(lastCue[cue]&&stamp-lastCue[cue]<(cue==='swap'?55:cue==='match'?90:130))return;lastCue[cue]=stamp;
  const pl=(notes,spacing=.065,len=.13,type='triangle',amp=.25)=>notes.forEach((n,i)=>tone(hz(n),now+i*spacing,len,type,amp,sfxBus));
