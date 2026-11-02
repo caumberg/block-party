@@ -879,7 +879,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.03</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.04</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span></button></div></div>
 </div></div>
 
 
@@ -892,7 +892,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
    <div class="bp-wallet-reward"><strong>🎁 7-Day Streak Bonus</strong><p id="bpWeeklyInfo"></p></div>
   </div>
   <div id="bpWalletStatus" role="status" aria-live="polite"></div><button id="bpWalletReset" type="button" style="margin-top:10px;background:#503a76;border:1px solid #9986d4;padding:8px 12px;border-radius:10px;color:white;font-weight:700">Reset My Test Wallet</button>
-  <p class="bp-wallet-note">Version 2.1.03: Supabase wallet with 10 introductory tokens, daily rewards beginning at 10 tokens, and an automatic 75-token bonus on each seventh consecutive day. Ad redemption, missed-day recovery, purchases, and token spending are not yet enabled. Anonymous accounts remain tied to their browser session until a permanent sign-in method is added.</p>
+  <p class="bp-wallet-note">Version 2.1.04: Supabase wallet with 10 introductory tokens, daily rewards beginning at 10 tokens, and an automatic 75-token bonus on each seventh consecutive day. Game entry costs 2 tokens. Ad redemption, missed-day recovery, and purchases are not yet enabled. Anonymous accounts remain tied to their browser session until a permanent sign-in method is added.</p>
  </div>
 </div>
 <div id="bpLeaderboard" hidden><div class="bp-panel bp-leaderboard-panel">
@@ -1276,7 +1276,7 @@ function initMiniLeaderboard(){
  },3000);
 }
 let bpSoloStartedAt=0;
-function start(){bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
+async function start(){if(window.bpGameStartBusy)return;window.bpGameStartBusy=true;const startButton=document.getElementById("start");if(startButton)startButton.disabled=true;try{if(!window.bpSpendGameEntry)throw Error("Token wallet is not ready. Please reload.");await window.bpSpendGameEntry();}catch(e){window.bpGameStartBusy=false;if(startButton)startButton.disabled=false;const msg=e.message||"Unable to charge game entry";document.getElementById("bpWalletOpen").click();document.getElementById("bpWalletStatus").textContent=msg;return;}window.bpGameStartBusy=false;if(startButton)startButton.disabled=false;bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
 $('start').onclick=()=>{if($('play').value==='versus'||$('play').value==='solo'&&$('diff').value==='super-easy')start();else promptPlayerName()};$('back').onclick=()=>{hideVictory();started=false;$('menu').hidden=false;$('arena').hidden=true;$('bpMini').hidden=true;$('human').removeAttribute('srcdoc');$('cpu').removeAttribute('srcdoc')};
 
 // Versus-only cosmetic attack particles, independent of attack delivery.
@@ -1649,6 +1649,13 @@ showTutorialPage(0);
 const el=id=>document.getElementById(id);
 const BASE=BP_SUPABASE_URL, KEY=BP_SUPABASE_KEY, SESSION='bp-supabase-anon-v1';
 let session=null, wallet=null, busy=false;
+window.bpSpendGameEntry=async function(){
+ if(busy)throw Error("Wallet is busy. Try again.");
+ busy=true;render();
+ try{const latest=await rpc("bp_wallet_get");wallet=latest;render();if(Number(latest.balance)<2)throw Error("You need 2 tokens to start a game. Claim your daily bonus or return later.");
+ const result=await rpc("bp_wallet_spend_game",{p_request_id:crypto.randomUUID()});wallet=result;render();return result;
+ }catch(e){throw e;}finally{busy=false;render()}
+};
 const status=msg=>{el('bpWalletStatus').textContent=msg};
 function saveSession(){localStorage.setItem(SESSION,JSON.stringify(session))}
 async function authFetch(path,body){
