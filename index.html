@@ -1233,7 +1233,7 @@ function bpAuditReport(){
    'Special effects, poison penalties, and garbage landings require separate causal interpretation.']};
 }
 
-$('bpDiagExport').onclick=()=>{const data={version:'1.9.85',exported:new Date().toISOString(),audit:bpAuditReport(),inputAudit:{touches:bpPoisonLog.filter(e=>e.event==='touch-down').length,missesInControls:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.status==='miss').length,commands:bpPoisonLog.filter(e=>e.event==='control-command').length,recoveredNearMisses:bpPoisonLog.filter(e=>e.event==='touch-recovered').length,sectorHits:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.directionalZone).length},events:bpPoisonLog};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Block-Party-Gameplay-Diagnostics-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000)};
+$('bpDiagExport').onclick=()=>{const data={version:'1.9.86',exported:new Date().toISOString(),audit:bpAuditReport(),directionalAmbiguityAudit:bpAmbiguitySummary(),inputAudit:{touches:bpPoisonLog.filter(e=>e.event==='touch-down').length,missesInControls:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.status==='miss').length,commands:bpPoisonLog.filter(e=>e.event==='control-command').length,recoveredNearMisses:bpPoisonLog.filter(e=>e.event==='touch-recovered').length,sectorHits:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.directionalZone).length},events:bpPoisonLog};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Block-Party-Gameplay-Diagnostics-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000)};
 $('bpDiagClear').onclick=()=>{bpPoisonLog.length=0;bpDiagSeq=0;$('bpDiagCount').textContent='0 diagnostic events'};
 $('victoryDiagExport').onclick=()=>$('bpDiagExport').click();
 function updateVictoryDiag(){ $('victoryDiagCount').textContent=bpPoisonLog.length+' events recorded (matches, attack attribution, garbage, CPU and poison)'; }
@@ -1392,6 +1392,63 @@ function bpTapTarget(el){
  return el.dataset?.key||({raiseRow:'Raise Row',swap:'Swap',pad:'D-pad area',
   actionStack:'Action area',bottom:'Control area'}[el.id])||el.id||el.tagName.toLowerCase();
 }
+// v1.9.86: Boundary ambiguity analysis; observational only, never changes controls.
+let bpPreviousDirection=null;
+function bpBoundaryAudit(pad,x,y,selected){
+ if(!pad||!selected)return null;
+ const r=pad.getBoundingClientRect();if(!r.width||!r.height)return null;
+ const px=x-r.left,py=y-r.top,w=r.width,h=r.height;
+ const cx=w/2,cy=h/2;
+ // CSS clip-path triangles meet on these four diagonals (center to corners).
+ const segments=[
+  {a:[0,0],b:[cx,cy],directions:['ArrowUp','ArrowLeft']},
+  {a:[w,0],b:[cx,cy],directions:['ArrowUp','ArrowRight']},
+  {a:[0,h],b:[cx,cy],directions:['ArrowDown','ArrowLeft']},
+  {a:[w,h],b:[cx,cy],directions:['ArrowDown','ArrowRight']}
+ ];
+ function distance(seg){
+  const dx=seg.b[0]-seg.a[0],dy=seg.b[1]-seg.a[1];
+  const t=Math.max(0,Math.min(1,((px-seg.a[0])*dx+(py-seg.a[1])*dy)/(dx*dx+dy*dy)));
+  return Math.hypot(px-(seg.a[0]+t*dx),py-(seg.a[1]+t*dy));
+ }
+ const neighbors=segments.filter(seg=>seg.directions.includes(selected)).map(seg=>({
+  direction:seg.directions.find(k=>k!==selected),distancePx:distance(seg)
+ })).sort((a,b)=>a.distancePx-b.distancePx);
+ const best=neighbors[0];if(!best)return null;
+ const d=best.distancePx;
+ const category=d<=5?'very-high':d<=10?'high':d<=20?'moderate':'low';
+ const now=performance.now(),prev=bpPreviousDirection;
+ const transition=prev?{from:prev.key,to:selected,elapsedMs:Math.round(now-prev.at),changed:prev.key!==selected}:null;
+ bpPreviousDirection={key:selected,at:now};
+ return {distancePx:+d.toFixed(2),category,alternateDirection:best.direction,
+  neighboringDirections:neighbors.map(n=>({direction:n.direction,distancePx:+n.distancePx.toFixed(2)})),
+  transition,normalizedX:+(px/w).toFixed(4),normalizedY:+(py/h).toFixed(4),
+  geometry:'css-triangular-sectors-center-to-corners',
+  caveat:'Proximity indicates possible ambiguity, not the intended direction'};
+}
+function bpAmbiguitySummary(){
+ const taps=bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.boundaryAmbiguity);
+ const counts={'very-high':0,high:0,moderate:0,low:0},pairs={},transitions={};
+ const heatmap=[];
+ for(const e of taps){
+  const a=e.details.boundaryAmbiguity;
+  counts[a.category]++;
+  if(a.distancePx<=20){
+   const pair=[e.details.directionalZone,a.alternateDirection].sort().join(' / ');
+   pairs[pair]=(pairs[pair]||0)+1;
+   if(a.transition?.changed){const t=a.transition.from+' → '+a.transition.to;transitions[t]=(transitions[t]||0)+1;}
+  }
+  heatmap.push({x:a.normalizedX,y:a.normalizedY,direction:e.details.directionalZone,
+   alternate:a.alternateDirection,distancePx:a.distancePx,category:a.category,
+   tapId:e.details.tapId});
+ }
+ return {totalDirectionalTouches:taps.length,thresholdsPx:{veryHigh:5,high:10,moderate:20},
+  counts,within20px:counts['very-high']+counts.high+counts.moderate,
+  percentageWithin20px:taps.length?+((counts['very-high']+counts.high+counts.moderate)/taps.length*100).toFixed(2):0,
+  ambiguityByDirectionPair:pairs,ambiguousDirectionTransitions:transitions,
+  heatmapPoints:heatmap,
+  note:'Near a shared boundary does not prove an incorrect direction. Heatmap points use normalized D-pad coordinates.'};
+}
 document.addEventListener('pointerdown',e=>{
  if(e.pointerType==='mouse'&&e.button!==0)return;
  const target=e.target.closest?.('button,[data-key]')||e.target;
@@ -1408,6 +1465,8 @@ document.addEventListener('pointerdown',e=>{
  }).sort((a,b)=>a.distance-b.distance)[0];
  const insidePad=!!(pad&&x>=pad.getBoundingClientRect().left&&x<=pad.getBoundingClientRect().right&&y>=pad.getBoundingClientRect().top&&y<=pad.getBoundingClientRect().bottom);
  const status=button?'hit':control?'miss':'outside-controls';
+ const directionalZone=button?.closest?.('#pad')?button.dataset.key:null;
+ const boundaryAmbiguity=bpBoundaryAudit(pad,x,y,directionalZone);
  const ring=document.createElement('span');
  ring.className='bp-touch-ring '+(button?'hit':control?'miss':'');
  ring.style.left=x+'px';ring.style.top=y+'px';document.body.appendChild(ring);
@@ -1417,7 +1476,7 @@ document.addEventListener('pointerdown',e=>{
   xPct:+(x/innerWidth*100).toFixed(2),yPct:+(y/innerHeight*100).toFixed(2),
   target:bpTapTarget(target),status,expectedButton:bpActiveTap.button,
   closestArrow:near?.key||null,closestArrowDistancePx:near?.distance??null,
-  inDpad:insidePad,withinControls:!!control,directionalZone:button?.closest?.('#pad')?button.dataset.key:null,hitStrategy:'visible-sector-v1.9.85',
+  inDpad:insidePad,withinControls:!!control,directionalZone,boundaryAmbiguity,hitStrategy:'visible-sector-v1.9.85',
   pad:bpTapGeometry(pad,x,y),actions:bpTapGeometry(actions,x,y),
   bottom:bpTapGeometry(bottom,x,y),
   button:button?bpTapGeometry(button,x,y):null});
