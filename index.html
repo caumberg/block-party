@@ -842,7 +842,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 
 
 /* Block Party v2.0: local-first rewards wallet */
-#bpWalletOpen{background:#6850b3!important;border-color:#ad94f3!important}
+#bpWalletOpen{background:#6850b3!important;border-color:#ad94f3!important;width:max-content!important;min-width:0!important;flex:0 0 auto!important;white-space:nowrap!important;padding-left:14px!important;padding-right:14px!important;margin-left:auto!important}
 #bpWalletOverlay[hidden]{display:none!important}
 #bpWalletOverlay{position:fixed;inset:0;z-index:150;background:#070b1de8;display:flex;align-items:center;justify-content:center;padding:14px;overflow:auto}
 .bp-wallet-card{width:min(94vw,430px);max-height:92dvh;overflow:auto;border-radius:20px;background:#202b4c;border:1px solid #9d8cdd;padding:20px;box-shadow:0 18px 65px #0009}
@@ -879,7 +879,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.0.0</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 &nbsp; TOKENS</button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.02</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span></button></div></div>
 </div></div>
 
 
@@ -889,11 +889,10 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
   <div class="bp-wallet-balance"><span id="bpWalletBalance">0</span> 🪙<small>Tokens saved on this device</small></div>
   <div class="bp-wallet-grid">
    <div class="bp-wallet-reward"><strong>🎁 Daily Bonus</strong><p id="bpDailyInfo"></p><button id="bpDailyClaim" type="button">Claim daily</button></div>
-   <div class="bp-wallet-reward"><strong>📅 Weekly Bonus</strong><p id="bpWeeklyInfo"></p><button id="bpWeeklyClaim" type="button">Claim weekly</button></div>
-   <div class="bp-wallet-reward" style="grid-column:1/-1"><strong>🎡 Daily Prize Wheel</strong><p id="bpWheelInfo"></p><button id="bpWheelSpin" type="button">Spin for free</button></div>
+   <div class="bp-wallet-reward"><strong>🎁 7-Day Streak Bonus</strong><p id="bpWeeklyInfo"></p></div>
   </div>
   <div id="bpWalletStatus" role="status" aria-live="polite"></div>
-  <p class="bp-wallet-note">Version 2.0 wallet preview: 100 introductory tokens, daily streak rewards, weekly bonus, and one weighted prize spin per day. Ad redemption, missed-day ad recovery, purchases, and spending are not enabled. Balances are local to this browser and can be lost if its data is cleared; they are not synchronized or secured by a server.</p>
+  <p class="bp-wallet-note">Version 2.1 wallet preview: 100 introductory tokens, daily streak rewards, and an automatic 75-token bonus every 7 consecutive days. Ad redemption, missed-day ad recovery, purchases, and spending are not enabled. Balances are local to this browser and can be lost if its data is cleared; they are not synchronized or secured by a server.</p>
  </div>
 </div>
 <div id="bpLeaderboard" hidden><div class="bp-panel bp-leaderboard-panel">
@@ -1350,7 +1349,7 @@ function bpAuditReport(){
    'Special effects, poison penalties, and garbage landings require separate causal interpretation.']};
 }
 
-$('bpDiagExport').onclick=()=>{const data={version:'2.0.0',exported:new Date().toISOString(),audit:bpAuditReport(),directionalAmbiguityAudit:bpAmbiguitySummary(),inputAudit:{touches:bpPoisonLog.filter(e=>e.event==='touch-down').length,missesInControls:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.status==='miss').length,commands:bpPoisonLog.filter(e=>e.event==='control-command').length,recoveredNearMisses:bpPoisonLog.filter(e=>e.event==='touch-recovered').length,sectorHits:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.directionalZone).length},events:bpPoisonLog};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Block-Party-Gameplay-Diagnostics-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000)};
+$('bpDiagExport').onclick=()=>{const data={version:'2.1.00',exported:new Date().toISOString(),audit:bpAuditReport(),directionalAmbiguityAudit:bpAmbiguitySummary(),inputAudit:{touches:bpPoisonLog.filter(e=>e.event==='touch-down').length,missesInControls:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.status==='miss').length,commands:bpPoisonLog.filter(e=>e.event==='control-command').length,recoveredNearMisses:bpPoisonLog.filter(e=>e.event==='touch-recovered').length,sectorHits:bpPoisonLog.filter(e=>e.event==='touch-down'&&e.details?.directionalZone).length},events:bpPoisonLog};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Block-Party-Gameplay-Diagnostics-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000)};
 $('bpDiagClear').onclick=()=>{bpPoisonLog.length=0;bpDiagSeq=0;$('bpDiagCount').textContent='0 diagnostic events'};
 $('victoryDiagExport').onclick=()=>$('bpDiagExport').click();
 function updateVictoryDiag(){ $('victoryDiagCount').textContent=bpPoisonLog.length+' events recorded (matches, attack attribution, garbage, CPU and poison)'; }
@@ -1644,32 +1643,31 @@ $('tutorialOverlay').addEventListener('click',e=>{if(e.target===$('tutorialOverl
 document.addEventListener('keydown',e=>{if($('tutorialOverlay').hidden)return;if(e.key==='Escape')closeTutorial();else if(e.key==='ArrowRight')showTutorialPage(tutIndex+1);else if(e.key==='ArrowLeft')showTutorialPage(tutIndex-1)});
 showTutorialPage(0);
 
-/* Block Party v2.0 wallet: local-only preview; never treat local balances as verified currency. */
+/* Block Party v2.1 wallet: local-only preview; never treat local balances as verified currency. */
 (function(){
 'use strict';
 const KEY='block-party-wallet-v2', DAY=86400000;
 const el=id=>document.getElementById(id);
 const dateKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const dayNumber=k=>{const p=k.split('-').map(Number);return Date.UTC(p[0],p[1]-1,p[2])/DAY};
-const weekKey=()=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-(d.getDay()+6)%7);return dateKey(d)};
 const fresh=()=>({balance:100,daily:null,weekly:null,wheel:null,streak:0});
 let wallet;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');wallet=saved&&Number.isSafeInteger(saved.balance)&&saved.balance>=0&&saved.balance<=1e9?{...fresh(),...saved}:fresh()}catch(_){wallet=fresh()}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(wallet))}catch(_){status('Browser storage is unavailable; rewards may not persist.')}};
 const status=msg=>{el('bpWalletStatus').textContent=msg};
 function render(){
- const today=dateKey(),week=weekKey();
+ const today=dateKey();
  el('bpWalletBalance').textContent=wallet.balance.toLocaleString();
- const dailyDone=wallet.daily===today,weeklyDone=wallet.weekly===week,wheelDone=wallet.wheel===today;
+ el('bpWalletMenuBalance').textContent=wallet.balance.toLocaleString();
+ const dailyDone=wallet.daily===today;
  const gap=wallet.daily?dayNumber(today)-dayNumber(wallet.daily):0;
  const nextStreak=gap===1?wallet.streak+1:1;
  const reward=20+Math.min(30,(nextStreak-1)*5);
  el('bpDailyInfo').textContent=dailyDone?'Claimed today · '+wallet.streak+'-day streak':reward+' tokens · Day '+nextStreak+' streak';
- el('bpWeeklyInfo').textContent=weeklyDone?'Claimed this week':'100 tokens · resets Monday';
- el('bpWheelInfo').textContent=wheelDone?'Already spun today':'Free daily spin · weighted prizes: 5, 10, 15, 20, 30, 50 or 100 tokens';
+ const activeStreak=dailyDone||gap===1?wallet.streak:0;
+ const progress=activeStreak%7;
+ el('bpWeeklyInfo').textContent=activeStreak>0&&progress===0?'75 bonus tokens earned! · '+activeStreak+'-day streak':progress+' of 7 days · +75 tokens on Day '+(activeStreak-progress+7);
  el('bpDailyClaim').disabled=dailyDone;
- el('bpWeeklyClaim').disabled=weeklyDone;
- el('bpWheelSpin').disabled=wheelDone;
 }
 el('bpWalletOpen').addEventListener('click',()=>{render();el('bpWalletOverlay').hidden=false;status('');});
 el('bpWalletClose').addEventListener('click',()=>{el('bpWalletOverlay').hidden=true;el('bpWalletOpen').focus()});
@@ -1679,23 +1677,11 @@ el('bpDailyClaim').addEventListener('click',()=>{
  const gap=wallet.daily?dayNumber(today)-dayNumber(wallet.daily):0;
  wallet.streak=gap===1?Math.max(1,wallet.streak)+1:1;
  const amount=20+Math.min(30,(wallet.streak-1)*5);
- wallet.balance+=amount;wallet.daily=today;save();render();status('+'+amount+' tokens! Daily streak: '+wallet.streak+' day(s).');
+ const bonus=wallet.streak%7===0?75:0;
+ wallet.balance+=amount+bonus;wallet.daily=today;save();render();status('+'+amount+' daily tokens'+(bonus?' +75 streak bonus!':'!')+' Daily streak: '+wallet.streak+' day(s).');
 });
-el('bpWeeklyClaim').addEventListener('click',()=>{
- const week=weekKey();if(wallet.weekly===week)return;
- wallet.balance+=100;wallet.weekly=week;save();render();status('+100 weekly tokens!');
-});
-el('bpWheelSpin').addEventListener('click',()=>{
- const today=dateKey();if(wallet.wheel===today)return;
- const prizes=[{n:5,w:35},{n:10,w:25},{n:15,w:17},{n:20,w:11},{n:30,w:7},{n:50,w:4},{n:100,w:1}];
- const total=prizes.reduce((sum,p)=>sum+p.w,0);
- const bytes=new Uint32Array(1);
- if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(bytes);
- else bytes[0]=Math.floor(Math.random()*4294967296);
- let roll=bytes[0]/4294967296*total,prize=prizes[0].n;
- for(const p of prizes){roll-=p.w;if(roll<0){prize=p.n;break}}
- wallet.balance+=prize;wallet.wheel=today;save();render();status('🎉 You won '+prize+' tokens on the daily prize wheel!');
-});
+
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!el('bpWalletOverlay').hidden)el('bpWalletOverlay').hidden=true});
 save();render();
 })();
