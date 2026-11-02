@@ -879,20 +879,20 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.02</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span>✦</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.03</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span></button></div></div>
 </div></div>
 
 
 <div id="bpWalletOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="bpWalletTitle">
  <div class="bp-wallet-card">
   <div class="bp-wallet-head"><h2 id="bpWalletTitle">🪙 Token Wallet</h2><button id="bpWalletClose" type="button" aria-label="Close wallet">✕</button></div>
-  <div class="bp-wallet-balance"><span id="bpWalletBalance">0</span> 🪙<small>Tokens saved on this device</small></div>
+  <div class="bp-wallet-balance"><span id="bpWalletBalance">0</span> 🪙<small>Tokens saved securely in Supabase</small></div>
   <div class="bp-wallet-grid">
    <div class="bp-wallet-reward"><strong>🎁 Daily Bonus</strong><p id="bpDailyInfo"></p><button id="bpDailyClaim" type="button">Claim daily</button></div>
    <div class="bp-wallet-reward"><strong>🎁 7-Day Streak Bonus</strong><p id="bpWeeklyInfo"></p></div>
   </div>
-  <div id="bpWalletStatus" role="status" aria-live="polite"></div>
-  <p class="bp-wallet-note">Version 2.1 wallet preview: 100 introductory tokens, daily streak rewards, and an automatic 75-token bonus every 7 consecutive days. Ad redemption, missed-day ad recovery, purchases, and spending are not enabled. Balances are local to this browser and can be lost if its data is cleared; they are not synchronized or secured by a server.</p>
+  <div id="bpWalletStatus" role="status" aria-live="polite"></div><button id="bpWalletReset" type="button" style="margin-top:10px;background:#503a76;border:1px solid #9986d4;padding:8px 12px;border-radius:10px;color:white;font-weight:700">Reset My Test Wallet</button>
+  <p class="bp-wallet-note">Version 2.1.03: Supabase wallet with 10 introductory tokens, daily rewards beginning at 10 tokens, and an automatic 75-token bonus on each seventh consecutive day. Ad redemption, missed-day recovery, purchases, and token spending are not yet enabled. Anonymous accounts remain tied to their browser session until a permanent sign-in method is added.</p>
  </div>
 </div>
 <div id="bpLeaderboard" hidden><div class="bp-panel bp-leaderboard-panel">
@@ -1643,46 +1643,60 @@ $('tutorialOverlay').addEventListener('click',e=>{if(e.target===$('tutorialOverl
 document.addEventListener('keydown',e=>{if($('tutorialOverlay').hidden)return;if(e.key==='Escape')closeTutorial();else if(e.key==='ArrowRight')showTutorialPage(tutIndex+1);else if(e.key==='ArrowLeft')showTutorialPage(tutIndex-1)});
 showTutorialPage(0);
 
-/* Block Party v2.1 wallet: local-only preview; never treat local balances as verified currency. */
+/* Block Party v2.1.03: server-authoritative wallet. Requires accompanying SQL migration and anonymous Auth enabled. */
 (function(){
 'use strict';
-const KEY='block-party-wallet-v2', DAY=86400000;
 const el=id=>document.getElementById(id);
-const dateKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-const dayNumber=k=>{const p=k.split('-').map(Number);return Date.UTC(p[0],p[1]-1,p[2])/DAY};
-const fresh=()=>({balance:100,daily:null,weekly:null,wheel:null,streak:0});
-let wallet;
-try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');wallet=saved&&Number.isSafeInteger(saved.balance)&&saved.balance>=0&&saved.balance<=1e9?{...fresh(),...saved}:fresh()}catch(_){wallet=fresh()}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(wallet))}catch(_){status('Browser storage is unavailable; rewards may not persist.')}};
+const BASE=BP_SUPABASE_URL, KEY=BP_SUPABASE_KEY, SESSION='bp-supabase-anon-v1';
+let session=null, wallet=null, busy=false;
 const status=msg=>{el('bpWalletStatus').textContent=msg};
-function render(){
- const today=dateKey();
- el('bpWalletBalance').textContent=wallet.balance.toLocaleString();
- el('bpWalletMenuBalance').textContent=wallet.balance.toLocaleString();
- const dailyDone=wallet.daily===today;
- const gap=wallet.daily?dayNumber(today)-dayNumber(wallet.daily):0;
- const nextStreak=gap===1?wallet.streak+1:1;
- const reward=20+Math.min(30,(nextStreak-1)*5);
- el('bpDailyInfo').textContent=dailyDone?'Claimed today · '+wallet.streak+'-day streak':reward+' tokens · Day '+nextStreak+' streak';
- const activeStreak=dailyDone||gap===1?wallet.streak:0;
- const progress=activeStreak%7;
- el('bpWeeklyInfo').textContent=activeStreak>0&&progress===0?'75 bonus tokens earned! · '+activeStreak+'-day streak':progress+' of 7 days · +75 tokens on Day '+(activeStreak-progress+7);
- el('bpDailyClaim').disabled=dailyDone;
+function saveSession(){localStorage.setItem(SESSION,JSON.stringify(session))}
+async function authFetch(path,body){
+ const r=await fetch(BASE+'/auth/v1/'+path,{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const data=await r.json().catch(()=>({}));if(!r.ok)throw Error(data.msg||data.error_description||data.message||'Authentication failed ('+r.status+')');return data;
 }
-el('bpWalletOpen').addEventListener('click',()=>{render();el('bpWalletOverlay').hidden=false;status('');});
+async function getSession(){
+ if(session&&session.access_token&&session.expires_at>Date.now()/1000+60)return session;
+ if(!session){try{session=JSON.parse(localStorage.getItem(SESSION)||'null')}catch(_){session=null}}
+ if(session?.access_token&&session.expires_at>Date.now()/1000+60)return session;
+ if(session?.refresh_token){try{const data=await authFetch('token?grant_type=refresh_token',{refresh_token:session.refresh_token});session={...data,expires_at:Math.floor(Date.now()/1000)+data.expires_in};saveSession();return session}catch(_){session=null}}
+ const data=await authFetch('signup',{data:{}});
+ if(!data.access_token)throw Error('Enable Anonymous Sign-ins in Supabase Authentication settings.');
+ session={...data,expires_at:Math.floor(Date.now()/1000)+data.expires_in};saveSession();return session;
+}
+async function rpc(name,params={}){
+ const auth=await getSession();
+ const r=await fetch(BASE+'/rest/v1/rpc/'+name,{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+auth.access_token,'Content-Type':'application/json'},body:JSON.stringify(params)});
+ const raw=await r.text();let data;try{data=JSON.parse(raw)}catch(_){data=raw}
+ if(!r.ok)throw Error((data&&data.message)||'Wallet service error '+r.status);
+ return data;
+}
+function render(){
+ const ready=!!wallet;
+ el('bpWalletBalance').textContent=ready?Number(wallet.balance).toLocaleString():'…';
+ el('bpWalletMenuBalance').textContent=ready?Number(wallet.balance).toLocaleString():'…';
+ if(!ready){el('bpDailyInfo').textContent='Connecting to Supabase…';el('bpWeeklyInfo').textContent='—';el('bpDailyClaim').disabled=true;return}
+ const next=Number(wallet.next_streak||1),done=!!wallet.claimed_today;
+ el('bpDailyInfo').textContent=done?'Claimed today · '+wallet.streak+'-day streak':wallet.next_reward+' tokens · Day '+next+' streak';
+ const progress=Number(wallet.active_streak||0)%7;
+ el('bpWeeklyInfo').textContent=wallet.active_streak>0&&progress===0?'75 bonus tokens earned! · '+wallet.active_streak+'-day streak':progress+' of 7 days · +75 tokens on Day '+(Number(wallet.active_streak||0)-progress+7);
+ el('bpDailyClaim').disabled=done||busy;
+ el('bpWalletReset').disabled=busy;
+}
+async function load(){try{wallet=await rpc('bp_wallet_get');render();status('')}catch(e){status('Wallet unavailable: '+e.message);render()}}
+el('bpWalletOpen').addEventListener('click',()=>{el('bpWalletOverlay').hidden=false;render();load()});
 el('bpWalletClose').addEventListener('click',()=>{el('bpWalletOverlay').hidden=true;el('bpWalletOpen').focus()});
 el('bpWalletOverlay').addEventListener('click',e=>{if(e.target===el('bpWalletOverlay'))el('bpWalletOverlay').hidden=true});
-el('bpDailyClaim').addEventListener('click',()=>{
- const today=dateKey();if(wallet.daily===today)return;
- const gap=wallet.daily?dayNumber(today)-dayNumber(wallet.daily):0;
- wallet.streak=gap===1?Math.max(1,wallet.streak)+1:1;
- const amount=20+Math.min(30,(wallet.streak-1)*5);
- const bonus=wallet.streak%7===0?75:0;
- wallet.balance+=amount+bonus;wallet.daily=today;save();render();status('+'+amount+' daily tokens'+(bonus?' +75 streak bonus!':'!')+' Daily streak: '+wallet.streak+' day(s).');
+el('bpDailyClaim').addEventListener('click',async()=>{
+ if(busy||!wallet||wallet.claimed_today)return;busy=true;render();
+ try{const result=await rpc('bp_wallet_claim_daily');wallet=result;status('+'+result.awarded_daily+' daily tokens'+(result.awarded_streak?' +75 streak bonus!':'!')+' Daily streak: '+result.streak+' day(s).')}
+ catch(e){status('Claim failed: '+e.message)}finally{busy=false;render()}
 });
-
-
+el('bpWalletReset').addEventListener('click',async()=>{
+ if(busy||!confirm('Delete YOUR Supabase token wallet and daily streak? This cannot be undone. Your new wallet will start with 10 tokens.'))return;
+ busy=true;render();try{wallet=await rpc('bp_wallet_reset');status('Your server wallet was reset to 10 tokens. Your leaderboard scores were not deleted.')}catch(e){status('Reset failed: '+e.message)}finally{busy=false;render()}
+});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!el('bpWalletOverlay').hidden)el('bpWalletOverlay').hidden=true});
-save();render();
+render();load();
 })();
 </script></html>
