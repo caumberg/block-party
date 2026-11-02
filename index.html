@@ -1164,7 +1164,7 @@ function promptPlayerName(){
 $('bpNameCancel').onclick=()=>{$('bpNamePrompt').hidden=true};
 $('bpNamePlay').onclick=()=>{
  const name=$('bpPlayerName').value.trim();if(!name||name.length>20){$('bpNameError').textContent='Enter a name between 1 and 20 characters.';return}
- bpPlayer=name;localStorage.setItem('bp-player-name',name);$('bpNamePrompt').hidden=true;start();
+ bpPlayer=name;localStorage.setItem('bp-player-name',name);$('bpNamePrompt').hidden=true;bpWalletRequest('rpc/set_block_party_solo_name','POST',{p_name:name}).catch(e=>console.warn('Could not sync Solo name:',e));start();
 };
 $('bpPlayerName').addEventListener('keydown',e=>{if(e.key==='Enter')$('bpNamePlay').click()});
 function bpClientId(){let id=localStorage.getItem('bp-client-id');if(!id){id=crypto.randomUUID();localStorage.setItem('bp-client-id',id)}return id}
