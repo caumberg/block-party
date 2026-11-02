@@ -1244,7 +1244,65 @@ function initMiniLeaderboard(){
  },3000);
 }
 let bpSoloStartedAt=0;
-function start(){bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
+
+/* Block Party wallet: authenticated, server-authoritative token accounting. */
+const BP_AUTH_STORAGE='bp-supabase-auth-v1';
+let bpAuthSession=null,bpWalletBalance=null,bpWalletBusy=false;
+const bpWalletBadge=document.createElement('div');
+bpWalletBadge.id='bpWalletBadge';
+bpWalletBadge.style.cssText='text-align:center;margin:12px auto 0;padding:9px 14px;max-width:260px;border-radius:14px;background:#172544;border:1px solid #7186c4;color:#ffdc81;font-weight:800';
+bpWalletBadge.textContent='🪙 Connecting wallet…';
+$('start').parentNode.insertBefore(bpWalletBadge,$('start'));
+function bpWalletRender(){bpWalletBadge.textContent=bpWalletBalance==null?'🪙 Wallet unavailable':'🪙 '+bpWalletBalance+' tokens · 2 per game'}
+function bpAuthSave(session){bpAuthSession=session;try{localStorage.setItem(BP_AUTH_STORAGE,JSON.stringify(session))}catch(e){}}
+async function bpAuthRequest(path,body,token){
+ const response=await fetch(BP_SUPABASE_URL+'/auth/v1/'+path,{method:'POST',headers:{'apikey':BP_SUPABASE_KEY,'Content-Type':'application/json',...(token?{'Authorization':'Bearer '+token}:{})},body:JSON.stringify(body)});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(data.msg||data.error_description||data.message||'Authentication failed');
+ return data;
+}
+async function bpEnsureAuth(){
+ if(!bpAuthSession){try{bpAuthSession=JSON.parse(localStorage.getItem(BP_AUTH_STORAGE)||'null')}catch(e){}}
+ if(bpAuthSession?.access_token && bpAuthSession?.expires_at && Date.now()/1000<bpAuthSession.expires_at-90)return bpAuthSession.access_token;
+ if(bpAuthSession?.refresh_token){
+  try{const fresh=await bpAuthRequest('token?grant_type=refresh_token',{refresh_token:bpAuthSession.refresh_token});bpAuthSave(fresh);return fresh.access_token}catch(e){bpAuthSave(null)}
+ }
+ const created=await bpAuthRequest('signup',{data:{}});
+ if(!created.access_token)throw Error('Anonymous sign-in is unavailable');
+ bpAuthSave(created);return created.access_token;
+}
+async function bpWalletRequest(path,method='GET',body=null){
+ const token=await bpEnsureAuth();
+ const response=await fetch(BP_SUPABASE_URL+'/rest/v1/'+path,{method,headers:{'apikey':BP_SUPABASE_KEY,'Authorization':'Bearer '+token,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
+ if(!response.ok)throw Error((await response.text()).slice(0,180));
+ return response.status===204?null:response.json();
+}
+async function bpWalletRefresh(){
+ const rows=await bpWalletRequest('player_wallets?select=balance&limit=1');
+ if(!rows?.length)throw Error('Wallet not initialized');
+ bpWalletBalance=rows[0].balance;bpWalletRender();
+}
+async function bpWalletInit(){
+ try{await bpWalletRefresh()}catch(e){console.warn('Wallet initialization failed:',e);bpWalletBalance=null;bpWalletRender()}
+}
+async function bpWalletStart(){
+ if(bpWalletBusy)return;
+ bpWalletBusy=true;$('start').disabled=true;
+ try{
+  await bpWalletRefresh();
+  if(bpWalletBalance<2){alert('You need 2 tokens to play. More token options are coming soon.');return}
+  const mode=$('play').value==='versus'?'versus-'+$('aiDiff').value:$('mode').value==='timed'?'timed-'+$('duration').value:$('mode').value;
+  const id=crypto.randomUUID();
+  const result=await bpWalletRequest('rpc/start_block_party_game','POST',{p_session_id:id,p_game_mode:mode});
+  bpWalletBalance=result[0].remaining_tokens;bpWalletRender();
+  startCore();
+ }catch(e){console.warn('Unable to start game:',e);alert('Game could not start: '+e.message)}
+ finally{bpWalletBusy=false;$('start').disabled=false}
+}
+function start(){return bpWalletStart()}
+bpWalletInit();
+
+function startCore(){bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
 $('start').onclick=()=>{if($('play').value==='versus'||$('play').value==='solo'&&$('diff').value==='super-easy')start();else promptPlayerName()};$('back').onclick=()=>{hideVictory();started=false;$('menu').hidden=false;$('arena').hidden=true;$('bpMini').hidden=true;$('human').removeAttribute('srcdoc');$('cpu').removeAttribute('srcdoc')};
 
 // Versus-only cosmetic attack particles, independent of attack delivery.
