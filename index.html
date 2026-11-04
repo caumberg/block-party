@@ -870,7 +870,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpIdleClaim{width:100%;padding:11px;border-radius:10px;font-weight:800}
 #bpIdleClaim:disabled{opacity:.5}
 
-/* v2.1.13 public tester build: hide developer diagnostics and touch overlays. */
+/* v2.1.14 public tester build: hide developer diagnostics and touch overlays. */
 #bpDiagBar, #victoryDiag, .bp-touch-ring { display:none!important; }
 #menu #start:disabled{opacity:.45!important;filter:grayscale(.65);cursor:not-allowed!important;transform:none!important;box-shadow:none!important}
 </style>
@@ -893,7 +893,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.13</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.14</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -905,9 +905,9 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
    <div class="bp-wallet-reward"><strong>🎁 Daily Bonus</strong><p id="bpDailyInfo"></p><button id="bpDailyClaim" type="button">Claim daily</button></div>
    <div class="bp-wallet-reward"><strong>🎁 7-Day Streak Bonus</strong><p id="bpWeeklyInfo"></p></div>
   </div>
-  <div class="bp-idle-card"><strong>⏱ Idle Token Reward</strong><div id="bpIdleTimer" class="bp-idle-timer">60:00</div><p id="bpIdleInfo">10 tokens available after the first hour. Earn up to 25 by waiting 2½ hours.</p><button type="button" id="bpIdleClaim" disabled>Redeem tokens</button></div>
+  <div class="bp-idle-card"><strong>⏱ Idle Token Reward</strong><div id="bpIdleTimer" class="bp-idle-timer">60:00</div><p id="bpIdleInfo">10 tokens after 60 minutes; up to 5 more over the next 150 minutes.</p><button type="button" id="bpIdleClaim" disabled>Redeem tokens</button></div>
   <div id="bpWalletStatus" role="status" aria-live="polite"></div><button id="bpWalletReset" type="button" style="margin-top:10px;background:#503a76;border:1px solid #9986d4;padding:8px 12px;border-radius:10px;color:white;font-weight:700">Reset My Test Wallet</button>
-  <p class="bp-wallet-note">Version 2.1.05: Supabase wallet with 10 introductory tokens, daily rewards beginning at 10 tokens, and an automatic 75-token bonus on each seventh consecutive day. Game entry costs 2 tokens. Idle rewards become redeemable after 60 minutes, accumulate up to 25 tokens after 150 minutes, and restart on redemption. Ad redemption, missed-day recovery, and purchases are not yet enabled. Anonymous accounts remain tied to their browser session until a permanent sign-in method is added.</p>
+  <p class="bp-wallet-note">Version 2.1.14: The idle reward is 10 tokens at 60 minutes, then +2 at 120 minutes, +1 at 150, 180, and 210 minutes, capped at 15 tokens per cycle. Supabase must have the matching idle reward RPC migration before claims are enabled. Game entry costs 2 tokens.</p>
  </div>
 </div>
 <div id="bpLeaderboard" hidden><div class="bp-panel bp-leaderboard-panel">
@@ -1718,11 +1718,11 @@ function renderIdle(){
  const elapsed=Math.max(0,Math.floor((Date.now()+serverOffset-Date.parse(idle.started_at))/1000));
  const secondsLeft=Math.max(0,3600-elapsed);
  el('bpIdleTimer').textContent=String(Math.floor(secondsLeft/60)).padStart(2,'0')+':'+String(secondsLeft%60).padStart(2,'0');
- const reward=elapsed>=3600?Math.min(25,Math.floor(elapsed/360)):0;
- el('bpIdleInfo').textContent=reward?reward+' tokens ready to redeem'+(reward===25?' · Maximum reached':' · Continues earning up to 25'):'10 tokens unlock after the first hour. Rewards grow to 25 tokens at 2½ hours.';
- el('bpIdleClaim').disabled=!reward||busy;
- el('bpIdleClaim').textContent=reward?'Redeem '+reward+' 🪙':'Redeem tokens';
- el('bpIdleBadge').hidden=!reward;
+ const reward=elapsed<3600?0:elapsed<7200?10:elapsed<9000?12:elapsed<10800?13:elapsed<12600?14:15;
+ el('bpIdleInfo').textContent=reward?reward+' tokens ready to redeem'+(reward===15?' · Maximum reached':' · Up to 15 tokens total after 3½ hours'):'10 tokens unlock after the first hour. Earn up to 5 additional tokens afterward.';
+ el('bpIdleClaim').disabled=true; // Requires updated Supabase RPC; old server awards too many tokens.
+ el('bpIdleClaim').textContent=reward?'Redeem '+reward+' 🪙 (server update required)':'Redeem tokens';
+ el('bpIdleBadge').hidden=true;
 }
 function render(){
  const ready=!!wallet;
