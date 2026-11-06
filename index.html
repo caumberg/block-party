@@ -870,7 +870,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpIdleClaim{width:100%;padding:11px;border-radius:10px;font-weight:800}
 #bpIdleClaim:disabled{opacity:.5}
 
-/* v2.1.15 public tester build: hide developer diagnostics and touch overlays. */
+/* v2.1.16 public tester build: hide developer diagnostics and touch overlays. */
 #bpDiagBar, #victoryDiag, .bp-touch-ring { display:none!important; }
 #menu #start:disabled{opacity:.45!important;filter:grayscale(.65);cursor:not-allowed!important;transform:none!important;box-shadow:none!important}
 </style>
@@ -893,7 +893,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.15</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.1.16</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -907,7 +907,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
   </div>
   <div class="bp-idle-card"><strong>⏱ Idle Token Reward</strong><div id="bpIdleTimer" class="bp-idle-timer">60:00</div><p id="bpIdleInfo">10 tokens after 60 minutes; up to 5 more over the next 150 minutes.</p><button type="button" id="bpIdleClaim" disabled>Redeem tokens</button></div>
   <div id="bpWalletStatus" role="status" aria-live="polite"></div><button id="bpWalletReset" type="button" style="margin-top:10px;background:#503a76;border:1px solid #9986d4;padding:8px 12px;border-radius:10px;color:white;font-weight:700">Reset My Test Wallet</button>
-  <p class="bp-wallet-note">Version 2.1.15: The idle reward is 10 tokens at 60 minutes, then +2 at 120 minutes, +1 at 150, 180, and 210 minutes, capped at 15 tokens per cycle. Game entry costs 2 tokens.</p>
+  <p class="bp-wallet-note">Version 2.1.16: The idle reward is 10 tokens at 60 minutes, then +2 at 120 minutes, +1 at 150, 180, and 210 minutes, capped at 15 tokens per cycle. Daily rewards are 5, 7, 9, 11, 13, 15, then 17 tokens per day (capped at 17), with a 25-token bonus every seventh consecutive day. Game entry costs 2 tokens.</p>
  </div>
 </div>
 <div id="bpLeaderboard" hidden><div class="bp-panel bp-leaderboard-panel">
@@ -1732,7 +1732,7 @@ function render(){
  const next=Number(wallet.next_streak||1),done=!!wallet.claimed_today;
  el('bpDailyInfo').textContent=done?'Claimed today · '+wallet.streak+'-day streak':wallet.next_reward+' tokens · Day '+next+' streak';
  const progress=Number(wallet.active_streak||0)%7;
- el('bpWeeklyInfo').textContent=wallet.active_streak>0&&progress===0?'75 bonus tokens earned! · '+wallet.active_streak+'-day streak':progress+' of 7 days · +75 tokens on Day '+(Number(wallet.active_streak||0)-progress+7);
+ el('bpWeeklyInfo').textContent=wallet.active_streak>0&&progress===0?'25 bonus tokens earned! · '+wallet.active_streak+'-day streak':progress+' of 7 days · +25 tokens on Day '+(Number(wallet.active_streak||0)-progress+7);
  el('bpDailyClaim').disabled=done||busy;
  el('bpWalletReset').disabled=busy;
  renderIdle();
@@ -1744,7 +1744,7 @@ el('bpWalletClose').addEventListener('click',()=>{el('bpWalletOverlay').hidden=t
 el('bpWalletOverlay').addEventListener('click',e=>{if(e.target===el('bpWalletOverlay'))el('bpWalletOverlay').hidden=true});
 el('bpDailyClaim').addEventListener('click',async()=>{
  if(busy||!wallet||wallet.claimed_today)return;busy=true;render();
- try{const result=await rpc('bp_wallet_claim_daily');wallet=result;status('+'+result.awarded_daily+' daily tokens'+(result.awarded_streak?' +75 streak bonus!':'!')+' Daily streak: '+result.streak+' day(s).')}
+ try{const result=await rpc('bp_wallet_claim_daily');wallet=result;status('+'+result.awarded_daily+' daily tokens'+(result.awarded_streak?' +25 streak bonus!':'!')+' Daily streak: '+result.streak+' day(s).')}
  catch(e){status('Claim failed: '+e.message)}finally{busy=false;render()}
 });
 el('bpIdleClaim').addEventListener('click',async()=>{
