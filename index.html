@@ -2362,8 +2362,14 @@ function render(){
  const total=Object.values(stars).reduce((a,b)=>a+Number(b||0),0);
  $('bpCampaignUnlocked').textContent=unlocked+' / '+LIMIT;$('bpCampaignStars').textContent=total+' / '+(LIMIT*3);
  $('bpCampaignPage').textContent=`${Math.floor((selected-1)/50)*50+1}–${Math.min(LIMIT,Math.floor((selected-1)/50)*50+50)}`;
- const menu=$('bpCampaignMenuProgress');if(menu)menu.textContent=`Level ${unlocked} of ${LIMIT} · ${total} / ${LIMIT*3} stars`;
- const bar=$('bpCampaignMenuBar');if(bar)bar.style.width=`${Math.max(0,(unlocked-1)/LIMIT*100)}%`;
+ // Main-menu progress is scoped to the player's current circuit tier (50 levels).
+ const currentTier=Math.min(3,Math.max(1,Math.ceil(unlocked/50)));
+ const tierFirst=(currentTier-1)*50+1;
+ const tierLast=Math.min(LIMIT,tierFirst+49);
+ const tierStars=Array.from({length:tierLast-tierFirst+1},(_,i)=>Number(stars[tierFirst+i]||0)).reduce((a,b)=>a+b,0);
+ const tierLevel=Math.min(50,Math.max(1,unlocked-tierFirst+1));
+ const menu=$('bpCampaignMenuProgress');if(menu)menu.textContent=`Red Circuit · Tier ${currentTier} — Level ${tierLevel} of 50 · ${tierStars} / 150 stars`;
+ const bar=$('bpCampaignMenuBar');if(bar)bar.style.width=`${Math.max(0,(tierLevel-1)/50*100)}%`;
  const grid=$('bpCampaignGrid'),previousScroll=grid.scrollTop;grid.replaceChildren();
  for(let n=Math.floor((selected-1)/50)*50+1;n<=Math.min(LIMIT,Math.floor((selected-1)/50)*50+50);n++){
   const l=level(n),btn=document.createElement('button'),rating=Math.max(0,Math.min(3,Number(stars[n]||0))),locked=n>unlocked;
