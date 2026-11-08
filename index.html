@@ -1188,13 +1188,19 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpCampaignOverlay .bp-circuit-logo{display:block;white-space:nowrap;font-family:Impact,"Arial Black",system-ui,sans-serif;font-weight:900;font-stretch:condensed;font-size:clamp(24px,7.2vw,51px);line-height:1.1;letter-spacing:.035em;color:#ff4353;-webkit-text-stroke:0;text-shadow:0 0 3px #ff243b,0 0 9px #ff102f,0 0 19px rgba(255,0,36,.95),0 0 38px rgba(255,0,32,.8),0 0 62px rgba(255,0,25,.55);filter:none}
 #bpCampaignOverlay .bp-tier-logo{display:block;margin-top:5px;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(15px,3.9vw,26px);font-weight:1000;line-height:1.1;letter-spacing:.21em;color:#fff;-webkit-text-stroke:.4px #fff;text-shadow:0 0 4px #fff,0 0 10px #e4eaff,0 0 18px #9caeff,0 0 26px #7894ff}
 @media(max-width:410px){#bpCampaignOverlay .bp-campaign-head{padding-left:10px;padding-right:10px}#bpCampaignOverlay .bp-circuit-logo{font-size:clamp(22px,6.8vw,32px)}#bpCampaignOverlay .bp-tier-logo{font-size:clamp(14px,3.8vw,18px)}}
+
+/* Tier carousel: a single tier label, bounded chevrons, no pagination dots. */
+#bpCampaignOverlay .bp-tier-carousel{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:8px 0 10px;width:100%;min-width:0}
+#bpCampaignOverlay .bp-tier-carousel button{flex:0 0 34px;width:34px;height:40px;min-width:0;padding:0;border:1.5px solid #8d9fe9;border-radius:12px;background:linear-gradient(155deg,#384b91,#192755);color:#fff;font-size:32px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 10px #6175ed55}
+#bpCampaignOverlay .bp-tier-carousel button:disabled{opacity:.28;filter:grayscale(1);cursor:default;box-shadow:none}
+#bpCampaignOverlay .bp-tier-carousel #bpTierCurrent{flex:1;min-width:0;white-space:nowrap;text-align:center;color:#f4edff;font-size:clamp(12px,2.6vw,17px);font-weight:900;letter-spacing:.06em;text-shadow:0 0 10px #b16dff}
 </style>
 <div id="bpCampaignOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="bpCampaignTitle">
 <div class="bp-campaign-card">
 <div class="bp-campaign-head"><h2 id="bpCampaignTitle"><span class="bp-circuit-logo">RED CIRCUIT</span><span class="bp-tier-logo">TIER 1</span></h2><button id="bpCampaignClose" type="button" aria-label="Close campaign">✕</button></div>
 <p class="bp-campaign-note">50 Solo and Versus challenges. Swipe through every level, replay completed rounds, and earn up to 200 milestone tokens.</p>
 <div class="bp-campaign-stats"><div class="bp-campaign-stat">🚩 Levels Unlocked <strong id="bpCampaignUnlocked">1 / 50</strong></div><div class="bp-campaign-stat">⭐ Stars Earned <strong id="bpCampaignStars">0 / 150</strong></div><div class="bp-campaign-stat" id="bpCampaignSync">Connecting…</div></div>
-<div class="bp-campaign-workspace"><div class="bp-campaign-rail"><div class="bp-campaign-scroll-title"><span>LEVELS</span><span id="bpCampaignPage">1–50</span></div><div id="bpTierNav" style="display:flex;gap:5px;justify-content:center;margin:5px 0"><button type="button" onclick="bpCampaignTier(1)">TIER 1</button><button type="button" onclick="bpCampaignTier(2)">TIER 2</button><button type="button" onclick="bpCampaignTier(3)">TIER 3</button></div><div class="bp-campaign-grid" id="bpCampaignGrid" role="list" aria-label="Scrollable campaign levels"></div></div><div class="bp-campaign-right"><div class="bp-campaign-detail" id="bpCampaignDetail" aria-live="polite"></div>
+<div class="bp-campaign-workspace"><div class="bp-campaign-rail"><div class="bp-campaign-scroll-title"><span>LEVELS</span><span id="bpCampaignPage">1–50</span></div><div id="bpTierNav" class="bp-tier-carousel" aria-label="Select campaign tier"><button id="bpTierPrev" type="button" aria-label="Previous tier" onclick="bpCampaignTierStep(-1)">‹</button><span id="bpTierCurrent" aria-live="polite">TIER 1</span><button id="bpTierNext" type="button" aria-label="Next tier" onclick="bpCampaignTierStep(1)">›</button></div><div class="bp-campaign-grid" id="bpCampaignGrid" role="list" aria-label="Scrollable campaign levels"></div></div><div class="bp-campaign-right"><div class="bp-campaign-detail" id="bpCampaignDetail" aria-live="polite"></div>
 <div class="bp-campaign-quick-actions">
 <button id="bpCampaignWalletOpen" type="button" aria-label="Open token wallet">🪙 <span id="bpCampaignWalletBalance">…</span><span id="bpCampaignIdleBadge" class="bp-idle-badge" hidden>!</span></button>
 <button id="bpCampaignStoreOpen" type="button">🛍️ STORE</button>
@@ -2357,11 +2363,23 @@ function checkpointDetail(group){
  d.append(heading,wrap);
 }
 
-window.bpCampaignTier=function(t){selected=(t-1)*50+1;selectedCheckpoint=null;render()};
+window.bpCampaignTier=function(t){
+ t=Math.max(1,Math.min(3,Number(t)||1));
+ if(t===Math.ceil(selected/50))return;
+ selected=(t-1)*50+1;selectedCheckpoint=null;
+ const grid=$('bpCampaignGrid');if(grid)grid.scrollTop=0;
+ render();
+};
+window.bpCampaignTierStep=function(delta){window.bpCampaignTier(Math.ceil(selected/50)+delta)};
 function render(){
  const total=Object.values(stars).reduce((a,b)=>a+Number(b||0),0);
  $('bpCampaignUnlocked').textContent=unlocked+' / '+LIMIT;$('bpCampaignStars').textContent=total+' / '+(LIMIT*3);
  $('bpCampaignPage').textContent=`${Math.floor((selected-1)/50)*50+1}–${Math.min(LIMIT,Math.floor((selected-1)/50)*50+50)}`;
+ const visibleTier=Math.ceil(selected/50);
+ $('bpTierCurrent').textContent=`TIER ${visibleTier}`;
+ $('bpTierPrev').disabled=visibleTier<=1;
+ $('bpTierNext').disabled=visibleTier>=3;
+
  // Main-menu progress is scoped to the player's current circuit tier (50 levels).
  const currentTier=Math.min(3,Math.max(1,Math.ceil(unlocked/50)));
  const tierFirst=(currentTier-1)*50+1;
