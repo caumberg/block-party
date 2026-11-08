@@ -1190,10 +1190,11 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 @media(max-width:410px){#bpCampaignOverlay .bp-campaign-head{padding-left:10px;padding-right:10px}#bpCampaignOverlay .bp-circuit-logo{font-size:clamp(22px,6.8vw,32px)}#bpCampaignOverlay .bp-tier-logo{font-size:clamp(14px,3.8vw,18px)}}
 
 /* Tier carousel: a single tier label, bounded chevrons, no pagination dots. */
-#bpCampaignOverlay .bp-tier-carousel{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:8px 0 10px;width:100%;min-width:0}
-#bpCampaignOverlay .bp-tier-carousel button{flex:0 0 34px;width:34px;height:40px;min-width:0;padding:0;border:1.5px solid #8d9fe9;border-radius:12px;background:linear-gradient(155deg,#384b91,#192755);color:#fff;font-size:32px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 10px #6175ed55}
-#bpCampaignOverlay .bp-tier-carousel button:disabled{opacity:.28;filter:grayscale(1);cursor:default;box-shadow:none}
-#bpCampaignOverlay .bp-tier-carousel #bpTierCurrent{flex:1;min-width:0;white-space:nowrap;text-align:center;color:#f4edff;font-size:clamp(12px,2.6vw,17px);font-weight:900;letter-spacing:.06em;text-shadow:0 0 10px #b16dff}
+#bpCampaignOverlay .bp-tier-carousel{display:grid;grid-template-columns:24px minmax(0,1fr) 24px;align-items:center;gap:2px;margin:8px 0 10px;width:100%;min-width:0}
+#bpCampaignOverlay .bp-tier-carousel button{appearance:none;-webkit-appearance:none;display:flex;align-items:center;justify-content:center;width:24px;height:40px;min-width:0;padding:0;margin:0;border:0;border-radius:0;background:none;box-shadow:none;color:#e4d9ff;font-size:35px;font-weight:600;line-height:1;cursor:pointer;text-shadow:0 0 9px #a46cff}
+#bpCampaignOverlay .bp-tier-carousel button:disabled{opacity:.22;filter:grayscale(1);cursor:default;text-shadow:none}
+#bpCampaignOverlay .bp-tier-carousel button:not(:disabled):active{color:#fff;transform:scale(.9)}
+#bpCampaignOverlay .bp-tier-carousel #bpTierCurrent{min-width:0;white-space:nowrap;text-align:center;color:#f4edff;font-size:clamp(11px,2.4vw,16px);font-weight:900;letter-spacing:0;text-shadow:0 0 10px #b16dff}
 </style>
 <div id="bpCampaignOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="bpCampaignTitle">
 <div class="bp-campaign-card">
