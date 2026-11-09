@@ -1228,7 +1228,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.18</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.19</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1804,7 +1804,7 @@ function bpObstacleExit(){
 }
 window.bpObstacleBoards={"75":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[13,1,13,0,13,0],[2,3,2,13,0,0],[13,3,3,0,0,0],[1,1,4,5,0,0],[4,4,5,1,0,0],[1,1,5,2,0,0]],"100":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[2,3,5,4,0,0],[13,2,3,2,13,0],[3,1,4,4,13,0],[1,5,13,1,13,0],[1,2,13,2,0,0],[5,1,1,2,0,0]],"125":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[1,2,4,2,13,0],[3,3,13,2,13,0],[13,2,4,1,13,0],[13,5,3,13,2,0],[3,2,3,4,1,0],[1,1,5,5,3,1]],"150":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[4,13,13,13,1,0],[2,5,4,13,13,5],[3,3,4,3,5,2],[1,1,13,3,13,1],[1,13,4,4,3,3],[2,2,4,2,2,1]]};
 function bpStartObstacle(l){
- bpCampaignSettings=l;bpSoloStartedAt=performance.now();started=true;isVersus=false;
+ bpCampaignSettings=l;bpSoloStartedAt=performance.now();started=true;isVersus=false;ready.clear();
  $('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=true;
  $('arena').classList.remove('versus','timed-match');$('arena').classList.add('solo','bp-obstacle-active');$('bottom').hidden=false;
  $('humanZone').style.width='';$('human').style.height='';$('human').style.aspectRatio='';
@@ -1814,8 +1814,9 @@ function bpStartObstacle(l){
  const board=window.bpObstacleBoards[String(l.n)];
  if(!board)throw Error('Obstacle board unavailable');
  const frame=$('human');frame.setAttribute('sandbox','allow-scripts allow-same-origin');frame.name='bp-human';
+ // The shared engine announces readiness; the existing ready-message handler
+ // then sends obstacle-load instead of the standard randomized start message.
  frame.srcdoc=engineHTML;
- frame.addEventListener('load',function loadObstacle(){frame.removeEventListener('load',loadObstacle);frame.contentWindow?.postMessage({bp:'obstacle-load',board},'*')},{once:true});
 }
 (function(){
  const style=document.createElement('style');
@@ -1945,7 +1946,14 @@ $('bpDiagExport').onclick=()=>{const data={version:'2.1.00',exported:new Date().
 $('bpDiagClear').onclick=()=>{bpPoisonLog.length=0;bpDiagSeq=0;$('bpDiagCount').textContent='0 diagnostic events'};
 $('victoryDiagExport').onclick=()=>$('bpDiagExport').click();
 function updateVictoryDiag(){ $('victoryDiagCount').textContent=bpPoisonLog.length+' events recorded (matches, attack attribution, garbage, CPU and poison)'; }
-window.addEventListener('message',e=>{if(!started||!e.data?.bp)return;const d=e.data;if(d.bp==='power-check-result'||d.bp==='power-use-result'||d.bp==='power-event'){window.bpPowerMessage?.(d);return;}if(d.bp==='poisonDiag'){bpPoisonLog.push({seq:++bpDiagSeq,...d});if(bpPoisonLog.length>30000)bpPoisonLog.shift();$('bpDiagCount').textContent=bpDiagSeq+' diagnostic events';return;}if(d.bp==='ready'){ready.add(d.who);if(isVersus){if(ready.has('human')&&ready.has('cpu')){tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});tell('cpu',{bp:'start',...settings,cpu:true})}}else{tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});$('human').contentWindow.document.querySelector('.control-layout').style.display='none';$('human').contentWindow.document.querySelector('.game-actions').style.display='none';$('human').contentWindow.document.querySelector('.layout-setting').style.display='none'}}
+window.addEventListener('message',e=>{if(!started||!e.data?.bp)return;const d=e.data;if(d.bp==='power-check-result'||d.bp==='power-use-result'||d.bp==='power-event'){window.bpPowerMessage?.(d);return;}if(d.bp==='poisonDiag'){bpPoisonLog.push({seq:++bpDiagSeq,...d});if(bpPoisonLog.length>30000)bpPoisonLog.shift();$('bpDiagCount').textContent=bpDiagSeq+' diagnostic events';return;}if(d.bp==='ready'&&bpCampaignSettings?.type==='obstacles'){
+  if(d.who==='human'){
+    const board=window.bpObstacleBoards?.[String(bpCampaignSettings.n)];
+    if(board)tell('human',{bp:'obstacle-load',board});
+  }
+  return;
+ }
+ if(d.bp==='ready'){ready.add(d.who);if(isVersus){if(ready.has('human')&&ready.has('cpu')){tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});tell('cpu',{bp:'start',...settings,cpu:true})}}else{tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});$('human').contentWindow.document.querySelector('.control-layout').style.display='none';$('human').contentWindow.document.querySelector('.game-actions').style.display='none';$('human').contentWindow.document.querySelector('.layout-setting').style.display='none'}}
 if(d.bp==='stats'){scores[d.who]=Number(d.score)||0;if(isVersus){$('humanScore').textContent=scores.human.toLocaleString();$('cpuScore').textContent=scores.cpu.toLocaleString();if(settings&&settings.mode==='timed'){$('humanScore').className=scores.human>scores.cpu?'score-leader':scores.human<scores.cpu?'score-trailer':'';$('cpuScore').className=scores.cpu>scores.human?'score-leader':scores.cpu<scores.human?'score-trailer':''}}if(d.who==='human'){$('roundClock').textContent=d.clock;$('soloTime').textContent=d.clock;$('soloScore').textContent=String(d.score??0);}}
 if(d.bp==='chainFx'&&isVersus&&settings.mode==='unlimited'){
  const particleCount=bpAnimateAttack(d);
