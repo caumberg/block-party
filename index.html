@@ -1228,7 +1228,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.20</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.21</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1808,8 +1808,8 @@ function bpStartObstacle(l){
  $('menu').hidden=true;$('arena').hidden=false;$('cpuZone').hidden=true;
  $('arena').classList.remove('versus','timed-match');$('arena').classList.add('solo','bp-obstacle-active');$('bottom').hidden=false;
  $('humanZone').style.width='';$('human').style.height='';$('human').style.aspectRatio='';
- $('message').textContent='';layoutGame();initMiniLeaderboard();
- $('soloTime').textContent='00:00';$('soloScore').textContent='0';$('soloGoal').textContent='Clear the blocks!';$('humanScore').textContent='0';
+ $('message').textContent='';layoutGame();clearInterval(bpMiniTimer);$('bpMini').hidden=true;
+ $('soloTime').textContent='00:00';$('soloScore').textContent=String(window.bpObstacleBoards[String(l.n)].flat().filter(v=>v>=1&&v<=5).length);$('soloGoal').textContent='Clear the blocks!';$('humanScore').textContent='';
  const doc=bpObstacleDocuments[String(l.n)];
  const board=window.bpObstacleBoards[String(l.n)];
  if(!board)throw Error('Obstacle board unavailable');
@@ -1821,9 +1821,11 @@ function bpStartObstacle(l){
 (function(){
  const style=document.createElement('style');
  style.textContent=`
+ #arena.bp-obstacle-active #soloHud .hud-card:nth-child(2) .hud-label{font-size:0!important}
+ #arena.bp-obstacle-active #soloHud .hud-card:nth-child(2) .hud-label::after{content:'▦ BLOCKS LEFT';font-size:clamp(10px,2.3vw,13px)!important}
  #arena.bp-obstacle-active #raiseRow{display:none!important}
  #arena.bp-obstacle-active #bpPowerBolt{display:none!important}
- #arena.bp-obstacle-active #bpMini{display:none!important}
+ body:has(#arena.bp-obstacle-active) #bpMini{display:none!important}
  #arena.bp-obstacle-active #roundClock{visibility:hidden!important}
  #arena.bp-obstacle-active #humanZone header{visibility:visible}
  `;
@@ -1838,8 +1840,8 @@ function bpStartObstacle(l){
  },true);
  window.addEventListener('message',e=>{
   if(e.data?.bp!=='obstacle-status'||bpCampaignSettings?.type!=='obstacles'||!started||e.source!==$('human').contentWindow)return;
-  $('soloScore').textContent=String(e.data.cleared);
-  $('humanScore').textContent=String(e.data.cleared);
+  $('soloScore').textContent=String(e.data.left);
+  $('humanScore').textContent='';
   const secs=Math.floor((Number(e.data.elapsedMs)||0)/1000);
   $('soloTime').textContent=String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0');
   $('soloGoal').textContent=String(e.data.left)+' blocks left';
@@ -1949,6 +1951,7 @@ window.addEventListener('message',e=>{if(!started||!e.data?.bp)return;const d=e.
   return;
  }
  if(d.bp==='ready'){ready.add(d.who);if(isVersus){if(ready.has('human')&&ready.has('cpu')){tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});tell('cpu',{bp:'start',...settings,cpu:true})}}else{tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});$('human').contentWindow.document.querySelector('.control-layout').style.display='none';$('human').contentWindow.document.querySelector('.game-actions').style.display='none';$('human').contentWindow.document.querySelector('.layout-setting').style.display='none'}}
+if(d.bp==='stats'&&bpCampaignSettings?.type==='obstacles')return;
 if(d.bp==='stats'){scores[d.who]=Number(d.score)||0;if(isVersus){$('humanScore').textContent=scores.human.toLocaleString();$('cpuScore').textContent=scores.cpu.toLocaleString();if(settings&&settings.mode==='timed'){$('humanScore').className=scores.human>scores.cpu?'score-leader':scores.human<scores.cpu?'score-trailer':'';$('cpuScore').className=scores.cpu>scores.human?'score-leader':scores.cpu<scores.human?'score-trailer':''}}if(d.who==='human'){$('roundClock').textContent=d.clock;$('soloTime').textContent=d.clock;$('soloScore').textContent=String(d.score??0);}}
 if(d.bp==='chainFx'&&isVersus&&settings.mode==='unlimited'){
  const particleCount=bpAnimateAttack(d);
