@@ -1228,7 +1228,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.19</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.20</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1833,13 +1833,8 @@ function bpStartObstacle(l){
   if(!started||bpCampaignSettings?.type!=='obstacles')return;
   const b=e.target.closest('button');if(!b)return;
   if(b.id==='back'){e.preventDefault();e.stopImmediatePropagation();bpObstacleExit();return}
-  if(b.id==='swap'){e.preventDefault();e.stopImmediatePropagation();send('swap');return}
-  if(b.closest('#pad')){const key=b.dataset.key;const action={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[key];if(action){e.preventDefault();e.stopImmediatePropagation();send(action)}}
- },true);
- document.addEventListener('keydown',e=>{
-  if(!started||bpCampaignSettings?.type!=='obstacles')return;
-  const action={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',Space:'swap',Enter:'swap'}[e.code]||({' ':'swap'}[e.key]);
-  if(action){e.preventDefault();e.stopImmediatePropagation();send(action)}
+  // D-pad and SWAP are already handled by the standard Solo controls
+  // on pointerdown. Do not send a second input from the synthesized click.
  },true);
  window.addEventListener('message',e=>{
   if(e.data?.bp!=='obstacle-status'||bpCampaignSettings?.type!=='obstacles'||!started||e.source!==$('human').contentWindow)return;
