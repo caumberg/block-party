@@ -1228,7 +1228,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.28</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.29</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1914,11 +1914,13 @@ window.addEventListener('message',e=>{if(e.data?.bp!=='obstacle-finish'||bpCampa
  $('victoryDialog').hidden=false;if(!won)bpShowCampaignLoss();
 });
 
+let bpCampaignCpuRemaining=null;
 let bpSoloStartedAt=0;
 let bpCampaignSettings=null;
 window.bpCampaignLaunchGame=function(l){
  if(l.type==='obstacles'){bpStartObstacle(l);return;}
  bpCampaignSettings=l;
+ bpCampaignCpuRemaining=null;
  $('play').value=l.type.startsWith('versus')?'versus':'solo';
  $('mode').value=l.type==='solo-line'||l.type==='versus-line'?'line':l.type==='solo-timed'||l.type==='versus-timed'?'timed':'battle';
  $('diff').value=l.diff;$('aiDiff').value=l.cpu;$('duration').value=String(l.duration||180);
@@ -2010,6 +2012,11 @@ window.addEventListener('message',e=>{if(!started||!e.data?.bp)return;const d=e.
  }
  if(d.bp==='ready'){ready.add(d.who);if(isVersus){if(ready.has('human')&&ready.has('cpu')){tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});tell('cpu',{bp:'start',...settings,cpu:true})}}else{tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});$('human').contentWindow.document.querySelector('.control-layout').style.display='none';$('human').contentWindow.document.querySelector('.game-actions').style.display='none';$('human').contentWindow.document.querySelector('.layout-setting').style.display='none'}}
 if((d.bp==='stats'||d.bp==='end')&&bpVLineEnabled())bpVLineSample(d);
+// Capture the opponent's live line state for Campaign Versus Line Clear.
+if(bpCampaignSettings?.type==='versus-line' && d.who==='cpu' && d.lineMeasure &&
+   Number.isInteger(d.lineMeasure.remaining) && d.lineMeasure.remaining>=0){
+ bpCampaignCpuRemaining=d.lineMeasure.remaining;
+}
 if(d.bp==='stats'&&bpCampaignSettings?.type==='obstacles')return;
 if(d.bp==='stats'){scores[d.who]=Number(d.score)||0;if(isVersus){$('humanScore').textContent=scores.human.toLocaleString();$('cpuScore').textContent=scores.cpu.toLocaleString();if(settings&&settings.mode==='timed'){$('humanScore').className=scores.human>scores.cpu?'score-leader':scores.human<scores.cpu?'score-trailer':'';$('cpuScore').className=scores.cpu>scores.human?'score-leader':scores.cpu<scores.human?'score-trailer':''}}if(d.who==='human'){$('roundClock').textContent=d.clock;$('soloTime').textContent=d.clock;$('soloScore').textContent=String(d.score??0);}}
 if(d.bp==='chainFx'&&isVersus&&settings.mode==='unlimited'){
@@ -2113,7 +2120,7 @@ function celebrate(winner){
 function showVictory(winner){
  bpResetCampaignResult();
  if(bpCampaignSettings&&winner!=='human')bpShowCampaignLoss();
- if(bpCampaignSettings)window.bpCampaignOnResult?.({won:winner==='human',score:scores.human,cpuScore:settings.mode==='timed'?scores.cpu:null,elapsedMs:performance.now()-bpSoloStartedAt});
+ if(bpCampaignSettings)window.bpCampaignOnResult?.({won:winner==='human',score:scores.human,cpuScore:settings.mode==='timed'?scores.cpu:null,cpuRemaining:bpCampaignSettings.type==='versus-line'?bpCampaignCpuRemaining:null,elapsedMs:performance.now()-bpSoloStartedAt});
  $('victoryTitle').textContent=winner==='human'?'YOU WIN!':winner==='cpu'?'COMPUTER WINS!':'IT’S A TIE!';
  $('victorySubtitle').textContent=settings.mode==='line'
   ?(winner==='human'?'You cleared the line before the computer!':winner==='cpu'?'The computer cleared the line first.':'Both players cleared the line together.')
@@ -2781,7 +2788,8 @@ async function complete(result){
    p_attempt_id:a.attempt,p_level:a.level,p_won:!!result.won,
    p_score:Math.max(0,Math.floor(Number(result.score)||0)),
    p_elapsed_ms:Math.max(0,Math.round(Number(result.elapsedMs)||0)),
-   p_cpu_score:result.cpuScore==null?null:Math.max(0,Math.floor(Number(result.cpuScore)||0))
+   p_cpu_score:result.cpuScore==null?null:Math.max(0,Math.floor(Number(result.cpuScore)||0)),
+   p_cpu_remaining:result.cpuRemaining==null?null:Math.max(0,Math.floor(Number(result.cpuRemaining)||0))
   });
   // Submit only after Supabase confirms campaign completion. Do not hold
   // the results modal hostage to a leaderboard/network failure.
