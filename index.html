@@ -1228,7 +1228,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.21</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.22</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1809,7 +1809,7 @@ function bpStartObstacle(l){
  $('arena').classList.remove('versus','timed-match');$('arena').classList.add('solo','bp-obstacle-active');$('bottom').hidden=false;
  $('humanZone').style.width='';$('human').style.height='';$('human').style.aspectRatio='';
  $('message').textContent='';layoutGame();clearInterval(bpMiniTimer);$('bpMini').hidden=true;
- $('soloTime').textContent='00:00';$('soloScore').textContent=String(window.bpObstacleBoards[String(l.n)].flat().filter(v=>v>=1&&v<=5).length);$('soloGoal').textContent='Clear the blocks!';$('humanScore').textContent='';
+ $('soloTime').textContent='00:00';$('soloScore').textContent=String(window.bpObstacleBoards[String(l.n)].flat().filter(v=>v>=1&&v<=5).length);$('soloGoal').textContent='Clear all blocks!';$('humanScore').textContent='';
  const doc=bpObstacleDocuments[String(l.n)];
  const board=window.bpObstacleBoards[String(l.n)];
  if(!board)throw Error('Obstacle board unavailable');
@@ -1844,7 +1844,7 @@ function bpStartObstacle(l){
   $('humanScore').textContent='';
   const secs=Math.floor((Number(e.data.elapsedMs)||0)/1000);
   $('soloTime').textContent=String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0');
-  $('soloGoal').textContent=String(e.data.left)+' blocks left';
+  // The Blocks Left HUD already shows the live count; keep GOAL as the objective.
  });
 })();
 window.addEventListener('message',e=>{if(e.data?.bp!=='obstacle-finish'||bpCampaignSettings?.type!=='obstacles'||!started)return;
