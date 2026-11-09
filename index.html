@@ -1228,7 +1228,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.22</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.23</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2822,15 +2822,44 @@ const header=$('humanZone').querySelector('header'),boards=$('boards');
 function sync(){const dest=$('arena').classList.contains('versus')?boards:header;if(bolt.parentElement!==dest)dest.appendChild(bolt)}new MutationObserver(sync).observe($('arena'),{attributes:true,attributeFilter:['class']});sync();
 function valid(item,l){if(!l)return true;if(l.type==='obstacles')return false;if(item==='time_extension')return l.type==='solo-timed';if(['special_block_magnet','garbage_shield','attack_amplifier'].includes(item))return l.type==='versus-battle';return true}
 async function refresh(){const d=await window.bpCampaignRpc('bp_store_get');inventory=d?.inventory||{};return inventory;}
-function row(item,mode){const [id,emoji,name,kind]=item,qty=Number(inventory[id]||0),r=document.createElement('button');r.type='button';r.className='bp-power-item bp-power-select';r.disabled=busy||qty<=0;const left=document.createElement('div'),strong=document.createElement('strong'),small=document.createElement('small');strong.textContent=emoji+' '+name;small.textContent=(kind==='passive'?'Passive':'Active')+' · Owned ×'+qty;left.append(strong,small);const right=document.createElement('strong');right.textContent=mode==='equip'?((kind==='passive'?selectedPassive===id:selectedActive.includes(id))?'✓ EQUIPPED':'EQUIP'):'USE';r.append(left,right);r.onclick=()=>mode==='equip'?toggle(id,kind):use(id);return r;}
-function render(){list.replaceChildren();const equip=phase==='equip';const session=window.bpPowerSession;const source=equip?items:items.filter(i=>i[3]==='active'&&session.active.includes(i[0])&&!session.used.includes(i[0]));for(const item of source){if(equip&&!valid(item[0],window.bpPowerUpcoming))continue;const r=row(item,equip?'equip':'use');if(!equip&&Number(inventory[item[0]]||0)<1)r.disabled=true;list.append(r)}if(!list.children.length)status.textContent=equip?'No compatible power-ups available. You can still play without them.':'No active power-ups equipped for this match. Passive effects, if equipped, work automatically.';$('bpPowerCount').textContent=Object.values(inventory).reduce((a,v)=>a+Number(v||0),0);$('bpPowerCount').hidden=false;$('bpPowerDone').textContent=equip?'START MATCH':'BACK TO GAME';$('bpPowerStore').style.display=equip?'none':'';}
+function row(item,mode){const [id,emoji,name,kind]=item,qty=Number(inventory[id]||0),r=document.createElement('button');r.type='button';r.className='bp-power-item bp-power-select';r.disabled=busy||qty<=0;const left=document.createElement('div'),strong=document.createElement('strong'),small=document.createElement('small');strong.textContent=emoji+' '+name;small.textContent=(kind==='passive'?'Passive':'Active')+' · Owned ×'+qty;left.append(strong,small);const right=document.createElement('strong');right.textContent=mode==='equip'?((kind==='passive'?selectedPassive===id:selectedActive.includes(id))?'✓ EQUIPPED':'EQUIP'):'USE';r.append(left,right);r.onclick=()=>mode==='equip'?toggle(id,kind):mode==='activate'?activatePassive(id):use(id);return r;}
+function render(){list.replaceChildren();const equip=phase==='equip';const session=window.bpPowerSession;const versusBattle=!equip&&$('arena').classList.contains('versus')&&$('mode').value==='battle';
+const source=equip?items:items.filter(i=>(i[3]==='active'&&session.active.includes(i[0])&&!session.used.includes(i[0]))||(versusBattle&&['special_block_magnet','garbage_shield','attack_amplifier'].includes(i[0])&&(Number(inventory[i[0]]||0)>0||session.passive===i[0])));
+for(const item of source){
+ if(equip&&!valid(item[0],window.bpPowerUpcoming))continue;
+ const passiveInGame=!equip&&item[3]==='passive';
+ const r=row(item,equip?'equip':passiveInGame?'activate':'use');
+ if(passiveInGame){
+  const already=session.passive===item[0];
+  r.lastChild.textContent=already?'ACTIVE':session.passive?'ONE PASSIVE MAX':'ACTIVATE';
+  r.disabled=busy||already||!!session.passive||Number(inventory[item[0]]||0)<1;
+ }
+ if(!equip&&!passiveInGame&&Number(inventory[item[0]]||0)<1)r.disabled=true;
+ list.append(r)
+}
+if(!list.children.length)status.textContent=equip?'No compatible power-ups available. You can still play without them.':'No usable power-ups for this match. Equip active abilities before starting, or buy Versus Battle passives in the Store.';$('bpPowerCount').textContent=Object.values(inventory).reduce((a,v)=>a+Number(v||0),0);$('bpPowerCount').hidden=false;$('bpPowerDone').textContent=equip?'START MATCH':'BACK TO GAME';$('bpPowerStore').style.display=equip?'none':'';}
 function toggle(id,kind){if(kind==='passive')selectedPassive=selectedPassive===id?null:id;else if(selectedActive.includes(id))selectedActive=selectedActive.filter(x=>x!==id);else if(selectedActive.length<3)selectedActive.push(id);else{status.textContent='You can equip up to three active power-ups.';return}status.textContent='Choose one passive and up to three active abilities. Passive items are consumed at the start; active items only when used.';render()}
 function close(confirmed=false){overlay.hidden=true;if(phase==='game')window.bpPowerPause?.(false);if(pendingResolve){const resolve=pendingResolve;pendingResolve=null;resolve(confirmed)}}
-async function openGame(){if(!$('arena').classList.contains('bp-campaign-power'))return;phase='game';overlay.hidden=false;window.bpPowerPause?.(true);status.textContent='Select an equipped active ability. It will target the cursor position.';try{await refresh();render()}catch(e){status.textContent=e.message||'Inventory unavailable'}}
+async function openGame(){if(!$('arena').classList.contains('bp-campaign-power'))return;phase='game';overlay.hidden=false;window.bpPowerPause?.(true);status.textContent=$('arena').classList.contains('versus')&&$('mode').value==='battle'?'Versus Battle: activate one owned passive here, or use an equipped active ability. Passives last for this battle.':'Select an equipped active ability. It will target the cursor position.';try{await refresh();render()}catch(e){status.textContent=e.message||'Inventory unavailable'}}
 window.bpPowerPrepareLaunch=async l=>{if(l.type==='obstacles'){window.bpPowerSession={passive:null,active:[],used:[],assisted:false};return true;}window.bpPowerUpcoming=l;phase='equip';selectedPassive=null;selectedActive=[];overlay.hidden=false;status.textContent='Loading your power-ups…';try{await refresh()}catch(e){status.textContent='Cannot load inventory: '+e.message;overlay.hidden=true;return false}status.textContent='Choose one compatible passive and up to three active abilities. Passives are used when the match starts; active abilities only when activated.';render();const confirmed=await new Promise(resolve=>pendingResolve=resolve);if(!confirmed)return false;try{window.bpPowerSession={passive:selectedPassive,active:[...selectedActive],used:[],assisted:!!selectedPassive};return true}catch(e){busy=false;alert('Unable to equip passive: '+e.message);return false}};
 window.bpPowerPause=paused=>{for(const id of ['human','cpu']){const f=$(id);if(f?.contentWindow)f.contentWindow.postMessage({bp:'power-pause',paused},'*')}};
 window.bpPowerMessage=d=>{if(d.bp==='power-event'){status.textContent=d.detail||'Power-up activated';return;}const fn=requests.get(d.request);if(fn){requests.delete(d.request);fn(d)}};
 function engineRequest(bp,item){return new Promise((resolve,reject)=>{const request=++seq;requests.set(request,resolve);$('human').contentWindow.postMessage({bp,item,request},'*');setTimeout(()=>{if(requests.has(request)){requests.delete(request);reject(Error('Game engine did not respond'))}},2500)})}
+async function activatePassive(id){
+ if(busy||window.bpPowerSession.passive)return;
+ if(!$('arena').classList.contains('versus')||$('mode').value!=='battle'){status.textContent='This passive requires Versus Special Battle.';return}
+ busy=true;status.textContent='Activating '+names[id]+'…';
+ try{
+  await window.bpCampaignRpc('bp_power_consume',{p_item:id});
+  window.bpPowerSession.passive=id;
+  window.bpPowerSession.assisted=true;
+  inventory[id]=Math.max(0,Number(inventory[id]||0)-1);
+  $('human').contentWindow.postMessage({bp:'power-config',passive:id},'*');
+  status.textContent=names[id]+' is now active for this battle.';
+  render();
+ }catch(e){status.textContent='Could not activate: '+(e.message||e)}
+ finally{busy=false}
+}
 async function use(id){if(busy)return;busy=true;status.textContent='Checking selected board position…';try{const check=await engineRequest('power-check',id);if(!check.eligible)throw Error('No eligible blocks at the cursor. Move the cursor and try again.');await window.bpCampaignRpc('bp_power_consume',{p_item:id});const result=await engineRequest('power-use',id);if(!result.success)throw Error('Inventory deducted, but board changed before activation. Contact support.');window.bpPowerSession.used.push(id);window.bpPowerSession.assisted=true;inventory[id]=Math.max(0,(Number(inventory[id])||0)-1);status.textContent=names[id]+' activated!';render();setTimeout(()=>{if(!overlay.hidden)close()},400)}catch(e){status.textContent=e.message||'Activation failed'}finally{busy=false}}
 bolt.onclick=openGame;$('bpPowerClose').onclick=()=>close(false);$('bpPowerDone').onclick=()=>close(phase==='equip');$('bpPowerStore').onclick=()=>{close(false);window.bpOpenTicketStore?.()};overlay.addEventListener('click',e=>{if(e.target===overlay)close(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)close(false)});new MutationObserver(()=>{if($('arena').hidden&&phase==='game'&&!overlay.hidden)close(false)}).observe($('arena'),{attributes:true,attributeFilter:['hidden']});
 })();
