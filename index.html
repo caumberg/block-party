@@ -1229,7 +1229,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.32</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.33</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1260,7 +1260,8 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 <div class="bp-campaign-stats"><div class="bp-campaign-stat">🚩 Levels Unlocked <strong id="bpCampaignUnlocked">1 / 50</strong></div><div class="bp-campaign-stat">⭐ Stars Earned <strong id="bpCampaignStars">0 / 150</strong></div><button class="bp-campaign-stat" id="bpCampaignWalletOpen" type="button" aria-label="Open token wallet">🪙 <strong id="bpCampaignWalletBalance">…</strong><span id="bpCampaignIdleBadge" class="bp-idle-badge" hidden>!</span></button></div><div id="bpCampaignSync" class="bp-campaign-sync-status" aria-live="polite">Connecting…</div>
 <div class="bp-campaign-workspace"><div class="bp-campaign-rail"><div class="bp-campaign-scroll-title"><span>LEVELS</span><span id="bpCampaignPage">1–50</span></div><div id="bpTierNav" class="bp-tier-carousel" aria-label="Select campaign tier"><button id="bpTierPrev" type="button" aria-label="Previous tier" onclick="bpCampaignTierStep(-1)">‹</button><span id="bpTierCurrent" aria-live="polite">TIER 1</span><button id="bpTierNext" type="button" aria-label="Next tier" onclick="bpCampaignTierStep(1)">›</button></div><div class="bp-campaign-grid" id="bpCampaignGrid" role="list" aria-label="Scrollable campaign levels"></div></div><div class="bp-campaign-right"><div class="bp-campaign-detail" id="bpCampaignDetail" aria-live="polite"></div>
 <div class="bp-campaign-quick-actions">
-<button id="bpCampaignStoreOpen" type="button">🛍️ STORE</button>
+<div class="bp-campaign-ticket-balance" aria-label="Available tickets"><span class="bp-campaign-ticket-icon" aria-hidden="true">🎟️</span><strong id="bpCampaignTicketCount" aria-live="polite">—</strong></div>
+<button id="bpCampaignStoreOpen" type="button"><span aria-hidden="true">🛒</span> STORE</button>
 </div></div></div>
 <p class="bp-campaign-muted">Campaign entry is free in this build. Token entry fees and Obstacles gameplay are pending implementation.</p>
 </div></div>
@@ -2908,7 +2909,7 @@ timed: 'PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJ1
 #arena.solo.bp-campaign-power #bpPowerBolt{display:flex!important;position:absolute!important;top:8px!important;right:8px!important;transform:none!important;z-index:100!important;width:36px!important;height:36px!important}
 #bpPowerOverlay .bp-power-select{width:100%;text-align:left;color:#f4f0ff;cursor:pointer;background:rgba(75,50,130,.35);border:1px solid rgba(170,140,250,.22);border-radius:13px;padding:11px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}#bpPowerOverlay .bp-power-select:hover{background:rgba(110,75,190,.5)}#bpPowerOverlay .bp-power-select:disabled{opacity:.42;cursor:not-allowed}#bpPowerOverlay .bp-power-select small{display:block;opacity:.75;margin-top:3px}
 
-/* v2.4.32: compact, non-scrolling power-up selector */
+/* v2.4.33: compact, non-scrolling power-up selector */
 #bpPowerOverlay{padding:10px!important;overflow:hidden!important}
 #bpPowerOverlay .bp-power-panel{box-sizing:border-box;width:min(440px,96vw);max-height:calc(100dvh - 20px)!important;overflow:hidden!important;padding:clamp(9px,2dvh,16px)!important;display:flex;flex-direction:column;gap:0}
 #bpPowerOverlay .bp-power-head h2{font-size:clamp(18px,4.8vw,23px)!important}
@@ -2970,5 +2971,40 @@ async function activatePassive(id){
 }
 async function use(id){if(busy)return;busy=true;status.textContent='Checking selected board position…';try{const check=await engineRequest('power-check',id);if(!check.eligible)throw Error('No eligible blocks at the cursor. Move the cursor and try again.');await window.bpCampaignRpc('bp_power_consume',{p_item:id});const result=await engineRequest('power-use',id);if(!result.success)throw Error('Inventory deducted, but board changed before activation. Contact support.');window.bpPowerSession.used.push(id);window.bpPowerSession.assisted=true;inventory[id]=Math.max(0,(Number(inventory[id])||0)-1);status.textContent=names[id]+' activated!';render();setTimeout(()=>{if(!overlay.hidden)close()},400)}catch(e){status.textContent=e.message||'Activation failed'}finally{busy=false}}
 bolt.onclick=openGame;$('bpPowerClose').onclick=()=>close(false);$('bpPowerDone').onclick=()=>close(phase==='equip');$('bpPowerStore').onclick=()=>{close(false);window.bpOpenTicketStore?.()};overlay.addEventListener('click',e=>{if(e.target===overlay)close(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)close(false)});new MutationObserver(()=>{if($('arena').hidden&&phase==='game'&&!overlay.hidden)close(false)}).observe($('arena'),{attributes:true,attributeFilter:['hidden']});
+})();
+</script><style id="bp-campaign-ticket-actions-v2433">
+#bpCampaignOverlay .bp-campaign-quick-actions{display:grid!important;grid-template-columns:minmax(0,0.85fr) minmax(0,1.4fr)!important;gap:10px!important;align-items:stretch!important;width:100%!important;padding:2px 1px 0!important}
+#bpCampaignOverlay .bp-campaign-ticket-balance{display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;min-height:66px;box-sizing:border-box;border:2px solid #a67aff;border-radius:17px;background:linear-gradient(135deg,#1e326c,#2c225e);box-shadow:inset 0 1px 10px #a47cff24;color:#fff}
+#bpCampaignOverlay .bp-campaign-ticket-icon{font-size:clamp(22px,5vw,32px);line-height:1}
+#bpCampaignOverlay #bpCampaignTicketCount{font-size:clamp(23px,5.8vw,34px);font-weight:900;line-height:1;min-width:1ch;font-variant-numeric:tabular-nums}
+#bpCampaignOverlay .bp-campaign-quick-actions #bpCampaignStoreOpen{display:flex!important;align-items:center;justify-content:center;gap:10px;width:100%!important;min-height:66px!important;padding:10px 12px!important;font-size:clamp(20px,5vw,29px)!important;font-weight:950!important;letter-spacing:.025em;border-radius:17px!important;white-space:nowrap}
+#bpCampaignOverlay #bpCampaignStoreOpen span{font-size:1.2em;line-height:1}
+</style><script id="bp-campaign-ticket-actions-js-v2433">
+(()=>{'use strict';
+const el=document.getElementById('bpCampaignTicketCount');
+let busy=false;
+async function refresh(){
+ if(busy||typeof window.bpCampaignRpc!=='function')return;
+ busy=true;
+ try{
+  const data=await window.bpCampaignRpc('bp_store_get');
+  const count=Number(data?.tickets);
+  if(Number.isFinite(count)&&count>=0)el.textContent=count.toLocaleString();
+  else el.textContent='—';
+ }catch(e){console.warn('Ticket balance unavailable:',e);el.textContent='—'}
+ finally{busy=false}
+}
+window.bpCampaignRefreshTickets=refresh;
+const campaign=document.getElementById('bpCampaignOverlay');
+if(campaign){
+ const observer=new MutationObserver(()=>{if(!campaign.hidden)refresh()});
+ observer.observe(campaign,{attributes:true,attributeFilter:['hidden']});
+}
+const store=document.getElementById('bpStoreOverlay');
+if(store){
+ const observer=new MutationObserver(()=>{if(store.hidden&&!campaign.hidden)refresh()});
+ observer.observe(store,{attributes:true,attributeFilter:['hidden']});
+}
+document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>setTimeout(refresh,400));
 })();
 </script></html>
