@@ -1206,6 +1206,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
  #arena.solo #bottom #pad,#arena.versus #bottom #pad{width:60%!important;max-width:60%!important;flex-basis:60%!important;margin-inline:1%!important}
  #arena.solo #bottom #actionStack,#arena.versus #bottom #actionStack{width:34%!important;max-width:34%!important;flex-basis:34%!important}
 }
+.bp-campaign-duration{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:5px 9px;border:1px solid #6c87c9;border-radius:12px;background:#1d315a;color:#d8eaff;font-size:12px;font-weight:800;margin-left:7px}
 </style>
 </style>
 <div id="menu"><div class="menu-card arcade-menu">
@@ -1228,7 +1229,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.30</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.31</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2591,6 +2592,7 @@ function detail(){
  const sceneTop=document.createElement('div');sceneTop.className='bp-scene-top';
  const modeName=document.createElement('span');modeName.textContent=l.type==='solo-line'?'LINE CLEAR':l.type==='solo-timed'?'TIME ATTACK':l.type==='versus'?'VERSUS CPU':l.type==='versus-line'?'VERSUS LINE CLEAR':l.type==='versus-timed'?'VERSUS TIMED':'OBSTACLES';
  const diff=document.createElement('span');diff.className='bp-difficulty bp-diff-'+l.diff;diff.textContent=l.diff.replace(/(^|-)\w/g,x=>x.toUpperCase());sceneTop.append(modeName,diff);
+ if(l.type==='solo-timed'||l.type==='versus-timed'){const durationBadge=document.createElement('span');durationBadge.className='bp-campaign-duration';const seconds=Number(l.duration||180);durationBadge.textContent='◷ '+Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');sceneTop.append(durationBadge);}
  const stage=document.createElement('div');stage.className='bp-scene-stage';
  const board=document.createElement('div');board.className='bp-scene-board';
  const colors=['#cb48e7','#34bff3','#ffbc48','#4cdda5','#ff648c'];let seed=l.seed>>>0;
@@ -2666,7 +2668,12 @@ canvas{width:100%!important;height:100%!important;display:block!important}
  const objectives=document.createElement('div');objectives.className='bp-cinematic-objectives';
  /* Objective cards already show stars; redundant heading removed. */
  let requirements;
- if(l.type==='solo-timed'){const base={'super-easy':[4000,9000,16000],easy:[6500,14000,25000],medium:[9000,20000,35000],hard:[13000,28000,48000],'super-hard':[17000,37000,65000]};const scores=(base[l.diff]||base.easy).map(v=>Math.round(v*(l.duration||180)/180/500)*500);requirements=scores.map(v=>`Score ${v.toLocaleString()} points`);}
+ if(l.type==='solo-timed'){
+ const base={'super-easy':[4000,9000,16000],easy:[6500,14000,25000],medium:[0,20000,29000],hard:[0,15000,25000],'super-hard':[17000,37000,65000]};
+ const duration=Number(l.duration||180);
+ const scores=(base[l.diff]||base.easy).map(v=>Math.round(v*duration/180/500)*500);
+ requirements=['Complete the round',`Score ${scores[1].toLocaleString()} points`,`Score ${scores[2].toLocaleString()} points`];
+}
  else if(l.type==='solo-line'){const r=BP_STAR_TIMES[l.n]||{two:180,three:100};requirements=['Clear the target line',`Clear within ${Math.floor(r.two/60)}:${String(r.two%60).padStart(2,'0')}`,`Clear within ${Math.floor(r.three/60)}:${String(r.three%60).padStart(2,'0')}`];}
  else if(l.type==='versus-line'){const thresholds=BP_VLINE_CAMPAIGN_STARS[l.n];requirements=thresholds?['Defeat the CPU',`Win with ${thresholds[0]}+ CPU blocks remaining`,`Win with ${thresholds[1]}+ CPU blocks remaining`]:['Defeat the CPU','CPU blocks remaining for 2 stars','CPU blocks remaining for 3 stars'];}
  else if(l.type==='versus-timed'){
