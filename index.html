@@ -1229,7 +1229,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.31</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.32</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1493,6 +1493,17 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 .bp-next-brief-actions button{flex:1;min-width:0;min-height:47px;border-radius:12px;font-size:15px;font-weight:900;color:#fff;border:1px solid #b9b5ee;background:#455d98}
 #bpNextBriefStart{background:linear-gradient(115deg,#bf2de7,#613cf3);border-color:#f5a5ff}
 @media(max-height:720px){.bp-next-brief-card{padding:10px}.bp-next-preview{height:clamp(140px,25dvh,195px)}.bp-next-objective{padding:5px 8px}.bp-next-brief-actions button{min-height:42px}}
+</style><style id="bp-briefing-layout-v2432">
+#bpNextLevelBriefing .bp-next-brief-card{overflow:hidden!important;display:flex;flex-direction:column;max-height:calc(100dvh - 24px);padding:12px!important}
+#bpNextLevelBriefing .bp-next-brief-heading{flex-shrink:0;gap:8px}
+#bpNextLevelBriefing .bp-next-brief-heading h2{flex:1;min-width:0;font-size:clamp(15px,4.2vw,21px);line-height:1.15}
+#bpNextLevelBriefing .bp-next-duration-chip{flex-shrink:0;white-space:nowrap;font-size:12px;font-weight:900;color:#d9ecff;border:1px solid #759de8;background:#21365e;border-radius:10px;padding:6px 8px}
+#bpNextLevelBriefing #bpNextBriefContent{min-height:0;gap:8px;margin-top:8px;flex:1 1 auto}
+#bpNextLevelBriefing .bp-next-preview{height:clamp(220px,40dvh,370px)!important;flex:1 1 auto;min-height:160px!important}
+#bpNextLevelBriefing .bp-next-objectives{flex:0 0 auto;gap:5px}
+#bpNextLevelBriefing .bp-next-objective{padding:6px 9px}
+#bpNextLevelBriefing .bp-next-brief-actions{flex-shrink:0;margin-top:9px}
+@media(max-height:650px){#bpNextLevelBriefing .bp-next-preview{min-height:120px!important}#bpNextLevelBriefing .bp-next-objective{padding:4px 7px}#bpNextLevelBriefing .bp-next-brief-actions button{min-height:38px}}
 </style><style id="bp-inline-checkpoint-style">
 #bpCampaignMilestones{display:none!important}
 #bpCampaignGrid .bp-checkpoint-inline{grid-column:1/-1;flex:0 0 auto;box-sizing:border-box;width:100%;margin:8px 0 13px;padding:13px 7px;border:2px solid #d95bff;border-radius:17px;background:linear-gradient(150deg,#252356,#141b43);box-shadow:0 0 16px #a94cfa77,inset 0 0 16px #a54bfa22;text-align:center;color:#fff;overflow:hidden}
@@ -2742,7 +2753,14 @@ function briefNextLevel(n){
  const timedLabel=(briefing.type==='solo-timed'||briefing.type==='versus-timed')&&briefing.duration>0
   ? ' · '+Math.floor(briefing.duration/60)+':'+String(briefing.duration%60).padStart(2,'0')
   : '';
- $('bpNextBriefTitle').textContent='LEVEL '+n+' · '+title(briefing)+timedLabel;
+ $('bpNextBriefTitle').textContent='LEVEL '+n+' · '+title(briefing);
+ const briefHeading=$('bpNextBriefTitle').parentElement;
+ briefHeading.querySelector('.bp-next-duration-chip')?.remove();
+ if(briefing.duration>0 && (briefing.type==='solo-timed'||briefing.type==='versus-timed')){
+  const chip=document.createElement('span');chip.className='bp-next-duration-chip';
+  chip.textContent='◷ '+Math.floor(briefing.duration/60)+':'+String(briefing.duration%60).padStart(2,'0');
+  briefHeading.insertBefore(chip,$('bpNextBriefClose'));
+ }
  $('bpNextLevelBriefing').hidden=false;
 }
 function closeBriefing(){
@@ -2889,6 +2907,19 @@ timed: 'PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJ1
 #arena.solo.bp-campaign-power #humanZone>header>span{display:none!important}
 #arena.solo.bp-campaign-power #bpPowerBolt{display:flex!important;position:absolute!important;top:8px!important;right:8px!important;transform:none!important;z-index:100!important;width:36px!important;height:36px!important}
 #bpPowerOverlay .bp-power-select{width:100%;text-align:left;color:#f4f0ff;cursor:pointer;background:rgba(75,50,130,.35);border:1px solid rgba(170,140,250,.22);border-radius:13px;padding:11px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}#bpPowerOverlay .bp-power-select:hover{background:rgba(110,75,190,.5)}#bpPowerOverlay .bp-power-select:disabled{opacity:.42;cursor:not-allowed}#bpPowerOverlay .bp-power-select small{display:block;opacity:.75;margin-top:3px}
+
+/* v2.4.32: compact, non-scrolling power-up selector */
+#bpPowerOverlay{padding:10px!important;overflow:hidden!important}
+#bpPowerOverlay .bp-power-panel{box-sizing:border-box;width:min(440px,96vw);max-height:calc(100dvh - 20px)!important;overflow:hidden!important;padding:clamp(9px,2dvh,16px)!important;display:flex;flex-direction:column;gap:0}
+#bpPowerOverlay .bp-power-head h2{font-size:clamp(18px,4.8vw,23px)!important}
+#bpPowerOverlay .bp-power-status{font-size:clamp(11px,2.8vw,13px)!important;line-height:1.35!important;margin:10px 0!important}
+#bpPowerOverlay .bp-power-list{display:grid;gap:clamp(4px,.9dvh,8px)!important;margin:6px 0 10px!important;min-height:0;flex:0 1 auto}
+#bpPowerOverlay .bp-power-item{padding:clamp(6px,1dvh,10px) 10px!important;min-height:0}
+#bpPowerOverlay .bp-power-item strong{font-size:clamp(12px,3.2vw,15px)!important}
+#bpPowerOverlay .bp-power-item small{font-size:clamp(10px,2.6vw,12px)!important}
+#bpPowerOverlay .bp-power-footer{flex-shrink:0}
+#bpPowerOverlay .bp-power-footer button{padding:9px 7px!important;font-size:13px!important}
+@media(max-height:650px){#bpPowerOverlay .bp-power-status{margin:6px 0!important}#bpPowerOverlay .bp-power-list{gap:3px!important;margin:3px 0 6px!important}#bpPowerOverlay .bp-power-item{padding:4px 8px!important}}
 </style><div id="bpPowerOverlay" hidden role="dialog" aria-modal="true" aria-label="Campaign power-ups"><div class="bp-power-panel"><div class="bp-power-head"><h2>⚡ POWER-UPS</h2><button class="bp-power-close" id="bpPowerClose" aria-label="Close">✕</button></div><p class="bp-power-status" id="bpPowerStatus">Checking your inventory…</p><div class="bp-power-list" id="bpPowerList"></div><div class="bp-power-footer"><button id="bpPowerStore" type="button">🎟️ STORE</button><button id="bpPowerDone" type="button">BACK TO GAME</button></div></div></div><script id="bp-power-controls-script">
 (()=>{
 const $=id=>document.getElementById(id),bolt=$('bpPowerBolt'),overlay=$('bpPowerOverlay'),list=$('bpPowerList'),status=$('bpPowerStatus');
