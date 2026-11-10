@@ -2682,13 +2682,7 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,28vh,285px)!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(175px,25vh,240px)!important}}
 </style>`;
-   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('<style id="bp-line-live-count-style">
-#arena.versus .zone{position:relative;overflow:visible}
-#arena.versus .zone header{position:relative;z-index:4}
-#arena.versus .zone .bp-line-count{position:absolute;left:50%;top:calc(100% + 7px);transform:translateX(-50%);z-index:8;pointer-events:none;white-space:nowrap;font-size:clamp(10px,2.7vw,13px);font-weight:800;line-height:1.25;padding:5px 9px;border:1.5px solid #5ecbff;border-radius:30px;background:rgba(8,22,53,.93);color:#e8f7ff;box-shadow:0 2px 10px #0009,0 0 9px #20bbff44}
-#arena.versus #cpuZone .bp-line-count{border-color:#ff739e;background:rgba(51,12,42,.95);color:#ffe5ee;box-shadow:0 2px 10px #0009,0 0 9px #ff508044}
-#arena.versus .zone .bp-line-count[hidden]{display:none!important}
-</style></head>',compactCss+'</head>');
+   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head>');
    scene.replaceChildren(sceneTop,approved);
   }
  }
