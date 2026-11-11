@@ -2498,6 +2498,10 @@ const LEVELS=[{"n":1,"type":"solo-line","diff":"super-easy","cpu":"easy","durati
 let unlocked=1,stars={},page=0,selected=1,selectedCheckpoint=null,active=null,loading=false;
 const level=n=>LEVELS[n-1];
  const BP_VLINE_CAMPAIGN_STARS={"51":[15,22],"58":[15,22],"60":[15,22],"67":[15,22],"76":[15,22],"79":[15,22],"85":[11,16],"88":[11,16],"94":[15,22],"97":[15,22],"101":[15,22],"108":[15,22],"110":[15,22],"117":[11,16],"126":[15,22],"129":[15,22],"135":[5,8],"138":[5,8],"144":[11,16],"147":[11,16]};
+// Versus Special Battle: star targets by actual CPU difficulty (seconds).
+// Supabase bp_campaign_complete must use the same thresholds for awarded stars.
+const BP_VSPECIAL_STAR_TIMES={easy:{three:60,two:90},medium:{three:105,two:165},hard:{three:165,two:240},'super-hard':{three:210,two:300}};
+function bpVersusSpecialTargets(l){return BP_VSPECIAL_STAR_TIMES[l.cpu]||BP_VSPECIAL_STAR_TIMES.easy;}
 const BP_STAR_TIMES={"1":{"two":175,"three":90},"3":{"two":190,"three":95},"4":{"two":175,"three":90},"5":{"two":190,"three":95},"7":{"two":175,"three":90},"8":{"two":190,"three":95},"10":{"two":255,"three":130},"11":{"two":165,"three":85},"13":{"two":180,"three":90},"14":{"two":165,"three":85},"15":{"two":240,"three":120},"17":{"two":180,"three":95},"18":{"two":240,"three":120},"20":{"two":300,"three":150},"21":{"two":155,"three":80},"23":{"two":225,"three":115},"24":{"two":170,"three":90},"25":{"two":225,"three":115},"27":{"two":195,"three":105},"28":{"two":285,"three":140},"30":{"two":310,"three":155},"31":{"two":210,"three":110},"33":{"two":305,"three":155},"34":{"two":210,"three":110},"35":{"two":305,"three":155},"37":{"two":210,"three":110},"38":{"two":305,"three":155},"40":{"two":335,"three":170},"41":{"two":210,"three":115},"43":{"two":300,"three":150},"44":{"two":210,"three":115},"45":{"two":300,"three":150},"47":{"two":210,"three":115},"48":{"two":300,"three":150},"50":{"two":300,"three":150}};
 function title(l){return {'solo-line':'Solo · Line Clear','solo-timed':'Solo · Timed','versus':'Versus · Computer','versus-line':'Versus · Line Clear','versus-timed':'Versus · Timed Play','obstacles':'Obstacle Clear'}[l.type]||'Challenge'}
 function checkpointStats(group){
@@ -2705,7 +2709,7 @@ canvas{width:100%!important;height:100%!important;display:block!important}
   requirements=['Outscore the computer',`Win by ${two.toLocaleString()} points`,`Win by ${three.toLocaleString()} points`];
  }
  else if(l.type==='obstacles')requirements=['Finish with 6 or fewer blocks','Finish with 3 or fewer blocks','Clear every colored block'];
- else {const r=BP_STAR_TIMES[l.n]||{two:Math.max(90,l.duration||180),three:Math.max(45,Math.round((l.duration||180)*.55))};requirements=['Defeat the CPU',`Win within ${Math.floor(r.two/60)}:${String(r.two%60).padStart(2,'0')}`,`Win within ${Math.floor(r.three/60)}:${String(r.three%60).padStart(2,'0')}`];}
+ else {const r=l.type==='versus'?bpVersusSpecialTargets(l):BP_STAR_TIMES[l.n]||{two:Math.max(90,l.duration||180),three:Math.max(45,Math.round((l.duration||180)*.55))};requirements=['Defeat the CPU',`Win within ${Math.floor(r.two/60)}:${String(r.two%60).padStart(2,'0')}`,`Win within ${Math.floor(r.three/60)}:${String(r.three%60).padStart(2,'0')}`];}
  const track=document.createElement('div');track.className='bp-objective-track';
  const cards=[];
  requirements.forEach((t,i)=>{const card=document.createElement('div');card.className='bp-objective-card'+(i===0?' active':'');const star=document.createElement('div');star.className='bp-objective-stars';star.textContent='★'.repeat(i+1)+'☆'.repeat(2-i);const desc=document.createElement('div');desc.className='bp-objective-text';desc.textContent=t;card.append(star,desc);track.append(card);cards.push(card)});
