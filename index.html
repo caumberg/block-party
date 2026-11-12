@@ -1257,6 +1257,39 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] .bp-circuit-nav button:not(:disabled){color:#ebc5ff;text-shadow:0 0 10px #b748ff}
 @media(max-width:410px){#bpCampaignOverlay .bp-circuit-nav{grid-template-columns:26px minmax(0,1fr) 26px;gap:2px}#bpCampaignOverlay .bp-circuit-nav button{width:26px;font-size:35px}#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{font-size:clamp(18px,5.6vw,30px)}}
 </style>
+<style id="bp-campaign-header-red-theme-fix">
+/* Restore the original full-size circuit logo and compact tier spacing. */
+#bpCampaignOverlay .bp-campaign-head h2{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0!important;min-height:100px;padding:0 34px!important;box-sizing:border-box}
+#bpCampaignOverlay .bp-circuit-nav{display:contents!important}
+#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{display:block!important;max-width:none!important;width:auto!important;min-width:0;text-align:center;white-space:nowrap;font-size:clamp(24px,7.2vw,51px)!important;line-height:1.1!important}
+#bpCampaignOverlay .bp-tier-logo{margin-top:5px!important;line-height:1.1!important}
+#bpCampaignOverlay .bp-circuit-nav button{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:32px;height:52px;font-size:42px}
+#bpCampaignOverlay #bpCircuitPrev{left:0}
+#bpCampaignOverlay #bpCircuitNext{right:0}
+#bpCampaignOverlay .bp-circuit-nav button:not(:disabled):active{transform:translateY(-50%) scale(.9)}
+@media(max-width:410px){#bpCampaignOverlay .bp-campaign-head h2{padding:0 27px!important;min-height:90px}#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{font-size:clamp(23px,7.1vw,36px)!important}#bpCampaignOverlay .bp-circuit-nav button{width:26px;font-size:36px}}
+/* Red Circuit: warm red neon framing, surfaces, controls, and selected levels. */
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"]{--bp-accent:#ff526b;--bp-glow:#ff284a;background:linear-gradient(160deg,#270c1b,#170a1b 58%,#100917)!important;border-color:#ff435d!important;box-shadow:0 0 35px #ff244533!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-head,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-rail,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-detail,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-checkpoint-inline{border-color:#a83c55!important;background-color:#2c1226!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-circuit-logo,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-scroll-title,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-detail-banner{color:#ff6478!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level.selected,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level.current{border-color:#ff9eae!important;background:linear-gradient(140deg,#842b4a,#481a35)!important;box-shadow:0 0 16px #ff3d664d!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level.done{border-color:#e05a72!important;background:linear-gradient(140deg,#5b2036,#28182c)!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level.locked{opacity:.56}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-tier-carousel button{background:#552039!important;border-color:#b64a65!important;color:#ffd4dd!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-progress-fill,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpCampaignMenuBar{background:linear-gradient(90deg,#e12d50,#ff8a95)!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] button:focus-visible{outline:2px solid #ffb1c0!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-stat{border-color:#b93d62!important;background:linear-gradient(155deg,#5c213f,#29162d)!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-right .bp-campaign-actions button,
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-play{background:linear-gradient(100deg,#e02a55,#a6254c)!important;border-color:#ff96ab!important}
+</style>
 <style id="bp-circuit-logo-style">
 #bpCampaignOverlay .bp-campaign-head h2{gap:0;line-height:1;justify-content:center;overflow:visible}
 #bpCampaignOverlay .bp-circuit-logo{display:block;white-space:nowrap;font-family:Impact,"Arial Black",system-ui,sans-serif;font-weight:900;font-stretch:condensed;font-size:clamp(24px,7.2vw,51px);line-height:1.1;letter-spacing:.035em;color:#ff4353;-webkit-text-stroke:0;text-shadow:0 0 3px #ff243b,0 0 9px #ff102f,0 0 19px rgba(255,0,36,.95),0 0 38px rgba(255,0,32,.8),0 0 62px rgba(255,0,25,.55);filter:none}
