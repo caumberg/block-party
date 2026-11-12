@@ -1208,7 +1208,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 }
 .bp-campaign-duration{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:5px 9px;border:1px solid #6c87c9;border-radius:12px;background:#1d315a;color:#d8eaff;font-size:12px;font-weight:800;margin-left:7px}
 
-/* v2.4.46: circuit-wide campaign styling */
+/* v2.4.47: circuit-wide campaign styling */
 .bp-circuit-switch{display:flex;gap:8px;margin:7px 0 9px}
 .bp-circuit-switch button{flex:1;min-width:0;padding:8px 5px;border-radius:10px;background:#351a28;color:#ffb3bd;border:1px solid #aa465d;font-weight:800;font-size:11px;cursor:pointer}
 .bp-campaign-card[data-circuit="purple"]{--bp-accent:#c084fc;--bp-glow:#8b5cf6;background:linear-gradient(160deg,#241239,#150d29 55%,#100b1e)!important;border-color:#8d50d0!important;box-shadow:0 0 35px #7c3aed33!important}
@@ -1242,7 +1242,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.46</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.47</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1311,7 +1311,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpCampaignOverlay .bp-campaign-sync-status{font-size:10px;color:#58f9ba;text-align:right;line-height:1.1;margin:-4px 2px 3px;min-height:10px;opacity:.85}
 </style>
 <style id="bp-campaign-v2445-compact-and-circuit-theme">
-/* v2.4.46: reclaim vertical space without shrinking the circuit wordmark. */
+/* v2.4.47: reclaim vertical space without shrinking the circuit wordmark. */
 #bpCampaignOverlay .bp-campaign-card{height:min(97dvh,1000px)!important;max-height:97dvh!important;min-height:0!important;overflow:hidden!important;padding:9px 9px 8px!important}
 #bpCampaignOverlay .bp-campaign-head{flex:0 0 auto!important;min-height:0!important;padding:0 42px 5px!important;margin:0 0 6px!important;align-items:center!important}
 #bpCampaignOverlay .bp-campaign-head h2{min-height:0!important;height:auto!important;padding:1px 27px 3px!important;margin:0!important;gap:0!important;line-height:1!important}
@@ -1369,7 +1369,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 @media(max-height:720px){#bpCampaignOverlay .bp-preview-board{max-height:18dvh!important}#bpCampaignOverlay .bp-campaign-level{min-height:57px!important}}
 </style>
 <style id="bp-campaign-v2446">
-/* v2.4.46: more balanced header and Purple Circuit theme */
+/* v2.4.47: more balanced header and Purple Circuit theme */
 #bpCampaignOverlay .bp-campaign-head{min-height:84px!important;padding:9px 40px 10px!important;margin-bottom:6px!important;box-sizing:border-box!important;position:relative!important}
 #bpCampaignOverlay .bp-campaign-head h2{padding:2px 30px!important;gap:0!important;margin:0!important;line-height:1.05!important}
 #bpCampaignOverlay .bp-circuit-nav button{top:50%!important;transform:translateY(-50%)!important;width:28px!important;height:42px!important}
@@ -1390,6 +1390,23 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] #bpCampaignStoreOpen,#bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] .bp-campaign-play{background:linear-gradient(110deg,#b743e8,#7831d4)!important;border-color:#e0a5ff!important}
 #bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] #bpCampaignClose{background:linear-gradient(145deg,#66318d,#3a1a5d)!important;border-color:#bf81f5!important}
 @media(max-width:420px){#bpCampaignOverlay .bp-campaign-head{min-height:80px!important;padding:8px 39px 9px!important}#bpCampaignOverlay #bpCircuitPrev{left:8px!important}#bpCampaignOverlay #bpCircuitNext{right:43px!important}}
+</style>
+<style id="bp-campaign-v2447">
+/* v2.4.47: symmetrical circuit chevrons and corner close button */
+#bpCampaignOverlay .bp-campaign-head{position:relative!important}
+#bpCampaignOverlay #bpCircuitPrev,
+#bpCampaignOverlay #bpCircuitNext{position:absolute!important;top:50%!important;transform:translateY(-50%)!important;width:30px!important;height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+#bpCampaignOverlay #bpCircuitPrev{left:10%!important;right:auto!important}
+#bpCampaignOverlay #bpCircuitNext{right:10%!important;left:auto!important}
+#bpCampaignOverlay #bpCampaignClose{position:absolute!important;top:2px!important;right:2px!important;transform:none!important;width:33px!important;height:33px!important;min-width:0!important;min-height:0!important;font-size:24px!important;line-height:1!important;padding:0!important;z-index:5!important}
+#bpCampaignOverlay .bp-campaign-grid{scrollbar-width:none!important;-ms-overflow-style:none!important}
+#bpCampaignOverlay .bp-campaign-grid::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+#bpCampaignOverlay .bp-campaign-rail{position:relative!important}
+#bpCampaignOverlay .bp-level-scroll-indicator{position:absolute;right:5px;width:4px;pointer-events:none;z-index:7;opacity:0;transition:opacity .28s ease}
+#bpCampaignOverlay .bp-level-scroll-indicator.active{opacity:1}
+#bpCampaignOverlay .bp-level-scroll-thumb{width:100%;min-height:18px;border-radius:8px;background:linear-gradient(#e88aff,#a53aff);box-shadow:0 0 7px #b349fbbb;position:absolute;left:0;top:0}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-level-scroll-thumb{background:linear-gradient(#ff99a9,#ff315d);box-shadow:0 0 7px #ff315d99}
+@media(max-width:420px){#bpCampaignOverlay #bpCircuitPrev{left:8%!important}#bpCampaignOverlay #bpCircuitNext{right:8%!important}#bpCampaignOverlay #bpCampaignClose{top:1px!important;right:1px!important;width:30px!important;height:30px!important}}
 </style>
 <div id="bpCampaignOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="bpCampaignTitle">
 <div class="bp-campaign-card">
@@ -3080,7 +3097,7 @@ timed: 'PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJ1
 #arena.solo.bp-campaign-power #bpPowerBolt{display:flex!important;position:absolute!important;top:8px!important;right:8px!important;transform:none!important;z-index:100!important;width:36px!important;height:36px!important}
 #bpPowerOverlay .bp-power-select{width:100%;text-align:left;color:#f4f0ff;cursor:pointer;background:rgba(75,50,130,.35);border:1px solid rgba(170,140,250,.22);border-radius:13px;padding:11px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}#bpPowerOverlay .bp-power-select:hover{background:rgba(110,75,190,.5)}#bpPowerOverlay .bp-power-select:disabled{opacity:.42;cursor:not-allowed}#bpPowerOverlay .bp-power-select small{display:block;opacity:.75;margin-top:3px}
 
-/* v2.4.46: compact, non-scrolling power-up selector */
+/* v2.4.47: compact, non-scrolling power-up selector */
 #bpPowerOverlay{padding:10px!important;overflow:hidden!important}
 #bpPowerOverlay .bp-power-panel{box-sizing:border-box;width:min(440px,96vw);max-height:calc(100dvh - 20px)!important;overflow:hidden!important;padding:clamp(9px,2dvh,16px)!important;display:flex;flex-direction:column;gap:0}
 #bpPowerOverlay .bp-power-head h2{font-size:clamp(18px,4.8vw,23px)!important}
