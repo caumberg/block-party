@@ -1208,7 +1208,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 }
 .bp-campaign-duration{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:5px 9px;border:1px solid #6c87c9;border-radius:12px;background:#1d315a;color:#d8eaff;font-size:12px;font-weight:800;margin-left:7px}
 
-/* v2.4.44: circuit-wide campaign styling */
+/* v2.4.45: circuit-wide campaign styling */
 .bp-circuit-switch{display:flex;gap:8px;margin:7px 0 9px}
 .bp-circuit-switch button{flex:1;min-width:0;padding:8px 5px;border-radius:10px;background:#351a28;color:#ffb3bd;border:1px solid #aa465d;font-weight:800;font-size:11px;cursor:pointer}
 .bp-campaign-card[data-circuit="purple"]{--bp-accent:#c084fc;--bp-glow:#8b5cf6;background:linear-gradient(160deg,#241239,#150d29 55%,#100b1e)!important;border-color:#8d50d0!important;box-shadow:0 0 35px #7c3aed33!important}
@@ -1242,7 +1242,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.44</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.45</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1309,6 +1309,64 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpCampaignOverlay .bp-campaign-quick-actions{grid-template-columns:minmax(0,1fr)!important;width:100%!important}
 #bpCampaignOverlay .bp-campaign-quick-actions #bpCampaignStoreOpen{display:block;width:100%!important;min-width:0!important}
 #bpCampaignOverlay .bp-campaign-sync-status{font-size:10px;color:#58f9ba;text-align:right;line-height:1.1;margin:-4px 2px 3px;min-height:10px;opacity:.85}
+</style>
+<style id="bp-campaign-v2445-compact-and-circuit-theme">
+/* v2.4.45: reclaim vertical space without shrinking the circuit wordmark. */
+#bpCampaignOverlay .bp-campaign-card{height:min(97dvh,1000px)!important;max-height:97dvh!important;min-height:0!important;overflow:hidden!important;padding:9px 9px 8px!important}
+#bpCampaignOverlay .bp-campaign-head{flex:0 0 auto!important;min-height:0!important;padding:0 42px 5px!important;margin:0 0 6px!important;align-items:center!important}
+#bpCampaignOverlay .bp-campaign-head h2{min-height:0!important;height:auto!important;padding:1px 27px 3px!important;margin:0!important;gap:0!important;line-height:1!important}
+#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{font-size:clamp(23px,6.7vw,46px)!important;line-height:1.05!important}
+#bpCampaignOverlay .bp-tier-logo{margin-top:1px!important;line-height:1!important;font-size:clamp(14px,3.7vw,24px)!important}
+#bpCampaignOverlay .bp-circuit-nav button{height:36px!important;font-size:34px!important}
+#bpCampaignOverlay #bpCampaignClose{top:50%!important;transform:translateY(-50%)!important;width:37px!important;height:37px!important}
+#bpCampaignOverlay .bp-campaign-stats{flex:0 0 auto!important;margin:0 0 4px!important;gap:6px!important}
+#bpCampaignOverlay .bp-campaign-stat{min-height:0!important;padding:5px 3px!important}
+#bpCampaignOverlay .bp-campaign-stat strong{line-height:1.12!important}
+#bpCampaignOverlay .bp-campaign-stats #bpCampaignWalletOpen{min-height:0!important;padding:5px 3px!important}
+#bpCampaignOverlay #bpCampaignSync{flex:0 0 auto!important;margin:0 0 4px!important;min-height:12px!important}
+#bpCampaignOverlay .bp-campaign-workspace{min-height:0!important;flex:1 1 0!important;overflow:hidden!important}
+#bpCampaignOverlay .bp-campaign-rail{min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+#bpCampaignOverlay .bp-campaign-scroll-title{flex:0 0 auto!important;margin:0 0 2px!important}
+#bpCampaignOverlay #bpTierNav{position:relative!important;z-index:1!important;flex:0 0 34px!important;min-height:34px!important;max-height:34px!important;margin:0 0 5px!important;padding:0!important;background:transparent!important}
+#bpCampaignOverlay #bpTierNav button{height:32px!important;background:transparent!important;border:0!important;box-shadow:none!important}
+#bpCampaignOverlay #bpCampaignGrid{flex:1 1 0!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;scroll-padding-top:5px!important;position:relative!important}
+#bpCampaignOverlay .bp-campaign-right{min-height:0!important;overflow:hidden!important}
+#bpCampaignOverlay #bpCampaignDetail{flex:1 1 0!important;min-height:0!important;overflow-y:auto!important;gap:5px!important;padding:7px!important}
+#bpCampaignOverlay .bp-campaign-quick-actions{flex:0 0 auto!important;margin-top:5px!important}
+#bpCampaignOverlay .bp-preview-board{max-height:25dvh!important;width:auto!important;max-width:100%!important;object-fit:contain!important}
+#bpCampaignOverlay .bp-campaign-detail button{flex-shrink:0!important}
+/* The game board colors, gold stars, difficulty status and green completion status stay semantic. */
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"]{background:radial-gradient(ellipse at 50% 0%,#471426 0%,transparent 56%),linear-gradient(155deg,#210d1c,#110a14 85%)!important;border-color:#ff315d!important;box-shadow:inset 0 0 0 2px #ff315d33,0 0 22px #ff315d44!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-head{border-bottom-color:#d84165!important;background:transparent!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-rail{background:linear-gradient(155deg,#391427,#1d0d1c)!important;border-color:#e4486c!important;box-shadow:0 0 9px #ff315d33!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-right{background:transparent!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-detail{background:linear-gradient(155deg,#351326,#1d0c1b)!important;border-color:#d74869!important;box-shadow:0 0 9px #ff315d25!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-stat{background:linear-gradient(155deg,#542039,#2b1024)!important;border-color:#e4486c!important;box-shadow:0 0 8px #ff315d2d!important;color:#ffe1e7!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpCampaignWalletOpen{background:linear-gradient(155deg,#542039,#2b1024)!important;border-color:#e4486c!important;box-shadow:0 0 8px #ff315d2d!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-scroll-title{color:#ff879d!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpTierNav button{color:#ffb7c5!important;text-shadow:0 0 7px #ff315d!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpTierCurrent{color:#ffe4ea!important;text-shadow:0 0 7px #ff315d!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level:not(.done):not(.current):not(.selected){background:linear-gradient(140deg,#39182d,#241124)!important;border-color:#84405a!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level.done{background:linear-gradient(140deg,#07584d,#0c3255)!important;border-color:#16d6a8!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level.current,#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-level.selected{background:linear-gradient(140deg,#812c4c,#48172e)!important;border-color:#ff9eb0!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-detail-banner,#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-detail h3{background:linear-gradient(115deg,#9d254b,#52152f)!important;border-color:#ff879d!important;color:#ffe9ef!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-preview-frame,#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-preview-container{background:linear-gradient(145deg,#301426,#170d1b)!important;border-color:#db5271!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-preview-board{border-color:#e36a83!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-preview-label{color:#ffc5d0!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-ticket-balance{background:linear-gradient(145deg,#572039,#291124)!important;border-color:#e26080!important;box-shadow:0 0 8px #ff315d2d!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpCampaignStoreOpen,#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-play,#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpCampaignDetail button:not(:disabled){background:linear-gradient(110deg,#ec355f,#a62049)!important;border-color:#ff9bad!important;box-shadow:0 0 12px #ff315d44!important;color:white!important}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpCampaignClose{background:linear-gradient(145deg,#6a2340,#3b142c)!important;border-color:#ff879d!important;box-shadow:0 0 10px #ff315d44!important}
+@media(max-width:420px){
+ #bpCampaignOverlay .bp-campaign-card{padding:7px 7px 6px!important}
+ #bpCampaignOverlay .bp-campaign-head{padding:0 38px 4px!important;margin-bottom:5px!important}
+ #bpCampaignOverlay .bp-campaign-head h2{padding:1px 24px 2px!important}
+ #bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{font-size:clamp(22px,6.5vw,33px)!important}
+ #bpCampaignOverlay .bp-tier-logo{font-size:clamp(13px,3.5vw,18px)!important}
+ #bpCampaignOverlay .bp-circuit-nav button{font-size:30px!important;width:25px!important}
+ #bpCampaignOverlay #bpCampaignClose{width:33px!important;height:33px!important}
+ #bpCampaignOverlay .bp-preview-board{max-height:22dvh!important}
+}
+@media(max-height:720px){#bpCampaignOverlay .bp-preview-board{max-height:18dvh!important}#bpCampaignOverlay .bp-campaign-level{min-height:57px!important}}
 </style>
 <div id="bpCampaignOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="bpCampaignTitle">
 <div class="bp-campaign-card">
@@ -2999,7 +3057,7 @@ timed: 'PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJ1
 #arena.solo.bp-campaign-power #bpPowerBolt{display:flex!important;position:absolute!important;top:8px!important;right:8px!important;transform:none!important;z-index:100!important;width:36px!important;height:36px!important}
 #bpPowerOverlay .bp-power-select{width:100%;text-align:left;color:#f4f0ff;cursor:pointer;background:rgba(75,50,130,.35);border:1px solid rgba(170,140,250,.22);border-radius:13px;padding:11px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}#bpPowerOverlay .bp-power-select:hover{background:rgba(110,75,190,.5)}#bpPowerOverlay .bp-power-select:disabled{opacity:.42;cursor:not-allowed}#bpPowerOverlay .bp-power-select small{display:block;opacity:.75;margin-top:3px}
 
-/* v2.4.44: compact, non-scrolling power-up selector */
+/* v2.4.45: compact, non-scrolling power-up selector */
 #bpPowerOverlay{padding:10px!important;overflow:hidden!important}
 #bpPowerOverlay .bp-power-panel{box-sizing:border-box;width:min(440px,96vw);max-height:calc(100dvh - 20px)!important;overflow:hidden!important;padding:clamp(9px,2dvh,16px)!important;display:flex;flex-direction:column;gap:0}
 #bpPowerOverlay .bp-power-head h2{font-size:clamp(18px,4.8vw,23px)!important}
