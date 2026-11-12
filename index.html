@@ -1246,6 +1246,17 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></div>
 
 
+<style id="bp-circuit-header-navigation-v2444">
+#bpCampaignOverlay .bp-campaign-head h2{width:100%;min-width:0;flex:1}
+#bpCampaignOverlay .bp-circuit-nav{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;align-items:center;gap:5px;width:100%;max-width:510px;margin:0 auto}
+#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{min-width:0;text-align:center;font-size:clamp(21px,6.1vw,47px)}
+#bpCampaignOverlay .bp-circuit-nav button{appearance:none;border:0;background:none;box-shadow:none;display:flex;align-items:center;justify-content:center;padding:0;width:34px;height:46px;font-size:43px;font-weight:800;line-height:1;color:#f6e9ff;text-shadow:0 0 9px #c080ff;cursor:pointer}
+#bpCampaignOverlay .bp-circuit-nav button:disabled{opacity:.18;cursor:default}
+#bpCampaignOverlay .bp-circuit-nav button:not(:disabled):active{transform:scale(.9)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-circuit-nav button:not(:disabled){color:#ffc2cb;text-shadow:0 0 10px #ff395a}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] .bp-circuit-nav button:not(:disabled){color:#ebc5ff;text-shadow:0 0 10px #b748ff}
+@media(max-width:410px){#bpCampaignOverlay .bp-circuit-nav{grid-template-columns:26px minmax(0,1fr) 26px;gap:2px}#bpCampaignOverlay .bp-circuit-nav button{width:26px;font-size:35px}#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{font-size:clamp(18px,5.6vw,30px)}}
+</style>
 <style id="bp-circuit-logo-style">
 #bpCampaignOverlay .bp-campaign-head h2{gap:0;line-height:1;justify-content:center;overflow:visible}
 #bpCampaignOverlay .bp-circuit-logo{display:block;white-space:nowrap;font-family:Impact,"Arial Black",system-ui,sans-serif;font-weight:900;font-stretch:condensed;font-size:clamp(24px,7.2vw,51px);line-height:1.1;letter-spacing:.035em;color:#ff4353;-webkit-text-stroke:0;text-shadow:0 0 3px #ff243b,0 0 9px #ff102f,0 0 19px rgba(255,0,36,.95),0 0 38px rgba(255,0,32,.8),0 0 62px rgba(255,0,25,.55);filter:none}
@@ -1268,10 +1279,10 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </style>
 <div id="bpCampaignOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="bpCampaignTitle">
 <div class="bp-campaign-card">
-<div class="bp-campaign-head"><h2 id="bpCampaignTitle"><span class="bp-circuit-logo">RED CIRCUIT</span><span class="bp-tier-logo">TIER 1</span></h2><button id="bpCampaignClose" type="button" aria-label="Close campaign">✕</button></div>
+<div class="bp-campaign-head"><h2 id="bpCampaignTitle"><span class="bp-circuit-nav"><button id="bpCircuitPrev" type="button" aria-label="Previous circuit" onclick="bpCampaignCircuitStep(-1)">‹</button><span class="bp-circuit-logo">RED CIRCUIT</span><button id="bpCircuitNext" type="button" aria-label="Next circuit" onclick="bpCampaignCircuitStep(1)">›</button></span><span class="bp-tier-logo">TIER 1</span></h2><button id="bpCampaignClose" type="button" aria-label="Close campaign">✕</button></div>
 <p class="bp-campaign-note">50 Solo and Versus challenges. Swipe through every level, replay completed rounds, and earn up to 200 milestone tokens.</p>
 <div class="bp-campaign-stats"><div class="bp-campaign-stat">🚩 Levels Unlocked <strong id="bpCampaignUnlocked">1 / 50</strong></div><div class="bp-campaign-stat">⭐ Stars Earned <strong id="bpCampaignStars">0 / 150</strong></div><button class="bp-campaign-stat" id="bpCampaignWalletOpen" type="button" aria-label="Open token wallet">🪙 <strong id="bpCampaignWalletBalance">…</strong><span id="bpCampaignIdleBadge" class="bp-idle-badge" hidden>!</span></button></div><div id="bpCampaignSync" class="bp-campaign-sync-status" aria-live="polite">Connecting…</div>
-<div class="bp-campaign-workspace"><div class="bp-campaign-rail"><div class="bp-campaign-scroll-title"><span>LEVELS</span><span id="bpCampaignPage">1–50</span></div><div class="bp-circuit-switch"><button type="button" onclick="bpCampaignTier(1)">🔴 RED CIRCUIT</button><button type="button" onclick="bpCampaignTier(4)">🟣 PURPLE CIRCUIT</button></div><div id="bpTierNav" class="bp-tier-carousel" aria-label="Select campaign tier"><button id="bpTierPrev" type="button" aria-label="Previous tier" onclick="bpCampaignTierStep(-1)">‹</button><span id="bpTierCurrent" aria-live="polite">TIER 1</span><button id="bpTierNext" type="button" aria-label="Next tier" onclick="bpCampaignTierStep(1)">›</button></div><div class="bp-campaign-grid" id="bpCampaignGrid" role="list" aria-label="Scrollable campaign levels"></div></div><div class="bp-campaign-right"><div class="bp-campaign-detail" id="bpCampaignDetail" aria-live="polite"></div>
+<div class="bp-campaign-workspace"><div class="bp-campaign-rail"><div class="bp-campaign-scroll-title"><span>LEVELS</span><span id="bpCampaignPage">1–50</span></div><div id="bpTierNav" class="bp-tier-carousel" aria-label="Select campaign tier"><button id="bpTierPrev" type="button" aria-label="Previous tier" onclick="bpCampaignTierStep(-1)">‹</button><span id="bpTierCurrent" aria-live="polite">TIER 1</span><button id="bpTierNext" type="button" aria-label="Next tier" onclick="bpCampaignTierStep(1)">›</button></div><div class="bp-campaign-grid" id="bpCampaignGrid" role="list" aria-label="Scrollable campaign levels"></div></div><div class="bp-campaign-right"><div class="bp-campaign-detail" id="bpCampaignDetail" aria-live="polite"></div>
 <div class="bp-campaign-quick-actions">
 <div class="bp-campaign-ticket-balance" aria-label="Available tickets"><span class="bp-campaign-ticket-icon" aria-hidden="true">🎟️</span><strong id="bpCampaignTicketCount" aria-live="polite">—</strong></div>
 <button id="bpCampaignStoreOpen" type="button"><span aria-hidden="true">🛒</span> STORE</button>
@@ -2584,7 +2595,16 @@ window.bpCampaignTier=function(t){
  const grid=$('bpCampaignGrid');if(grid)grid.scrollTop=0;
  render();
 };
-window.bpCampaignTierStep=function(delta){window.bpCampaignTier(Math.ceil(selected/50)+delta)};
+window.bpCampaignTierStep=function(delta){
+ const current=Math.ceil(selected/50),first=current<=3?1:4,last=first+2;
+ window.bpCampaignTier(Math.max(first,Math.min(last,current+delta)));
+};
+window.bpCampaignCircuitStep=function(delta){
+ const current=Math.ceil(selected/50),circuit=current<=3?0:1;
+ const target=circuit+delta;
+ if(target<0||target>1)return;
+ window.bpCampaignTier(target*3+((current-1)%3)+1);
+};
 function render(){
  const visibleTier=Math.ceil(selected/50);
  const circuit=visibleTier<=3?'red':'purple';
@@ -2602,9 +2622,11 @@ function render(){
  const tierLogo=$('bpCampaignTitle')?.querySelector('.bp-tier-logo');
  if(tierLogo)tierLogo.textContent=`TIER ${((visibleTier-1)%3)+1}`;
  $('bpCampaignPage').textContent=`${visibleTierFirst}–${visibleTierLast}`;
- $('bpTierCurrent').textContent=`${visibleTier<=3?'RED':'PURPLE'} · TIER ${((visibleTier-1)%3)+1}`;
- $('bpTierPrev').disabled=visibleTier<=1;
- $('bpTierNext').disabled=visibleTier>=6;
+ $('bpTierCurrent').textContent=`TIER ${((visibleTier-1)%3)+1}`;
+ $('bpTierPrev').disabled=((visibleTier-1)%3)===0;
+ $('bpTierNext').disabled=((visibleTier-1)%3)===2;
+ $('bpCircuitPrev').disabled=visibleTier<=3;
+ $('bpCircuitNext').disabled=visibleTier>=4;
 
  // Main-menu progress is scoped to the player's current circuit tier (50 levels).
  const currentTier=Math.min(6,Math.max(1,Math.ceil(unlocked/50)));
