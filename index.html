@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.103 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.104 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1469,6 +1469,11 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
 </div></div></div>
 <p class="bp-campaign-muted">Campaign entry is free in this build. Token entry fees and Obstacles gameplay are pending implementation.</p>
 </div></div>
+
+<style id="bp-campaign-progress-two-lines-v24104">
+#bpCampaignMenuProgress .bp-campaign-info-line{display:block;line-height:1.35}
+#bpCampaignMenuProgress .bp-campaign-info-line + .bp-campaign-info-line{margin-top:2px}
+</style>
 <script id="bp-store-tab-count-sync-v2487">
 window.addEventListener('message',function(e){
  const frame=document.getElementById('bpStoreFrame');
@@ -3180,12 +3185,7 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,28vh,285px)!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(175px,25vh,240px)!important}}
 </style>`;
-   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('<style id="bp-campaign-progress-two-lines-v24103">
-/* Campaign overview: circuit/tier on line one, level/stars on line two. */
-#bpCampaignMenuProgress .bp-campaign-info-line{display:block;line-height:1.35}
-#bpCampaignMenuProgress .bp-campaign-info-line + .bp-campaign-info-line{margin-top:2px}
-</style>
-</head>',compactCss+'</head>');
+   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head');
    scene.replaceChildren(sceneTop,approved);
   }
  }
