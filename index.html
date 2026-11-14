@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.100 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.101 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -3891,4 +3891,28 @@ document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>set
 #menu.bp-menu-ready #bpArcadeHome #bpCampaignOpen .bp-feature-title>span,
 #menu.bp-menu-ready #bpArcadeHome #bpArcadeOpen .bp-arcade-title>span{white-space:nowrap;font-size:clamp(11px,2.6vw,15px)}
 @media(max-width:390px){#menu.bp-menu-ready #bpArcadeHome #bpCampaignOpen,#menu.bp-menu-ready #bpArcadeHome #bpArcadeOpen{padding-left:85px!important;padding-right:10px!important}}
+</style><style id="bp-menu-icons-sizing-v24101">
+/* Larger illustrations with coordinated text inset; no change to card heights. */
+#menu.bp-menu-ready #bpArcadeHome #bpCampaignOpen,
+#menu.bp-menu-ready #bpArcadeHome #bpArcadeOpen{
+  padding-left:clamp(112px,30%,162px)!important;
+  padding-right:14px!important;
+}
+#menu.bp-menu-ready #bpArcadeHome #bpCampaignOpen::before,
+#menu.bp-menu-ready #bpArcadeHome #bpArcadeOpen::before{
+  left:8px!important;
+  width:clamp(96px,28%,146px)!important;
+  height:calc(100% - 8px)!important;
+}
+@media(max-width:390px){
+  #menu.bp-menu-ready #bpArcadeHome #bpCampaignOpen,
+  #menu.bp-menu-ready #bpArcadeHome #bpArcadeOpen{
+    padding-left:clamp(98px,29%,120px)!important;
+    padding-right:9px!important;
+  }
+  #menu.bp-menu-ready #bpArcadeHome #bpCampaignOpen::before,
+  #menu.bp-menu-ready #bpArcadeHome #bpArcadeOpen::before{
+    left:5px!important;width:clamp(88px,27%,108px)!important;
+  }
+}
 </style></html>
