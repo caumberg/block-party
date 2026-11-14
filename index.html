@@ -1208,7 +1208,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 }
 .bp-campaign-duration{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:5px 9px;border:1px solid #6c87c9;border-radius:12px;background:#1d315a;color:#d8eaff;font-size:12px;font-weight:800;margin-left:7px}
 
-/* v2.4.50: circuit-wide campaign styling */
+/* v2.4.51: circuit-wide campaign styling */
 .bp-circuit-switch{display:flex;gap:8px;margin:7px 0 9px}
 .bp-circuit-switch button{flex:1;min-width:0;padding:8px 5px;border-radius:10px;background:#351a28;color:#ffb3bd;border:1px solid #aa465d;font-weight:800;font-size:11px;cursor:pointer}
 .bp-campaign-card[data-circuit="purple"]{--bp-accent:#c084fc;--bp-glow:#8b5cf6;background:linear-gradient(160deg,#241239,#150d29 55%,#100b1e)!important;border-color:#8d50d0!important;box-shadow:0 0 35px #7c3aed33!important}
@@ -1242,7 +1242,23 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 </div></section>
 <select id="play" class="visually-hidden" aria-label="Play style"><option value="solo">Solo</option><option value="versus">Versus Computer</option></select>
 </div>
-<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><div class="bp-version" aria-label="Game version">v2.4.50</div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+<div class="menu-launch"><button id="start" type="button"><span>▶</span> START GAME <span class="bp-entry-cost">🪙 2</span></button><div class="launch-footnote">READY, SET, MATCH!</div><style id="bp-developer-mode-css">
+.bp-dev-link{background:none;border:0;color:#bfa9ff;text-decoration:underline;text-underline-offset:2px;font:inherit;font-size:inherit;cursor:pointer;margin-left:9px;padding:4px}
+#bpDeveloperOverlay{position:fixed;inset:0;z-index:2147483000;background:rgba(4,3,17,.87);display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box}
+#bpDeveloperOverlay[hidden]{display:none!important}
+.bp-dev-card{width:min(420px,100%);background:linear-gradient(145deg,#251638,#121323);border:1px solid #9b6fd6;border-radius:18px;padding:22px;box-shadow:0 18px 65px #000b;color:#eee9ff;font-family:inherit}
+.bp-dev-card h2{margin:0 0 8px;font-size:20px}.bp-dev-card p{font-size:13px;line-height:1.5;color:#c5bbd9}
+.bp-dev-uid{overflow-wrap:anywhere;font-family:monospace;font-size:13px;background:#090b17;padding:12px;border:1px solid #66507f;border-radius:9px;user-select:all}
+.bp-dev-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.bp-dev-actions button{background:#473064;border:1px solid #9472c2;border-radius:9px;color:white;padding:9px 12px;cursor:pointer}
+.bp-dev-card label{display:block;margin-top:18px;font-size:13px}.bp-dev-card input{display:block;width:100%;box-sizing:border-box;margin-top:7px;background:#101021;color:#eee;border:1px solid #625174;border-radius:8px;padding:10px}
+.bp-dev-note{color:#f3c987!important}
+</style><div id="bpDeveloperOverlay" hidden role="dialog" aria-modal="true" aria-label="Developer Mode">
+ <div class="bp-dev-card"><h2>Developer Mode</h2><p>Your current anonymous Supabase user ID is shown below. Copy it and use it to authorize your account in Supabase.</p>
+ <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
+ <label for="bpDeveloperPassword">Developer password</label><input type="password" id="bpDeveloperPassword" placeholder="Available after server authorization" disabled autocomplete="off">
+ <p class="bp-dev-note" id="bpDeveloperStatus">Developer gameplay is not enabled yet. This screen only identifies your account; it does not bypass tokens or security.</p>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.52 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1311,7 +1327,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 #bpCampaignOverlay .bp-campaign-sync-status{font-size:10px;color:#58f9ba;text-align:right;line-height:1.1;margin:-4px 2px 3px;min-height:10px;opacity:.85}
 </style>
 <style id="bp-campaign-v2445-compact-and-circuit-theme">
-/* v2.4.50: reclaim vertical space without shrinking the circuit wordmark. */
+/* v2.4.51: reclaim vertical space without shrinking the circuit wordmark. */
 #bpCampaignOverlay .bp-campaign-card{height:min(97dvh,1000px)!important;max-height:97dvh!important;min-height:0!important;overflow:hidden!important;padding:9px 9px 8px!important}
 #bpCampaignOverlay .bp-campaign-head{flex:0 0 auto!important;min-height:0!important;padding:0 42px 5px!important;margin:0 0 6px!important;align-items:center!important}
 #bpCampaignOverlay .bp-campaign-head h2{min-height:0!important;height:auto!important;padding:1px 27px 3px!important;margin:0!important;gap:0!important;line-height:1!important}
@@ -1369,7 +1385,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 @media(max-height:720px){#bpCampaignOverlay .bp-preview-board{max-height:18dvh!important}#bpCampaignOverlay .bp-campaign-level{min-height:57px!important}}
 </style>
 <style id="bp-campaign-v2446">
-/* v2.4.50: more balanced header and Purple Circuit theme */
+/* v2.4.51: more balanced header and Purple Circuit theme */
 #bpCampaignOverlay .bp-campaign-head{min-height:84px!important;padding:9px 40px 10px!important;margin-bottom:6px!important;box-sizing:border-box!important;position:relative!important}
 #bpCampaignOverlay .bp-campaign-head h2{padding:2px 30px!important;gap:0!important;margin:0!important;line-height:1.05!important}
 #bpCampaignOverlay .bp-circuit-nav button{top:50%!important;transform:translateY(-50%)!important;width:28px!important;height:42px!important}
@@ -1392,7 +1408,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 @media(max-width:420px){#bpCampaignOverlay .bp-campaign-head{min-height:80px!important;padding:8px 39px 9px!important}#bpCampaignOverlay #bpCircuitPrev{left:8px!important}#bpCampaignOverlay #bpCircuitNext{right:43px!important}}
 </style>
 <style id="bp-campaign-v2447">
-/* v2.4.50: symmetrical circuit chevrons and corner close button */
+/* v2.4.51: symmetrical circuit chevrons and corner close button */
 #bpCampaignOverlay .bp-campaign-head{position:relative!important}
 #bpCampaignOverlay #bpCircuitPrev,
 #bpCampaignOverlay #bpCircuitNext{position:absolute!important;top:50%!important;transform:translateY(-50%)!important;width:30px!important;height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}
@@ -1409,7 +1425,7 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 @media(max-width:420px){#bpCampaignOverlay #bpCircuitPrev{left:8%!important}#bpCampaignOverlay #bpCircuitNext{right:8%!important}#bpCampaignOverlay #bpCampaignClose{top:1px!important;right:1px!important;width:30px!important;height:30px!important}}
 </style>
 <style id="bp-campaign-v2450-circuit-arrows-wallet">
-/* v2.4.50: push the arrows toward the annotated outer circles. */
+/* v2.4.51: push the arrows toward the annotated outer circles. */
 #bpCampaignOverlay #bpCircuitPrev{left:2.5%!important;right:auto!important}
 #bpCampaignOverlay #bpCircuitNext{right:2.5%!important;left:auto!important}
 /* Wallet is a circuit surface, not an unchanging blue card. */
@@ -2601,6 +2617,7 @@ async function getSession(){
  if(!data.access_token)throw Error('Enable Anonymous Sign-ins in Supabase Authentication settings.');
  session={...data,expires_at:Math.floor(Date.now()/1000)+data.expires_in};saveSession();return session;
 }
+window.bpGetCurrentUserId=async function(){const s=await getSession();if(s?.user?.id)return s.user.id;const token=s?.access_token;if(token){try{const p=JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if(p.sub)return p.sub}catch(_){}}throw Error('No authenticated user ID found')};
 async function rpc(name,params={}){
  const auth=await getSession();
  const r=await fetch(BASE+'/rest/v1/rpc/'+name,{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+auth.access_token,'Content-Type':'application/json'},body:JSON.stringify(params)});
@@ -2739,12 +2756,36 @@ function checkpointDetail(group){
  d.append(heading,wrap);
 }
 
+// Navigate to meaningful progress rather than resetting to an arbitrary level.
+// A locked destination always opens at its first level for preview.
+function bpTierDestination(t){
+ const first=(t-1)*50+1,last=first+49;
+ if(unlocked<first)return first;
+ if(unlocked<=last)return unlocked; // Next unlocked level within unfinished tier.
+ for(let n=first;n<=last;n++){
+  if(Math.max(0,Math.min(3,Number(stars[n]||0)))<3)return n;
+ }
+ return first; // All levels have three stars.
+}
+function bpCircuitDestination(c){
+ const first=c*150+1,last=first+149;
+ if(unlocked<first)return first;
+ if(unlocked<=last)return unlocked;
+ // Finished circuit: find the earliest level still missing any stars.
+ for(let n=first;n<=last;n++){
+  if(Math.max(0,Math.min(3,Number(stars[n]||0)))<3)return n;
+ }
+ return first;
+}
+function bpCampaignNavigate(n){
+ selected=n;selectedCheckpoint=null;
+ const grid=$('bpCampaignGrid');if(grid)grid.scrollTop=0;
+ render();
+}
 window.bpCampaignTier=function(t){
  t=Math.max(1,Math.min(6,Number(t)||1));
  if(t===Math.ceil(selected/50))return;
- selected=(t-1)*50+1;selectedCheckpoint=null;
- const grid=$('bpCampaignGrid');if(grid)grid.scrollTop=0;
- render();
+ bpCampaignNavigate(bpTierDestination(t));
 };
 window.bpCampaignTierStep=function(delta){
  const current=Math.ceil(selected/50),first=current<=3?1:4,last=first+2;
@@ -2754,7 +2795,7 @@ window.bpCampaignCircuitStep=function(delta){
  const current=Math.ceil(selected/50),circuit=current<=3?0:1;
  const target=circuit+delta;
  if(target<0||target>1)return;
- window.bpCampaignTier(target*3+((current-1)%3)+1);
+ bpCampaignNavigate(bpCircuitDestination(target));
 };
 function render(){
  const visibleTier=Math.ceil(selected/50);
@@ -3117,7 +3158,7 @@ timed: 'PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ImVuIj48aGVhZD48bWV0YSBjaGFyc2V0PSJ1
 #arena.solo.bp-campaign-power #bpPowerBolt{display:flex!important;position:absolute!important;top:8px!important;right:8px!important;transform:none!important;z-index:100!important;width:36px!important;height:36px!important}
 #bpPowerOverlay .bp-power-select{width:100%;text-align:left;color:#f4f0ff;cursor:pointer;background:rgba(75,50,130,.35);border:1px solid rgba(170,140,250,.22);border-radius:13px;padding:11px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}#bpPowerOverlay .bp-power-select:hover{background:rgba(110,75,190,.5)}#bpPowerOverlay .bp-power-select:disabled{opacity:.42;cursor:not-allowed}#bpPowerOverlay .bp-power-select small{display:block;opacity:.75;margin-top:3px}
 
-/* v2.4.50: compact, non-scrolling power-up selector */
+/* v2.4.51: compact, non-scrolling power-up selector */
 #bpPowerOverlay{padding:10px!important;overflow:hidden!important}
 #bpPowerOverlay .bp-power-panel{box-sizing:border-box;width:min(440px,96vw);max-height:calc(100dvh - 20px)!important;overflow:hidden!important;padding:clamp(9px,2dvh,16px)!important;display:flex;flex-direction:column;gap:0}
 #bpPowerOverlay .bp-power-head h2{font-size:clamp(18px,4.8vw,23px)!important}
@@ -3246,5 +3287,22 @@ if(store){
  observer.observe(store,{attributes:true,attributeFilter:['hidden']});
 }
 document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>setTimeout(refresh,400));
+})();
+</script><script id="bp-developer-mode-script">
+(function(){
+ const $=id=>document.getElementById(id),modal=$('bpDeveloperOverlay');
+ $('bpDeveloperModeOpen')?.addEventListener('click',async()=>{
+  modal.hidden=false;$('bpDeveloperUserId').textContent='Loading…';
+  try{$('bpDeveloperUserId').textContent=await window.bpGetCurrentUserId()}
+  catch(e){$('bpDeveloperUserId').textContent='Unable to identify account: '+e.message}
+ });
+ $('bpDeveloperClose')?.addEventListener('click',()=>modal.hidden=true);
+ modal?.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true});
+ $('bpDeveloperCopyId')?.addEventListener('click',async()=>{
+  const id=$('bpDeveloperUserId').textContent;
+  if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(id))return;
+  try{await navigator.clipboard.writeText(id);$('bpDeveloperStatus').textContent='User ID copied. Use this ID to authorize your developer account in Supabase.'}
+  catch(_){$('bpDeveloperStatus').textContent='Press and hold the user ID to select and copy it.'}
+ });
 })();
 </script></html>
