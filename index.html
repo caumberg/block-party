@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.97 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.98 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1519,7 +1519,7 @@ window.addEventListener('message',function(e){
 })();
 </script>
 <style id="bp-tab-balances-v2486">
-/* v2.4.97: larger currency icon and amount, without startup script changes */
+/* v2.4.98: larger currency icon and amount, without startup script changes */
 .bp-wallet-tabs button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:88px!important;padding:11px 4px!important;font-size:clamp(14px,3.6vw,18px)!important;line-height:1.2!important;white-space:nowrap!important}
 .bp-wallet-tabs .bp-tab-value{display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-size:clamp(24px,6vw,31px)!important;font-weight:900!important;line-height:1.15!important;white-space:nowrap!important}
 .bp-wallet-tabs .bp-tab-count{font-size:inherit!important;font-weight:900!important;line-height:inherit!important}
@@ -1551,7 +1551,7 @@ window.addEventListener('message',function(e){
 #bpIdleClock:before{content:'';position:absolute;inset:14px;background:#141d3c;border-radius:50%}
 #bpIdleClockCenter{z-index:1;font-size:31px;font-weight:900;line-height:1.05}#bpIdleClockCenter small{display:block;font-size:11px;letter-spacing:.1em;margin-top:5px}
 #bpIdleClock.ready{background:conic-gradient(#34d399 100%,#34d399 100%);color:#61ffae;cursor:pointer}#bpIdleClock.ready:before{background:#153b34}#bpIdleClock.ready #bpIdleClockCenter{font-size:76px}
-/* v2.4.97: clear idle claim affordance; circular, contained focus/press glow. */
+/* v2.4.98: clear idle claim affordance; circular, contained focus/press glow. */
 #bpIdleClock{isolation:isolate;outline:0!important;-webkit-tap-highlight-color:transparent;box-shadow:0 0 11px 2px #ac74ff30!important}
 #bpIdleClock.ready{box-shadow:0 0 12px 3px #34d39955!important}
 #bpIdleClock:focus,#bpIdleClock:focus-visible,#bpIdleClock:active{outline:0!important;filter:none!important}
@@ -3785,4 +3785,59 @@ document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>set
  position:relative!important;
  top:auto!important;
 }
-</style></html>
+</style><style id="bp-consistent-close-v2498">
+/* Campaign-style circular close buttons, themed to each panel. */
+#bpWalletClose,#tutorialClose,#bpLbTopClose,#bpArcadeClose{
+ box-sizing:border-box!important;width:43px!important;height:43px!important;
+ min-width:43px!important;min-height:43px!important;padding:0!important;
+ display:grid!important;place-items:center!important;
+ border:1.5px solid var(--bp-close-accent,#a7b8ff)!important;
+ border-radius:50%!important;
+ background:var(--bp-close-bg,linear-gradient(145deg,#31446e,#1a2549))!important;
+ color:#fff!important;font-size:29px!important;font-weight:400!important;
+ line-height:1!important;box-shadow:0 0 9px var(--bp-close-glow,#769bff33)!important;
+ text-decoration:none!important;cursor:pointer!important;
+}
+#bpWalletClose{--bp-close-accent:#ae92f1;--bp-close-bg:linear-gradient(145deg,#514187,#292554);--bp-close-glow:#aa7fff30}
+#tutorialClose{--bp-close-accent:#66d8ff;--bp-close-bg:linear-gradient(145deg,#20517b,#112a51);--bp-close-glow:#56ccff30}
+#bpLbTopClose{--bp-close-accent:#b88aff;--bp-close-bg:linear-gradient(145deg,#553b92,#2a2054);--bp-close-glow:#b28aff30}
+#bpArcadeClose{--bp-close-accent:#61d6ff;--bp-close-bg:linear-gradient(145deg,#215b85,#182b61);--bp-close-glow:#50c8ff35}
+#bpLeaderboard .bp-lb-top{display:flex!important;align-items:center!important;gap:10px!important}
+#bpLeaderboard .bp-lb-top h2{flex:1;min-width:0}
+#bpLeaderboard #bpLbTopClose{margin-left:4px;flex-shrink:0}
+#menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) .menu-card{position:relative!important}
+#bpArcadeClose{display:none!important}
+#menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) #bpArcadeClose{
+ display:grid!important;position:absolute!important;top:21px!important;right:21px!important;z-index:20!important
+}
+#menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) .menu-hero{padding-top:48px!important}
+@media(max-width:420px){
+ #bpWalletClose,#tutorialClose,#bpLbTopClose,#bpArcadeClose{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;font-size:27px!important}
+ #menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) #bpArcadeClose{top:16px!important;right:16px!important}
+}
+</style><script id="bp-consistent-close-init-v2498">
+(function(){
+ function setup(){
+  const menu=document.getElementById('menu');
+  const card=menu&&menu.querySelector('.menu-card');
+  if(card&&!document.getElementById('bpArcadeClose')){
+   const btn=document.createElement('button');
+   btn.id='bpArcadeClose';btn.type='button';btn.textContent='×';btn.setAttribute('aria-label','Close Arcade and return to main menu');
+   btn.addEventListener('click',function(){
+    const back=document.getElementById('bpArcadeBack');
+    if(back)back.click();
+   });
+   card.appendChild(btn);
+  }
+  const lb=document.querySelector('#bpLeaderboard .bp-lb-top');
+  if(lb&&!document.getElementById('bpLbTopClose')){
+   const btn=document.createElement('button');
+   btn.id='bpLbTopClose';btn.type='button';btn.textContent='×';btn.setAttribute('aria-label','Close leaderboards');
+   btn.addEventListener('click',function(){document.getElementById('bpLbClose')?.click();});
+   lb.appendChild(btn);
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
+ else setup();
+})();
+</script></html>
