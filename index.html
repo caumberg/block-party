@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.77 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.78 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1485,7 +1485,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
 .bp-day-tile.ready.center{border-color:#55e49d;background:linear-gradient(140deg,#205c55,#2b6a58)}
 .bp-day-tile:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .bp-carousel-arrow{position:absolute;z-index:12;top:85px;width:34px;height:48px;border:1px solid #8c8cc4;border-radius:12px;background:#151d3bdc;color:#fff;font-size:32px;line-height:1;cursor:pointer;display:grid;place-items:center}.bp-carousel-arrow.prev{left:0}.bp-carousel-arrow.next{right:0}.bp-carousel-arrow:disabled{opacity:.25;cursor:default}
-.bp-daily-carousel{touch-action:pan-y;user-select:none;-webkit-user-select:none}.bp-daily-carousel.dragging .bp-day-tile{transition:none}.bp-carousel-note{text-align:center;color:#c4cdec;font-size:11px;margin-top:0}
+.bp-daily-carousel{touch-action:none;user-select:none;-webkit-user-select:none}.bp-daily-carousel .bp-day-tile{touch-action:none}.bp-daily-carousel.dragging .bp-day-tile{transition:none!important}.bp-carousel-note{text-align:center;color:#c4cdec;font-size:11px;margin-top:0}
 @media(max-width:430px){.bp-daily-carousel{height:193px}.bp-day-tile{top:12px;height:158px;width:39%;padding:8px 3px}.bp-day-tile .bp-day-icon{font-size:25px}.bp-day-tile .bp-day-amount{font-size:18px}.bp-carousel-arrow{top:68px;width:29px;height:42px}}
 .bp-daily-caption{font-size:12px;color:#c9d3ed;text-align:center;margin:10px 2px 0}
 .bp-idle-card{padding:18px 12px}.bp-idle-card strong{margin-bottom:12px}
@@ -2722,11 +2722,12 @@ function bpPositionDaily(){
   tile.classList.toggle('center',dist<.5);
   tile.style.pointerEvents=dist>4?'none':'auto';
  }
- const note=el('bpCarouselNote');if(note&&!bpCarouselDragActive)note.textContent=bpCarouselFocus===bpCarouselPending?'Next reward centered · Swipe to browse':'Viewing Day '+bpCarouselFocus+' · Swipe to browse';
+ const note=el('bpCarouselNote');if(note&&!bpCarouselDragActive)note.textContent=Math.round(bpCarouselFocus)===bpCarouselPending?'Next reward centered · Swipe to browse':'Viewing Day '+Math.round(bpCarouselFocus)+' · Swipe to browse';
 }
 function bpRenderDaily(){
  const strip=el('bpDailyStrip');if(!strip)return;
  if(!wallet){strip.replaceChildren();strip.textContent='Loading daily rewards…';return}
+ if(bpCarouselDragActive)return;
  const streak=Math.max(0,Number(wallet.active_streak||0));
  const claimed=!!wallet.claimed_today;
  const next=Math.max(1,Number(wallet.next_streak||streak+1));
@@ -2764,42 +2765,58 @@ function bpRenderDaily(){
 }
 (function(){
  const stage=el('bpDailyCarousel');
- let startX=0,startY=0,startFocus=0,tracking=false,dragging=false,pointerId=null;
- stage.addEventListener('pointerdown',e=>{
-  if(e.pointerType==='mouse'&&e.button!==0)return;
-  startX=e.clientX;startY=e.clientY;startFocus=bpCarouselFocus;
-  tracking=true;dragging=false;pointerId=e.pointerId;
- });
- stage.addEventListener('pointermove',e=>{
-  if(!tracking||e.pointerId!==pointerId)return;
-  const dx=e.clientX-startX,dy=e.clientY-startY;
-  if(!dragging&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.05){
+ let startX=0,startY=0,startFocus=0,tracking=false,dragging=false,mouseDown=false;
+ const begin=(x,y)=>{
+  startX=x;startY=y;startFocus=bpCarouselFocus;
+  tracking=true;dragging=false;
+ };
+ const move=(x,y,event)=>{
+  if(!tracking)return;
+  const dx=x-startX,dy=y-startY;
+  if(!dragging&&Math.abs(dx)>5&&Math.abs(dx)>Math.abs(dy)*.7){
    dragging=true;bpCarouselDragActive=true;stage.classList.add('dragging');
-   try{stage.setPointerCapture(e.pointerId)}catch(_){}
   }
   if(dragging){
+   // Live, fractional carousel positioning: do not rebuild cards during the gesture.
    const step=(stage.clientWidth||320)*.235;
    bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,startFocus-dx/step));
    bpPositionDaily();
-   if(e.cancelable)e.preventDefault();
+   if(event&&event.cancelable)event.preventDefault();
   }
- },{passive:false});
- const finish=e=>{
-  if(!tracking||e.pointerId!==pointerId)return;
-  tracking=false;pointerId=null;
+ };
+ const finish=()=>{
+  if(!tracking)return;
+  tracking=false;
   if(dragging){
-   bpCarouselSuppressClick=Date.now()+450;
+   bpCarouselSuppressClick=Date.now()+550;
    bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,Math.round(bpCarouselFocus)));
   }
   dragging=false;bpCarouselDragActive=false;
-  stage.classList.remove('dragging');bpPositionDaily();
+  stage.classList.remove('dragging');
+  bpPositionDaily();
  };
- stage.addEventListener('pointerup',finish);
- stage.addEventListener('pointercancel',finish);
- stage.addEventListener('lostpointercapture',e=>{if(tracking)finish(e)});
+ // Handle touch directly. Pointer capture on nested buttons was cancelling
+ // Android gestures and snapping the carousel back to its starting card.
+ stage.addEventListener('touchstart',e=>{
+  if(e.touches.length!==1)return;
+  const t=e.touches[0];begin(t.clientX,t.clientY);
+ },{passive:true});
+ stage.addEventListener('touchmove',e=>{
+  if(e.touches.length!==1)return;
+  const t=e.touches[0];move(t.clientX,t.clientY,e);
+ },{passive:false});
+ stage.addEventListener('touchend',finish,{passive:true});
+ stage.addEventListener('touchcancel',finish,{passive:true});
+ // Mouse and trackpad support, without interfering with touch events.
+ stage.addEventListener('mousedown',e=>{
+  if(e.button!==0)return;
+  mouseDown=true;begin(e.clientX,e.clientY);
+ });
+ window.addEventListener('mousemove',e=>{if(mouseDown)move(e.clientX,e.clientY,e)});
+ window.addEventListener('mouseup',()=>{if(mouseDown){mouseDown=false;finish()}});
  stage.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
-   e.preventDefault();bpCarouselMove(e.key==='ArrowRight'?1:-1)
+   e.preventDefault();bpCarouselMove(e.key==='ArrowRight'?1:-1);
   }
  });
 })();
