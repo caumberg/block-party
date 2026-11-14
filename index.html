@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.75 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.76 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1478,14 +1478,14 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
 .bp-daily-section{border:1px solid #53638f;border-radius:16px;background:#121c37;padding:12px 9px}
 .bp-daily-carousel{position:relative;overflow:hidden;height:218px;perspective:850px;isolation:isolate;margin:4px 0}
 .bp-daily-strip{position:absolute;inset:0;transform-style:preserve-3d;overflow:hidden}
-.bp-day-tile{position:absolute;top:15px;left:50%;width:33%;height:180px;transform:translateX(-50%) translateX(var(--dx,0px)) translateZ(var(--z,0px)) rotateY(var(--ry,0deg)) scale(var(--sc,1));transform-origin:center;transition:transform .35s ease,opacity .35s ease,box-shadow .35s ease;opacity:var(--op,1);z-index:var(--layer,1);border:1px solid #56699c;border-radius:16px;background:linear-gradient(155deg,#2a3664,#151f3d);color:#e6e8ff;padding:12px 5px;display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:5px;font-size:12px;font-weight:800;box-shadow:0 14px 22px #0008;overflow:hidden;cursor:pointer}
+.bp-day-tile{will-change:transform,opacity;backface-visibility:hidden;position:absolute;top:15px;left:50%;width:33%;height:180px;transform:translateX(-50%) translateX(var(--dx,0px)) translateZ(var(--z,0px)) rotateY(var(--ry,0deg)) scale(var(--sc,1));transform-origin:center;transition:transform .54s cubic-bezier(.2,.75,.18,1),opacity .54s ease,box-shadow .54s ease;opacity:var(--op,1);z-index:var(--layer,1);border:1px solid #56699c;border-radius:16px;background:linear-gradient(155deg,#2a3664,#151f3d);color:#e6e8ff;padding:12px 5px;display:flex;flex-direction:column;align-items:center;justify-content:space-around;gap:5px;font-size:12px;font-weight:800;box-shadow:0 14px 22px #0008;overflow:hidden;cursor:pointer}
 .bp-day-tile.center{border:2px solid #db9dff;background:linear-gradient(160deg,#6331a4,#252653);box-shadow:0 0 22px #b56cff77,0 18px 25px #0009}
 .bp-day-tile.claimed:not(.center){background:linear-gradient(155deg,#225c50,#172f3a);border-color:#50a58c}.bp-day-tile.future:not(.center){filter:saturate(.8)}
 .bp-day-tile .bp-day-number{font-size:13px}.bp-day-tile .bp-day-icon{font-size:30px}.bp-day-tile .bp-day-amount{color:#ffda80;font-size:20px}.bp-day-tile .bp-day-state{font-size:11px;font-weight:650;text-align:center;line-height:1.25}
 .bp-day-tile.ready.center{border-color:#55e49d;background:linear-gradient(140deg,#205c55,#2b6a58)}
 .bp-day-tile:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .bp-carousel-arrow{position:absolute;z-index:12;top:85px;width:34px;height:48px;border:1px solid #8c8cc4;border-radius:12px;background:#151d3bdc;color:#fff;font-size:32px;line-height:1;cursor:pointer;display:grid;place-items:center}.bp-carousel-arrow.prev{left:0}.bp-carousel-arrow.next{right:0}.bp-carousel-arrow:disabled{opacity:.25;cursor:default}
-.bp-carousel-note{text-align:center;color:#c4cdec;font-size:11px;margin-top:0}
+.bp-daily-carousel{touch-action:pan-y;user-select:none;-webkit-user-select:none}.bp-daily-carousel.dragging .bp-day-tile{transition:none}.bp-carousel-note{text-align:center;color:#c4cdec;font-size:11px;margin-top:0}
 @media(max-width:430px){.bp-daily-carousel{height:193px}.bp-day-tile{top:12px;height:158px;width:39%;padding:8px 3px}.bp-day-tile .bp-day-icon{font-size:25px}.bp-day-tile .bp-day-amount{font-size:18px}.bp-carousel-arrow{top:68px;width:29px;height:42px}}
 .bp-daily-caption{font-size:12px;color:#c9d3ed;text-align:center;margin:10px 2px 0}
 .bp-idle-card{padding:18px 12px}.bp-idle-card strong{margin-bottom:12px}
@@ -1503,7 +1503,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
   <div class="bp-wallet-tabs" role="tablist" aria-label="Rewards or store"><button id="bpWalletTabTokens" type="button" role="tab" aria-selected="true">🪙 Token Wallet</button><button id="bpWalletTabStore" type="button" role="tab" aria-selected="false">🎟️ Ticket Store</button></div>
   <div id="bpWalletTokensPane" role="tabpanel">
    <div class="bp-wallet-balance"><span id="bpWalletBalance">0</span> 🪙<small>Tokens saved securely in Supabase</small></div>
-   <section class="bp-daily-section"><div class="bp-wallet-section-head"><strong>🎁 Daily Rewards</strong><span id="bpWeeklyInfo"></span></div><div class="bp-daily-carousel" id="bpDailyCarousel"><button class="bp-carousel-arrow prev" id="bpDayPrev" aria-label="Previous reward day">‹</button><div id="bpDailyStrip" class="bp-daily-strip" aria-label="Seven-day daily bonus carousel"></div><button class="bp-carousel-arrow next" id="bpDayNext" aria-label="Next reward day">›</button></div><div class="bp-carousel-note" id="bpCarouselNote">‹ Swipe or use arrows to browse rewards ›</div><p id="bpDailyInfo" class="bp-daily-caption"></p><button id="bpDailyClaim" type="button" hidden>Claim daily</button></section>
+   <section class="bp-daily-section"><div class="bp-wallet-section-head"><strong>🎁 Daily Rewards</strong><span id="bpWeeklyInfo"></span></div><div class="bp-daily-carousel" id="bpDailyCarousel"><div id="bpDailyStrip" class="bp-daily-strip" aria-label="Seven-day daily bonus carousel"></div></div><div class="bp-carousel-note" id="bpCarouselNote">Swipe to browse your streak rewards</div><p id="bpDailyInfo" class="bp-daily-caption"></p><button id="bpDailyClaim" type="button" hidden>Claim daily</button></section>
    <div class="bp-idle-card"><strong>⏱ Idle Token Reward</strong><button id="bpIdleClock" type="button" aria-label="Claim available idle tokens" disabled><span id="bpIdleClockCenter">+10<small>TOKENS</small></span></button><div id="bpIdleTimer" class="bp-idle-timer">60:00</div><p id="bpIdleInfo">10 tokens unlock after the first hour.</p><button type="button" id="bpIdleClaim" disabled hidden>Redeem tokens</button></div>
   </div>
   <div id="bpWalletStorePane" role="tabpanel" hidden><div id="bpWalletStoreMount"></div></div>
@@ -2706,48 +2706,78 @@ async function refreshIdle(){
  finally{idleLoading=false}
 }
 function bpDayReward(n){return 3+2*(((Math.max(1,n)-1)%7)+1)}
-let bpCarouselOffset=0,bpCarouselCycle=0;
-function bpShiftCarousel(direction){bpCarouselOffset=Math.max(-6,Math.min(6,bpCarouselOffset+direction));bpRenderDaily()}
+let bpCarouselFocus=0,bpCarouselEnd=0,bpCarouselPending=0,bpCarouselDrag=0,bpCarouselDragActive=false,bpCarouselSuppressClick=0;
+function bpCarouselMove(direction){bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,bpCarouselFocus+direction));bpPositionDaily()}
+function bpPositionDaily(){
+ const strip=el('bpDailyStrip'),stage=el('bpDailyCarousel');if(!strip||!stage)return;
+ const w=stage.clientWidth||320;
+ for(const tile of strip.children){
+  const day=Number(tile.dataset.day),diff=day-bpCarouselFocus,dist=Math.abs(diff);
+  const dx=Math.sign(diff)*Math.min(dist,4)*w*.235+bpCarouselDrag;
+  tile.style.setProperty('--dx',dx+'px');tile.style.setProperty('--z',(-Math.min(dist,8)*68)+'px');
+  tile.style.setProperty('--ry',(-Math.sign(diff)*Math.min(dist*19,65))+'deg');
+  tile.style.setProperty('--sc',String(Math.max(.52,1-dist*.13)));
+  tile.style.setProperty('--op',String(dist>5?0:Math.max(.16,1-dist*.2)));
+  tile.style.setProperty('--layer',String(100-dist));
+  tile.classList.toggle('center',diff===0);
+  tile.style.pointerEvents=dist>4?'none':'auto';
+ }
+ const note=el('bpCarouselNote');if(note)note.textContent=bpCarouselFocus===bpCarouselPending?'Next reward centered · Swipe to browse':'Viewing Day '+bpCarouselFocus+' · Swipe to browse';
+}
 function bpRenderDaily(){
  const strip=el('bpDailyStrip');if(!strip)return;
- strip.replaceChildren();
- if(!wallet){strip.textContent='Loading daily rewards…';return}
+ if(!wallet){strip.replaceChildren();strip.textContent='Loading daily rewards…';return}
  const streak=Math.max(0,Number(wallet.active_streak||0));
  const claimed=!!wallet.claimed_today;
  const next=Math.max(1,Number(wallet.next_streak||streak+1));
- const start=Math.floor((next-1)/7)*7+1;
- if(bpCarouselCycle!==start){bpCarouselCycle=start;bpCarouselOffset=0}
- const pendingIndex=next-start,focus=Math.max(0,Math.min(6,pendingIndex+bpCarouselOffset));
- const serverNow=Date.now()+serverOffset;
- const utcNow=new Date(serverNow);const untilMidnight=Math.max(0,Date.UTC(utcNow.getUTCFullYear(),utcNow.getUTCMonth(),utcNow.getUTCDate()+1)-serverNow);
- const fmt=ms=>{const m=Math.ceil(ms/60000);return m>=1440?Math.floor(m/1440)+'d '+Math.floor(m%1440/60)+'h':String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
- const w=el('bpDailyCarousel').clientWidth||320;
- for(let i=0;i<7;i++){
-  const day=start+i,done=day<=streak,pending=day===next,ready=pending&&!claimed&&!busy;
-  const diff=i-focus,dist=Math.abs(diff);
-  const btn=document.createElement('button');btn.type='button';btn.className='bp-day-tile '+(done?'claimed':pending?'pending':'future')+(ready?' ready':'')+(diff===0?' center':'');
-  btn.style.setProperty('--dx',(Math.sign(diff)*(Math.min(dist,3)*w*.235))+'px');
-  btn.style.setProperty('--z',(-dist*68)+'px');btn.style.setProperty('--ry',(-Math.sign(diff)*Math.min(dist*19,55))+'deg');
-  btn.style.setProperty('--sc',String(Math.max(.62,1-dist*.13)));btn.style.setProperty('--op',String(Math.max(.2,1-dist*.2)));
-  btn.style.setProperty('--layer',String(10-dist));btn.setAttribute('aria-label','Day '+day+', '+bpDayReward(day)+' tokens'+(done?', claimed':pending?', next reward':''));
-  const num=document.createElement('span');num.className='bp-day-number';num.textContent='DAY '+day;
-  const icon=document.createElement('span');icon.className='bp-day-icon';icon.textContent=done?'✓':pending?'🎁':'🔒';
-  const amount=document.createElement('span');amount.className='bp-day-amount';amount.textContent='+'+bpDayReward(day);
-  const state=document.createElement('span');state.className='bp-day-state';
-  if(done)state.textContent='Claimed';else if(ready)state.textContent='CLAIM';else if(pending)state.textContent=claimed?fmt(untilMidnight):'Pending';else state.textContent=fmt(untilMidnight+Math.max(0,day-next)*86400000);
-  if(day%7===0){const bonus=document.createElement('span');bonus.style.fontSize='10px';bonus.textContent='🎟 +25 streak tokens';btn.append(bonus)}
-  btn.append(num,icon,amount,state);
-  btn.addEventListener('click',()=>{if(diff!==0){bpCarouselOffset=i-pendingIndex;bpRenderDaily()}else if(ready){el('bpDailyClaim').click()}});
-  strip.append(btn);
+ const end=Math.ceil(next/7)*7;
+ if(bpCarouselEnd!==end||bpCarouselPending!==next||strip.children.length!==end){
+  bpCarouselEnd=end;bpCarouselPending=next;bpCarouselFocus=next;
+  strip.replaceChildren();
+  for(let day=1;day<=end;day++){
+   const tile=document.createElement('button');tile.type='button';tile.className='bp-day-tile';tile.dataset.day=day;
+   const num=document.createElement('span');num.className='bp-day-number';num.textContent='DAY '+day;
+   const icon=document.createElement('span');icon.className='bp-day-icon';
+   const amount=document.createElement('span');amount.className='bp-day-amount';amount.textContent='+'+bpDayReward(day);
+   const state=document.createElement('span');state.className='bp-day-state';
+   tile.append(num,icon,amount,state);
+   if(day%7===0){const bonus=document.createElement('span');bonus.style.fontSize='10px';bonus.textContent='+25 streak bonus';tile.append(bonus)}
+   tile.addEventListener('click',()=>{
+    if(Date.now()<bpCarouselSuppressClick)return;
+    if(bpCarouselFocus!==day){bpCarouselFocus=day;bpPositionDaily()}
+    else if(day===bpCarouselPending&&!wallet.claimed_today&&!busy){el('bpDailyClaim').click()}
+   });
+   strip.append(tile);
+  }
  }
- el('bpDayPrev').disabled=focus===0;el('bpDayNext').disabled=focus===6;
- el('bpCarouselNote').textContent=focus===pendingIndex?'Next reward centered · Browse with arrows':'Viewing Day '+(start+focus)+' · Use arrows to return to next reward';
+ const serverNow=Date.now()+serverOffset,utcNow=new Date(serverNow);
+ const untilMidnight=Math.max(0,Date.UTC(utcNow.getUTCFullYear(),utcNow.getUTCMonth(),utcNow.getUTCDate()+1)-serverNow);
+ const fmt=ms=>{const m=Math.ceil(ms/60000);return m>=1440?Math.floor(m/1440)+'d '+Math.floor(m%1440/60)+'h':String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+ for(const tile of strip.children){
+  const day=Number(tile.dataset.day),done=day<=streak,pending=day===next,ready=pending&&!claimed&&!busy;
+  tile.classList.toggle('claimed',done);tile.classList.toggle('pending',pending);tile.classList.toggle('future',!done&&!pending);tile.classList.toggle('ready',ready);
+  tile.setAttribute('aria-label','Day '+day+', '+bpDayReward(day)+' tokens'+(done?', claimed':pending?', next reward':''));
+  tile.querySelector('.bp-day-icon').textContent=done?'✓':pending?'🎁':'🔒';
+  tile.querySelector('.bp-day-state').textContent=done?'Claimed':ready?'CLAIM':pending?(claimed?fmt(untilMidnight):'Pending'):fmt(untilMidnight+Math.max(0,day-next)*86400000);
+ }
+ bpPositionDaily();
 }
-el('bpDayPrev').addEventListener('click',()=>bpShiftCarousel(-1));
-el('bpDayNext').addEventListener('click',()=>bpShiftCarousel(1));
-let bpSwipeStart=null;
-el('bpDailyCarousel').addEventListener('touchstart',e=>{bpSwipeStart=e.touches[0]?.clientX??null},{passive:true});
-el('bpDailyCarousel').addEventListener('touchend',e=>{if(bpSwipeStart===null)return;const delta=(e.changedTouches[0]?.clientX??bpSwipeStart)-bpSwipeStart;bpSwipeStart=null;if(Math.abs(delta)>35)bpShiftCarousel(delta<0?1:-1)},{passive:true});
+(function(){
+ const stage=el('bpDailyCarousel');let startX=0,startY=0,tracking=false,dragging=false;
+ stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;startX=e.clientX;startY=e.clientY;tracking=true;dragging=false;bpCarouselDrag=0});
+ stage.addEventListener('pointermove',e=>{
+  if(!tracking)return;
+  const dx=e.clientX-startX,dy=e.clientY-startY;
+  if(!dragging&&Math.abs(dx)>9&&Math.abs(dx)>Math.abs(dy)*1.15){dragging=true;stage.classList.add('dragging')}
+  if(dragging){bpCarouselDrag=Math.max(-95,Math.min(95,dx*.55));bpPositionDaily()}
+ });
+ const finish=e=>{if(!tracking)return;tracking=false;stage.classList.remove('dragging');const dx=e.clientX-startX;
+  if(dragging){bpCarouselSuppressClick=Date.now()+400;if(Math.abs(dx)>30)bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,bpCarouselFocus+(dx<0?Math.max(1,Math.round(Math.abs(dx)/110)): -Math.max(1,Math.round(Math.abs(dx)/110)))))}
+  bpCarouselDrag=0;dragging=false;bpPositionDaily();
+ };
+ stage.addEventListener('pointerup',finish);stage.addEventListener('pointercancel',finish);
+ stage.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();bpCarouselMove(e.key==='ArrowRight'?1:-1)}});
+})();
 function renderIdle(){
  if(!idle)return;
  const elapsed=Math.max(0,Math.floor((Date.now()+serverOffset-Date.parse(idle.started_at))/1000));
