@@ -1253,12 +1253,12 @@ body{background-image:linear-gradient(180deg,rgba(5,8,28,.48),rgba(5,8,28,.66)),
 .bp-dev-actions button{background:#473064;border:1px solid #9472c2;border-radius:9px;color:white;padding:9px 12px;cursor:pointer}
 .bp-dev-card label{display:block;margin-top:18px;font-size:13px}.bp-dev-card input{display:block;width:100%;box-sizing:border-box;margin-top:7px;background:#101021;color:#eee;border:1px solid #625174;border-radius:8px;padding:10px}
 .bp-dev-note{color:#f3c987!important}
-</style><div id="bpDeveloperOverlay" hidden role="dialog" aria-modal="true" aria-label="Developer Mode">
- <div class="bp-dev-card"><h2>Developer Mode</h2><p>Your current anonymous Supabase user ID is shown below. Copy it and use it to authorize your account in Supabase.</p>
+body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:fixed;left:50%;bottom:5px;transform:translateX(-50%);background:#3c225b;color:#fff;border:1px solid #c6a0ff;padding:5px 12px;border-radius:30px;z-index:2147482000;pointer-events:none;font:700 11px system-ui;white-space:nowrap}</style><div id="bpDeveloperOverlay" hidden role="dialog" aria-modal="true" aria-label="Developer Mode">
+ <div class="bp-dev-card"><h2>Developer Mode</h2><p>Developer access is verified by Supabase. Test matches never spend real tokens or submit campaign results.</p>
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
- <label for="bpDeveloperPassword">Developer password</label><input type="password" id="bpDeveloperPassword" placeholder="Available after server authorization" disabled autocomplete="off">
- <p class="bp-dev-note" id="bpDeveloperStatus">Developer gameplay is not enabled yet. This screen only identifies your account; it does not bypass tokens or security.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.52 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
+ <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.53 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2130,7 +2130,7 @@ window.bpCampaignLaunchGame=function(l){
  $('diff').value=l.diff;$('aiDiff').value=l.cpu;$('duration').value=String(l.duration||180);
  start();
 };
-async function start(){if(!bpCampaignSettings&&!bpSelectionReady())return;if(window.bpGameStartBusy)return;window.bpGameStartBusy=true;const startButton=document.getElementById("start");if(startButton)startButton.disabled=true;try{if(!bpCampaignSettings && window.bpPowerPrepareLaunch){const mode=$("mode").value,versus=$("play").value==="versus";const l={type:(versus?"versus-":"solo-")+(mode==="battle"?"battle":mode==="timed"?"timed":"line"),diff:$("diff").value};if(!await window.bpPowerPrepareLaunch(l)){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();return;}if(window.bpPowerSession?.passive){await window.bpCampaignRpc("bp_power_consume",{p_item:window.bpPowerSession.passive});}}if(!bpCampaignSettings && !( $("play").value==="solo" && $("mode").value==="line" && $("diff").value==="super-easy" )){if(!window.bpSpendGameEntry)throw Error("Token wallet is not ready. Please reload.");await window.bpSpendGameEntry();}}catch(e){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();const msg=e.message||"Unable to charge game entry";document.getElementById("bpWalletOpen").click();document.getElementById("bpWalletStatus").textContent=msg;return;}window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};settings.openingSeed=bpCampaignSettings?.seed??((Math.random()*4294967296)>>>0);bpVLineBegin();
+async function start(){if(!bpCampaignSettings&&!bpSelectionReady())return;if(window.bpGameStartBusy)return;window.bpGameStartBusy=true;const startButton=document.getElementById("start");if(startButton)startButton.disabled=true;try{if(!bpCampaignSettings && window.bpPowerPrepareLaunch){const mode=$("mode").value,versus=$("play").value==="versus";const l={type:(versus?"versus-":"solo-")+(mode==="battle"?"battle":mode==="timed"?"timed":"line"),diff:$("diff").value};if(!window.bpDevActive && !await window.bpPowerPrepareLaunch(l)){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();return;}if(window.bpPowerSession?.passive){await window.bpCampaignRpc("bp_power_consume",{p_item:window.bpPowerSession.passive});}}if(!bpCampaignSettings && !( $("play").value==="solo" && $("mode").value==="line" && $("diff").value==="super-easy" )){if(!window.bpSpendGameEntry)throw Error("Token wallet is not ready. Please reload.");await window.bpSpendGameEntry();}}catch(e){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();const msg=e.message||"Unable to charge game entry";document.getElementById("bpWalletOpen").click();document.getElementById("bpWalletStatus").textContent=msg;return;}window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};settings.openingSeed=bpCampaignSettings?.seed??((Math.random()*4294967296)>>>0);bpVLineBegin();
 const bpLineVisible=isVersus&&settings.mode==='line';
 for(const id of ['bpHumanLineCount','bpCpuLineCount']){const el=$(id);el.hidden=!bpLineVisible;el.querySelector('b').textContent='—';}
 ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('arena').classList.add('bp-campaign-power');$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
@@ -2595,7 +2595,7 @@ showTutorialPage(0);
 const el=id=>document.getElementById(id);
 const BASE=BP_SUPABASE_URL, KEY=BP_SUPABASE_KEY, SESSION='bp-supabase-anon-v1';
 let session=null, wallet=null, busy=false, idle=null, serverOffset=0, idleLoading=false;
-window.bpSpendGameEntry=async function(){
+window.bpSpendGameEntry=async function(){if(window.bpDevActive)return {balance:999999};
  if(busy)throw Error("Wallet is busy. Try again.");
  busy=true;render();
  try{const latest=await rpc("bp_wallet_get");wallet=latest;render();if(Number(latest.balance)<2)throw Error("You need 2 tokens to start a game. Claim your daily bonus or return later.");
@@ -2620,12 +2620,24 @@ async function getSession(){
 window.bpGetCurrentUserId=async function(){const s=await getSession();if(s?.user?.id)return s.user.id;const token=s?.access_token;if(token){try{const p=JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));if(p.sub)return p.sub}catch(_){}}throw Error('No authenticated user ID found')};
 async function rpc(name,params={}){
  const auth=await getSession();
+ if(window.bpDevActive && /(?:leaderboard|campaign_|power_consume|wallet_spend|wallet_charge|wallet_entry|game_entry|score_submit)/i.test(name) && name!=='bp_developer_authorized' && name!=='bp_campaign_get')throw Error('Developer Mode blocks live write RPC: '+name);
  const r=await fetch(BASE+'/rest/v1/rpc/'+name,{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+auth.access_token,'Content-Type':'application/json'},body:JSON.stringify(params)});
  const raw=await r.text();let data;try{data=JSON.parse(raw)}catch(_){data=raw}
  if(!r.ok)throw Error((data&&data.message)||'Wallet service error '+r.status);
  return data;
 }
-window.bpCampaignRpc=rpc;
+window.bpDevAuthorized=false;
+window.bpDevActive=false;
+window.bpDevVerify=async()=>!!(await rpc('bp_developer_authorized'));
+window.bpCampaignRpc=async(name,params={})=>{
+ if(window.bpDevActive){
+  if(name==='bp_campaign_begin')return {attempt_id:'developer-local',charged_tokens:2,balance:999999};
+  if(name==='bp_campaign_complete')return {unlocked_level:300,stars:{},earned_stars:0,awarded_tokens:0,milestone_paid:0,surprise_powerup:null};
+  if(name==='bp_power_consume')return {success:true};
+  if(name==='bp_wallet_spend'||name==='bp_wallet_charge')return {success:true};
+ }
+ return rpc(name,params);
+};
 window.bpCampaignRefreshWallet=async()=>{try{wallet=await rpc('bp_wallet_get');render()}catch(e){console.warn('Campaign wallet refresh failed',e)}};
 async function refreshIdle(){
  if(idleLoading)return;idleLoading=true;
@@ -2843,7 +2855,7 @@ function render(){
 }
 function detail(){
  if(selectedCheckpoint!==null){checkpointDetail(selectedCheckpoint);return;}
- const l=level(selected),locked=selected>unlocked,d=$('bpCampaignDetail');d.replaceChildren();
+ const l=level(selected),locked=selected>unlocked&&!window.bpDevActive,d=$('bpCampaignDetail');d.replaceChildren();
  const h=document.createElement('h3');h.className='bp-detail-banner';h.textContent=`LEVEL ${selected}`;const earned=Math.max(0,Math.min(3,Number(stars[selected]||0)));const bannerStars=document.createElement('span');bannerStars.className='bp-detail-banner-stars';bannerStars.textContent='★'.repeat(earned)+'☆'.repeat(3-earned);h.append(bannerStars);d.append(h);
  const meta=document.createElement('div');meta.className='bp-preview-meta';meta.textContent=`${title(l)} · ${l.diff.replace(/(^|-)\w/g,x=>x.toUpperCase())}${l.type.startsWith('versus')?' · CPU '+l.cpu:l.type==='solo-timed'?' · '+Math.floor(l.duration/60)+':'+String(l.duration%60).padStart(2,'0'):''}`;/* Redundant mode metadata removed; mode and difficulty remain in preview header. */
  const scene=document.createElement('div');scene.className='bp-cinematic';scene.dataset.mode=l.type;scene.setAttribute('aria-label','Animated demonstration of '+title(l));
@@ -3027,11 +3039,11 @@ $('bpNextBriefStart').onclick=()=>{
  launch(n);
 };
 window.bpCampaignBriefNextLevel=briefNextLevel;
-async function launch(n){if(loading||n>unlocked)return;loading=true;detail();try{const l=level(n);if(window.bpPowerPrepareLaunch){const prepared=await window.bpPowerPrepareLaunch(l);if(!prepared){loading=false;detail();return;}}const d=await window.bpCampaignRpc('bp_campaign_begin',{p_level:n});if(!d?.attempt_id||Number(d.charged_tokens)!==2)throw Error('Campaign entry charge was not confirmed. Please update the Supabase bp_campaign_begin function before playing.');if(window.bpPowerSession?.passive){await window.bpCampaignRpc('bp_power_consume',{p_item:window.bpPowerSession.passive});}active={level:n,attempt:d.attempt_id,started:performance.now()};window.bpCampaignRefreshWallet?.();$('bpCampaignOverlay').hidden=true;window.bpCampaignLaunchGame(l)}catch(e){alert('Unable to start campaign: '+e.message);active=null}finally{loading=false;detail()}}
+async function launch(n){if(loading||(n>unlocked&&!window.bpDevActive))return;loading=true;detail();try{const l=level(n);if(window.bpPowerPrepareLaunch&&!window.bpDevActive){const prepared=await window.bpPowerPrepareLaunch(l);if(!prepared && !window.bpDevActive){loading=false;detail();return;}}const d=await window.bpCampaignRpc('bp_campaign_begin',{p_level:n});if(!d?.attempt_id||Number(d.charged_tokens)!==2)throw Error('Campaign entry charge was not confirmed. Please update the Supabase bp_campaign_begin function before playing.');if(window.bpPowerSession?.passive){await window.bpCampaignRpc('bp_power_consume',{p_item:window.bpPowerSession.passive});}active={level:n,attempt:d.attempt_id,started:performance.now()};window.bpCampaignRefreshWallet?.();$('bpCampaignOverlay').hidden=true;window.bpCampaignLaunchGame(l)}catch(e){alert('Unable to start campaign: '+e.message);active=null}finally{loading=false;detail()}}
 // Campaign Solo results share the standard Solo leaderboards only when the
 // mode, difficulty and duration have an equivalent public leaderboard.
 // The campaign attempt is consumed once before this function is called.
-async function bpSubmitCampaignSoloLeaderboard(l,result){
+async function bpSubmitCampaignSoloLeaderboard(l,result){if(window.bpDevActive)return;
  if(window.bpPowerSession?.assisted||!result.won||!l||!String(l.type).startsWith('solo-'))return;
  const diff=String(l.diff||'').toLowerCase();
  if(!['easy','medium','hard'].includes(diff))return;
@@ -3059,6 +3071,12 @@ async function bpSubmitCampaignSoloLeaderboard(l,result){
 async function complete(result){
  if(!active)return;
  const a=active;active=null;
+ if(window.bpDevActive){
+   $('victoryAgain').disabled=false;
+   selected=a.level;render();
+   if(result.won)window.bpShowCampaignStars?.(a.level,0,false,false);
+   return;
+ }
  $('victoryAgain').disabled=true;
  try{
   const d=await window.bpCampaignRpc('bp_campaign_complete',{
@@ -3295,6 +3313,24 @@ document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>set
   modal.hidden=false;$('bpDeveloperUserId').textContent='Loading…';
   try{$('bpDeveloperUserId').textContent=await window.bpGetCurrentUserId()}
   catch(e){$('bpDeveloperUserId').textContent='Unable to identify account: '+e.message}
+ });
+ $('bpDeveloperEnter')?.addEventListener('click',async()=>{
+  const status=$('bpDeveloperStatus');status.textContent='Checking Supabase developer authorization…';
+  try{
+   if(!await window.bpDevVerify())throw Error('This account is not authorized.');
+   window.bpDevAuthorized=true;window.bpDevActive=true;
+   $('bpDeveloperEnter').hidden=true;$('bpDeveloperExit').hidden=false;
+   status.textContent='Developer Mode ACTIVE. Campaign tests use local attempts; no tokens or campaign progress are written.';
+   document.body.classList.add('bp-developer-active');
+   document.getElementById('bpDeveloperModeOpen').textContent='Developer Mode ACTIVE';
+  }catch(e){status.textContent='Access denied: '+e.message}
+ });
+ $('bpDeveloperExit')?.addEventListener('click',()=>{
+  window.bpDevActive=false;window.bpDevAuthorized=false;
+  $('bpDeveloperEnter').hidden=false;$('bpDeveloperExit').hidden=true;
+  document.body.classList.remove('bp-developer-active');
+  document.getElementById('bpDeveloperModeOpen').textContent='Enter Developer Mode';
+  $('bpDeveloperStatus').textContent='Developer Mode disabled. Reload the game before playing normally.';
  });
  $('bpDeveloperClose')?.addEventListener('click',()=>modal.hidden=true);
  modal?.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true});
