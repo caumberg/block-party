@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.99 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.5.00 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1519,7 +1519,7 @@ window.addEventListener('message',function(e){
 })();
 </script>
 <style id="bp-tab-balances-v2486">
-/* v2.4.99: larger currency icon and amount, without startup script changes */
+/* v2.5.00: larger currency icon and amount, without startup script changes */
 .bp-wallet-tabs button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:88px!important;padding:11px 4px!important;font-size:clamp(14px,3.6vw,18px)!important;line-height:1.2!important;white-space:nowrap!important}
 .bp-wallet-tabs .bp-tab-value{display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-size:clamp(24px,6vw,31px)!important;font-weight:900!important;line-height:1.15!important;white-space:nowrap!important}
 .bp-wallet-tabs .bp-tab-count{font-size:inherit!important;font-weight:900!important;line-height:inherit!important}
@@ -1551,7 +1551,7 @@ window.addEventListener('message',function(e){
 #bpIdleClock:before{content:'';position:absolute;inset:14px;background:#141d3c;border-radius:50%}
 #bpIdleClockCenter{z-index:1;font-size:31px;font-weight:900;line-height:1.05}#bpIdleClockCenter small{display:block;font-size:11px;letter-spacing:.1em;margin-top:5px}
 #bpIdleClock.ready{background:conic-gradient(#34d399 100%,#34d399 100%);color:#61ffae;cursor:pointer}#bpIdleClock.ready:before{background:#153b34}#bpIdleClock.ready #bpIdleClockCenter{font-size:76px}
-/* v2.4.99: clear idle claim affordance; circular, contained focus/press glow. */
+/* v2.5.00: clear idle claim affordance; circular, contained focus/press glow. */
 #bpIdleClock{isolation:isolate;outline:0!important;-webkit-tap-highlight-color:transparent;box-shadow:0 0 11px 2px #ac74ff30!important}
 #bpIdleClock.ready{box-shadow:0 0 12px 3px #34d39955!important}
 #bpIdleClock:focus,#bpIdleClock:focus-visible,#bpIdleClock:active{outline:0!important;filter:none!important}
@@ -3878,4 +3878,81 @@ document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>set
 /* Preserve campaign header positioning, while matching the other controls. */
 #bpCampaignOverlay #bpCampaignClose{position:absolute!important;top:2px!important;right:2px!important;z-index:8!important}
 #menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) #bpArcadeClose{top:20px!important;right:20px!important}
-</style></html>
+</style><style id="bp-main-menu-cards-v2500">
+/* Two premium feature cards, same dimensions, preserving original button handlers. */
+#menu.bp-menu-ready #bpArcadeHome{display:grid;gap:12px;margin:4px 12px 14px!important}
+#menu.bp-menu-ready #bpArcadeHome>#bpCampaignOpen,
+#menu.bp-menu-ready #bpArcadeHome>#bpArcadeOpen{
+ width:100%!important;height:clamp(134px,17vh,172px)!important;min-height:0!important;
+ margin:0!important;box-sizing:border-box!important;border-radius:21px!important;
+ display:grid!important;grid-template-columns:26% minmax(0,1fr)!important;
+ align-items:center!important;gap:10px!important;padding:13px 14px!important;
+ position:relative!important;overflow:visible!important;isolation:isolate!important;
+ transition:transform .16s ease,filter .16s ease!important;
+}
+#menu.bp-menu-ready #bpArcadeHome>#bpCampaignOpen{
+ border:2px solid #e77bff!important;background:linear-gradient(118deg,#a100d2 0%,#4b167c 29%,#26124f 78%,#7c16ad 100%)!important;
+ box-shadow:inset 0 0 13px #f394ff55,0 0 9px #b93bff55!important;
+}
+#menu.bp-menu-ready #bpArcadeHome>#bpArcadeOpen{
+ border:2px solid #3ce8ff!important;background:linear-gradient(120deg,#0065d8 0%,#092c85 33%,#071b57 79%,#005dbd 100%)!important;
+ box-shadow:inset 0 0 13px #61edff55,0 0 9px #20cfff55!important;
+}
+#menu.bp-menu-ready #bpArcadeHome>button:active{transform:scale(.99)!important}
+#bpCampaignOpen .bp-card-art,#bpArcadeOpen .bp-card-art{
+ display:grid;place-items:center;position:relative;min-width:0;min-height:0;height:100%;
+ border-right:1px solid #ffffff88;padding-right:8px;
+}
+#bpCampaignOpen .bp-card-art .bp-card-emoji,#bpArcadeOpen .bp-card-art .bp-card-emoji{
+ font-size:clamp(43px,10vw,75px);line-height:1;filter:drop-shadow(0 5px 5px #0008) drop-shadow(0 0 9px #d484ffbb);
+}
+#bpArcadeOpen .bp-card-art .bp-card-emoji{filter:drop-shadow(0 5px 5px #0008) drop-shadow(0 0 9px #45e8ffbb)}
+#bpCampaignOpen .bp-card-art .bp-card-art-sub{font-size:clamp(15px,3.5vw,23px);letter-spacing:2px;color:#ffd46a;filter:drop-shadow(0 0 5px #ffa600)}
+#bpCampaignOpen .bp-card-body,#bpArcadeOpen .bp-card-body{display:flex;flex-direction:column;gap:7px;min-width:0;text-align:left}
+#bpCampaignOpen .bp-feature-title,#bpArcadeOpen .bp-arcade-title{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:5px!important;color:#fff!important;font-weight:1000!important;
+ font-size:clamp(19px,5.2vw,29px)!important;line-height:1.1!important;
+ text-shadow:0 1px 6px #fff4;letter-spacing:.012em!important;
+}
+#bpCampaignOpen .bp-feature-title>span,#bpArcadeOpen .bp-arcade-title>span{
+ flex-shrink:0;font-size:clamp(10px,2.7vw,15px)!important;color:#fff!important;
+ border-radius:50px;padding:5px 8px;border:1px solid #e787ff;
+ background:linear-gradient(#a525d2,#7510b5);box-shadow:0 0 7px #db3dff77;
+ font-weight:950!important;letter-spacing:0!important;white-space:nowrap;
+}
+#bpArcadeOpen .bp-arcade-title>span{border-color:#53f5ff;background:linear-gradient(#028ee4,#0451aa);box-shadow:0 0 7px #20dbff77}
+#bpCampaignOpen .bp-feature-progress,#bpArcadeOpen .bp-arcade-sub{
+ color:#f7edff!important;font-size:clamp(11px,2.9vw,15px)!important;
+ font-weight:600!important;line-height:1.3!important;letter-spacing:0!important;margin:0!important;
+}
+#bpArcadeOpen .bp-arcade-tags{color:#70f0ff!important;font-size:clamp(9px,2.3vw,12px)!important;font-weight:900!important;margin:0!important;line-height:1.25}
+#bpCampaignOpen .bp-feature-track{width:100%;height:8px!important;border-radius:20px;background:#180d32!important;margin-top:2px}
+#bpCampaignOpen .bp-feature-track>span{background:linear-gradient(90deg,#e1a1ff,#ffd76b)!important}
+@media(max-width:380px){
+ #menu.bp-menu-ready #bpArcadeHome{margin-left:8px!important;margin-right:8px!important;gap:10px}
+ #menu.bp-menu-ready #bpArcadeHome>button{padding:11px 9px!important;grid-template-columns:24% minmax(0,1fr)!important}
+ #bpCampaignOpen .bp-card-body,#bpArcadeOpen .bp-card-body{gap:5px}
+ #bpCampaignOpen .bp-feature-title>span,#bpArcadeOpen .bp-arcade-title>span{padding:4px 5px}
+}
+@media(max-height:750px){#menu.bp-menu-ready #bpArcadeHome>button{height:128px!important}}
+</style><script id="bp-main-menu-cards-init-v2500">
+(function(){
+ function setup(){
+  const campaign=document.getElementById('bpCampaignOpen');
+  const arcade=document.getElementById('bpArcadeOpen');
+  if(!campaign||!arcade||campaign.querySelector('.bp-card-body'))return;
+  const art=document.createElement('span');art.className='bp-card-art';
+  art.innerHTML='<span><span class="bp-card-emoji">🏁</span><span class="bp-card-art-sub">★★★</span></span>';
+  const body=document.createElement('span');body.className='bp-card-body';
+  while(campaign.firstChild)body.appendChild(campaign.firstChild);
+  campaign.append(art,body);
+  const art2=document.createElement('span');art2.className='bp-card-art';
+  art2.innerHTML='<span class="bp-card-emoji">🎮</span>';
+  const body2=document.createElement('span');body2.className='bp-card-body';
+  while(arcade.firstChild)body2.appendChild(arcade.firstChild);
+  arcade.append(art2,body2);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
+})();
+</script></html>
