@@ -1258,7 +1258,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.53 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.54 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2130,7 +2130,7 @@ window.bpCampaignLaunchGame=function(l){
  $('diff').value=l.diff;$('aiDiff').value=l.cpu;$('duration').value=String(l.duration||180);
  start();
 };
-async function start(){if(!bpCampaignSettings&&!bpSelectionReady())return;if(window.bpGameStartBusy)return;window.bpGameStartBusy=true;const startButton=document.getElementById("start");if(startButton)startButton.disabled=true;try{if(!bpCampaignSettings && window.bpPowerPrepareLaunch){const mode=$("mode").value,versus=$("play").value==="versus";const l={type:(versus?"versus-":"solo-")+(mode==="battle"?"battle":mode==="timed"?"timed":"line"),diff:$("diff").value};if(!window.bpDevActive && !await window.bpPowerPrepareLaunch(l)){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();return;}if(window.bpPowerSession?.passive){await window.bpCampaignRpc("bp_power_consume",{p_item:window.bpPowerSession.passive});}}if(!bpCampaignSettings && !( $("play").value==="solo" && $("mode").value==="line" && $("diff").value==="super-easy" )){if(!window.bpSpendGameEntry)throw Error("Token wallet is not ready. Please reload.");await window.bpSpendGameEntry();}}catch(e){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();const msg=e.message||"Unable to charge game entry";document.getElementById("bpWalletOpen").click();document.getElementById("bpWalletStatus").textContent=msg;return;}window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};settings.openingSeed=bpCampaignSettings?.seed??((Math.random()*4294967296)>>>0);bpVLineBegin();
+async function start(){if(!bpCampaignSettings&&!bpSelectionReady())return;if(window.bpGameStartBusy)return;window.bpGameStartBusy=true;const startButton=document.getElementById("start");if(startButton)startButton.disabled=true;try{if(window.bpDevActive&&!bpCampaignSettings){window.bpPowerSession={passive:null,active:[],used:[],assisted:false};}if(!bpCampaignSettings && window.bpPowerPrepareLaunch){const mode=$("mode").value,versus=$("play").value==="versus";const l={type:(versus?"versus-":"solo-")+(mode==="battle"?"battle":mode==="timed"?"timed":"line"),diff:$("diff").value};if(!window.bpDevActive && !await window.bpPowerPrepareLaunch(l)){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();return;}if(window.bpPowerSession?.passive){await window.bpCampaignRpc("bp_power_consume",{p_item:window.bpPowerSession.passive});}}if(!bpCampaignSettings && !( $("play").value==="solo" && $("mode").value==="line" && $("diff").value==="super-easy" )){if(!window.bpSpendGameEntry)throw Error("Token wallet is not ready. Please reload.");await window.bpSpendGameEntry();}}catch(e){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();const msg=e.message||"Unable to charge game entry";document.getElementById("bpWalletOpen").click();document.getElementById("bpWalletStatus").textContent=msg;return;}window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};settings.openingSeed=bpCampaignSettings?.seed??((Math.random()*4294967296)>>>0);bpVLineBegin();
 const bpLineVisible=isVersus&&settings.mode==='line';
 for(const id of ['bpHumanLineCount','bpCpuLineCount']){const el=$(id);el.hidden=!bpLineVisible;el.querySelector('b').textContent='—';}
 ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('arena').classList.add('bp-campaign-power');$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.width=isVersus?'calc(50% - 3px)':'min(95vw,370px)';$('human').style.height='';$('human').style.aspectRatio='';$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
@@ -2931,7 +2931,12 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,28vh,285px)!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(175px,25vh,240px)!important}}
 </style>`;
-   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head>');
+   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('<style id="bp-dev-sandbox-v2454">
+body.bp-developer-active #arena:not([hidden]) #bpPowerBolt{display:flex!important}
+body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock{display:flex!important}
+body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock[hidden]{display:none!important}
+body.bp-developer-active #arena:not([hidden]) .bp-power-quick{visibility:visible!important}
+</style></head>',compactCss+'</head>');
    scene.replaceChildren(sceneTop,approved);
   }
  }
@@ -3211,11 +3216,19 @@ function quickNotice(message){
  let note=$('bpPowerQuickNotice');if(!note){note=document.createElement('div');note.id='bpPowerQuickNotice';boards.appendChild(note)}
  note.textContent=message;note.hidden=false;clearTimeout(quickMessageTimer);quickMessageTimer=setTimeout(()=>note.hidden=true,2400);
 }
+function devEligible(id){
+ const mode=$('mode').value,versus=$('arena').classList.contains('versus');
+ if(['double_points','time_extension','speed_surge'].includes(id))return false; // Legacy passive scoring effects are not in-game activations.
+ if(['special_block_magnet','garbage_shield','attack_amplifier'].includes(id))return versus&&mode==='battle'&&!window.bpPowerSession?.passive;
+ return ['wild_block','block_bomb','board_shuffle'].includes(id);
+}
 function renderQuick(){
  dock.replaceChildren();const session=window.bpPowerSession;
- if(!session||!$('arena').classList.contains('bp-campaign-power')||!$('arena').classList.contains('versus')||$('arena').hidden)return;
+ if(!session||!$('arena').classList.contains('bp-campaign-power')||$('arena').hidden)return;
+ if(!window.bpDevActive&&!$('arena').classList.contains('versus'))return;
  const versusBattle=$('arena').classList.contains('versus')&&$('mode').value==='battle';
- const usable=items.filter(i=>Number(inventory[i[0]]||0)>0&&(i[3]==='active'||(versusBattle&&['special_block_magnet' ,'garbage_shield','attack_amplifier'].includes(i[0])&&!session.passive)));
+ const usable=items.filter(i=>Number(inventory[i[0]]||0)>0&&
+ (window.bpDevActive?devEligible(i[0]):(i[3]==='active'||(versusBattle&&['special_block_magnet','garbage_shield','attack_amplifier'].includes(i[0])&&!session.passive))));
  for(const item of usable){
   const [id,emoji,name,kind]=item,qty=Number(inventory[id]||0);
   if(qty<=0)continue;
@@ -3229,10 +3242,17 @@ function renderQuick(){
 
 function sync(){const dest=$('arena').classList.contains('versus')?boards:header;if(bolt.parentElement!==dest)dest.appendChild(bolt);bolt.hidden=true;renderQuick()}new MutationObserver(()=>{sync();if(!$('arena').hidden&&$('arena').classList.contains('bp-campaign-power'))refresh().catch(()=>{})}).observe($('arena'),{attributes:true,attributeFilter:['class','hidden']});sync();
 function valid(item,l){if(!l)return true;if(l.type==='obstacles')return false;if(item==='time_extension')return l.type==='solo-timed';if(['special_block_magnet' ,'garbage_shield','attack_amplifier'].includes(item))return l.type==='versus';return true}
-async function refresh(){const d=await window.bpCampaignRpc('bp_store_get');inventory=d?.inventory||{};renderQuick();return inventory;}
+async function refresh(){
+ if(window.bpDevActive){
+  inventory=Object.fromEntries(items.map(i=>[i[0],99]));
+  renderQuick();return inventory;
+ }
+ const d=await window.bpCampaignRpc('bp_store_get');inventory=d?.inventory||{};renderQuick();return inventory;
+}
 function row(item,mode){const [id,emoji,name,kind]=item,qty=Number(inventory[id]||0),r=document.createElement('button');r.type='button';r.className='bp-power-item bp-power-select';r.disabled=busy||qty<=0;const left=document.createElement('div'),strong=document.createElement('strong'),small=document.createElement('small');strong.textContent=emoji+' '+name;small.textContent=(kind==='passive'?'Passive':'Active')+' · Owned ×'+qty;left.append(strong,small);const right=document.createElement('strong');right.textContent=mode==='equip'?((kind==='passive'?selectedPassive===id:selectedActive.includes(id))?'✓ EQUIPPED':'EQUIP'):'USE';r.append(left,right);r.onclick=()=>mode==='equip'?toggle(id,kind):mode==='activate'?activatePassive(id):use(id);return r;}
 function render(){list.replaceChildren();const equip=phase==='equip';const session=window.bpPowerSession;const versusBattle=!equip&&$('arena').classList.contains('versus')&&$('mode').value==='battle';
-const source=equip?items.filter(i=>i[3]==='passive'):items.filter(i=>Number(inventory[i[0]]||0)>0&&(i[3]==='active'||(versusBattle&&['special_block_magnet' ,'garbage_shield','attack_amplifier'].includes(i[0]))));
+const source=equip?items.filter(i=>i[3]==='passive'):items.filter(i=>Number(inventory[i[0]]||0)>0&&
+ (window.bpDevActive?devEligible(i[0]):(i[3]==='active'||(versusBattle&&['special_block_magnet','garbage_shield','attack_amplifier'].includes(i[0]))));
 for(const item of source){
  if(equip&&!valid(item[0],window.bpPowerUpcoming))continue;
  const passiveInGame=!equip&&item[3]==='passive';
@@ -3258,18 +3278,21 @@ async function activatePassive(id){
  if(!$('arena').classList.contains('versus')||$('mode').value!=='battle'){status.textContent='This passive requires Versus Special Battle.';return}
  busy=true;status.textContent='Activating '+names[id]+'…';
  try{
-  await window.bpCampaignRpc('bp_power_consume',{p_item:id});
+  if(!window.bpDevActive)await window.bpCampaignRpc('bp_power_consume',{p_item:id});
   window.bpPowerSession.passive=id;
   window.bpPowerSession.assisted=true;
-  inventory[id]=Math.max(0,Number(inventory[id]||0)-1);
+  if(!window.bpDevActive)inventory[id]=Math.max(0,Number(inventory[id]||0)-1);
   $('human').contentWindow.postMessage({bp:'power-config',passive:id},'*');
   status.textContent=names[id]+' is now active for this battle.';quickNotice(status.textContent);
   render();
  }catch(e){status.textContent='Could not activate: '+(e.message||e);quickNotice(status.textContent)}
  finally{busy=false;renderQuick()}
 }
-async function use(id){if(busy)return;busy=true;status.textContent='Checking selected board position…';try{const check=await engineRequest('power-check',id);if(!check.eligible)throw Error('No eligible blocks at the cursor. Move the cursor and try again.');await window.bpCampaignRpc('bp_power_consume',{p_item:id});const result=await engineRequest('power-use',id);if(!result.success)throw Error('Inventory deducted, but board changed before activation. Contact support.');window.bpPowerSession.used.push(id);window.bpPowerSession.assisted=true;inventory[id]=Math.max(0,(Number(inventory[id])||0)-1);status.textContent=names[id]+' activated!';quickNotice(status.textContent);render();setTimeout(()=>{if(!overlay.hidden)close()},400)}catch(e){status.textContent=e.message||'Activation failed';quickNotice(status.textContent)}finally{busy=false;renderQuick()}}
-bolt.onclick=openGame;window.bpPowerRefreshQuick=async()=>{try{await refresh()}catch(e){quickNotice('Power-ups unavailable')}};$('bpPowerClose').onclick=()=>close(false);$('bpPowerDone').onclick=()=>close(phase==='equip');$('bpPowerStore').onclick=()=>{close(false);window.bpOpenTicketStore?.()};overlay.addEventListener('click',e=>{if(e.target===overlay)close(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)close(false)});new MutationObserver(()=>{if($('arena').hidden&&phase==='game'&&!overlay.hidden)close(false)}).observe($('arena'),{attributes:true,attributeFilter:['hidden']});
+async function use(id){if(busy)return;busy=true;status.textContent='Checking selected board position…';try{const check=await engineRequest('power-check',id);if(!check.eligible)throw Error('No eligible blocks at the cursor. Move the cursor and try again.');if(!window.bpDevActive)await window.bpCampaignRpc('bp_power_consume',{p_item:id});const result=await engineRequest('power-use',id);if(!result.success)throw Error('Inventory deducted, but board changed before activation. Contact support.');window.bpPowerSession.used.push(id);window.bpPowerSession.assisted=true;if(!window.bpDevActive)inventory[id]=Math.max(0,(Number(inventory[id])||0)-1);status.textContent=names[id]+' activated!';quickNotice(status.textContent);render();setTimeout(()=>{if(!overlay.hidden)close()},400)}catch(e){status.textContent=e.message||'Activation failed';quickNotice(status.textContent)}finally{busy=false;renderQuick()}}
+bolt.onclick=openGame;window.bpPowerRefreshQuick=async()=>{try{await refresh()}catch(e){quickNotice('Power-ups unavailable')}};$('bpPowerClose').onclick=()=>close(false);$('bpPowerDone').onclick=()=>close(phase==='equip');$('bpPowerStore').onclick=()=>{close(false);window.bpOpenTicketStore?.()};overlay.addEventListener('click',e=>{if(e.target===overlay)close(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)close(false)});new MutationObserver(()=>{
+ if($('arena').hidden&&phase==='game'&&!overlay.hidden)close(false);
+ if(!$('arena').hidden&&window.bpDevActive){refresh().then(render).catch(console.warn)}
+}).observe($('arena'),{attributes:true,attributeFilter:['hidden']});
 })();
 </script><style id="bp-campaign-ticket-actions-v2433">
 #bpCampaignOverlay .bp-campaign-quick-actions{display:grid!important;grid-template-columns:minmax(0,0.85fr) minmax(0,1.4fr)!important;gap:8px!important;align-items:stretch!important;width:100%!important;padding:2px 1px 0!important}
@@ -3320,7 +3343,7 @@ document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>set
    if(!await window.bpDevVerify())throw Error('This account is not authorized.');
    window.bpDevAuthorized=true;window.bpDevActive=true;
    $('bpDeveloperEnter').hidden=true;$('bpDeveloperExit').hidden=false;
-   status.textContent='Developer Mode ACTIVE. Campaign tests use local attempts; no tokens or campaign progress are written.';
+   status.textContent='Developer Mode ACTIVE. Non-campaign games now have free entry and sandbox power-up inventory. Redesigned effects are still under development.';
    document.body.classList.add('bp-developer-active');
    document.getElementById('bpDeveloperModeOpen').textContent='Developer Mode ACTIVE';
   }catch(e){status.textContent='Access denied: '+e.message}
