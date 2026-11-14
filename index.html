@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.102 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.103 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -3087,7 +3087,7 @@ function render(){
  const tierLast=Math.min(LIMIT,tierFirst+49);
  const tierStars=Array.from({length:tierLast-tierFirst+1},(_,i)=>Number(stars[tierFirst+i]||0)).reduce((a,b)=>a+b,0);
  const tierLevel=Math.min(50,Math.max(1,unlocked-tierFirst+1));
- const menu=$('bpCampaignMenuProgress');if(menu)menu.textContent=`${currentTier<=3?"Red":"Purple"} Circuit · Tier ${((currentTier-1)%3)+1} — Level ${tierLevel} of 50 · ${tierStars} / 150 stars`;
+ const menu=$('bpCampaignMenuProgress');if(menu)menu.innerHTML=`<span class="bp-campaign-info-line">${currentTier<=3?"Red":"Purple"} Circuit · Tier ${((currentTier-1)%3)+1}</span><span class="bp-campaign-info-line">Level ${tierLevel} of 50 · ${tierStars} / 150 stars</span>`;
  const bar=$('bpCampaignMenuBar');if(bar)bar.style.width=`${Math.max(0,(tierLevel-1)/50*100)}%`;
  const grid=$('bpCampaignGrid'),previousScroll=grid.scrollTop;grid.replaceChildren();
  for(let n=Math.floor((selected-1)/50)*50+1;n<=Math.min(LIMIT,Math.floor((selected-1)/50)*50+50);n++){
@@ -3180,7 +3180,12 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,28vh,285px)!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(175px,25vh,240px)!important}}
 </style>`;
-   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head>');
+   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('<style id="bp-campaign-progress-two-lines-v24103">
+/* Campaign overview: circuit/tier on line one, level/stars on line two. */
+#bpCampaignMenuProgress .bp-campaign-info-line{display:block;line-height:1.35}
+#bpCampaignMenuProgress .bp-campaign-info-line + .bp-campaign-info-line{margin-top:2px}
+</style>
+</head>',compactCss+'</head>');
    scene.replaceChildren(sceneTop,approved);
   }
  }
