@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.76 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.77 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2706,23 +2706,23 @@ async function refreshIdle(){
  finally{idleLoading=false}
 }
 function bpDayReward(n){return 3+2*(((Math.max(1,n)-1)%7)+1)}
-let bpCarouselFocus=0,bpCarouselEnd=0,bpCarouselPending=0,bpCarouselDrag=0,bpCarouselDragActive=false,bpCarouselSuppressClick=0;
+let bpCarouselFocus=0,bpCarouselEnd=0,bpCarouselPending=0,bpCarouselDragActive=false,bpCarouselSuppressClick=0;
 function bpCarouselMove(direction){bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,bpCarouselFocus+direction));bpPositionDaily()}
 function bpPositionDaily(){
  const strip=el('bpDailyStrip'),stage=el('bpDailyCarousel');if(!strip||!stage)return;
  const w=stage.clientWidth||320;
  for(const tile of strip.children){
   const day=Number(tile.dataset.day),diff=day-bpCarouselFocus,dist=Math.abs(diff);
-  const dx=Math.sign(diff)*Math.min(dist,4)*w*.235+bpCarouselDrag;
+  const dx=Math.sign(diff)*Math.min(dist,4)*w*.235;
   tile.style.setProperty('--dx',dx+'px');tile.style.setProperty('--z',(-Math.min(dist,8)*68)+'px');
   tile.style.setProperty('--ry',(-Math.sign(diff)*Math.min(dist*19,65))+'deg');
   tile.style.setProperty('--sc',String(Math.max(.52,1-dist*.13)));
   tile.style.setProperty('--op',String(dist>5?0:Math.max(.16,1-dist*.2)));
-  tile.style.setProperty('--layer',String(100-dist));
-  tile.classList.toggle('center',diff===0);
+  tile.style.setProperty('--layer',String(100-Math.round(dist*10)));
+  tile.classList.toggle('center',dist<.5);
   tile.style.pointerEvents=dist>4?'none':'auto';
  }
- const note=el('bpCarouselNote');if(note)note.textContent=bpCarouselFocus===bpCarouselPending?'Next reward centered · Swipe to browse':'Viewing Day '+bpCarouselFocus+' · Swipe to browse';
+ const note=el('bpCarouselNote');if(note&&!bpCarouselDragActive)note.textContent=bpCarouselFocus===bpCarouselPending?'Next reward centered · Swipe to browse':'Viewing Day '+bpCarouselFocus+' · Swipe to browse';
 }
 function bpRenderDaily(){
  const strip=el('bpDailyStrip');if(!strip)return;
@@ -2763,20 +2763,45 @@ function bpRenderDaily(){
  bpPositionDaily();
 }
 (function(){
- const stage=el('bpDailyCarousel');let startX=0,startY=0,tracking=false,dragging=false;
- stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;startX=e.clientX;startY=e.clientY;tracking=true;dragging=false;bpCarouselDrag=0});
- stage.addEventListener('pointermove',e=>{
-  if(!tracking)return;
-  const dx=e.clientX-startX,dy=e.clientY-startY;
-  if(!dragging&&Math.abs(dx)>9&&Math.abs(dx)>Math.abs(dy)*1.15){dragging=true;stage.classList.add('dragging')}
-  if(dragging){bpCarouselDrag=Math.max(-95,Math.min(95,dx*.55));bpPositionDaily()}
+ const stage=el('bpDailyCarousel');
+ let startX=0,startY=0,startFocus=0,tracking=false,dragging=false,pointerId=null;
+ stage.addEventListener('pointerdown',e=>{
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  startX=e.clientX;startY=e.clientY;startFocus=bpCarouselFocus;
+  tracking=true;dragging=false;pointerId=e.pointerId;
  });
- const finish=e=>{if(!tracking)return;tracking=false;stage.classList.remove('dragging');const dx=e.clientX-startX;
-  if(dragging){bpCarouselSuppressClick=Date.now()+400;if(Math.abs(dx)>30)bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,bpCarouselFocus+(dx<0?Math.max(1,Math.round(Math.abs(dx)/110)): -Math.max(1,Math.round(Math.abs(dx)/110)))))}
-  bpCarouselDrag=0;dragging=false;bpPositionDaily();
+ stage.addEventListener('pointermove',e=>{
+  if(!tracking||e.pointerId!==pointerId)return;
+  const dx=e.clientX-startX,dy=e.clientY-startY;
+  if(!dragging&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.05){
+   dragging=true;bpCarouselDragActive=true;stage.classList.add('dragging');
+   try{stage.setPointerCapture(e.pointerId)}catch(_){}
+  }
+  if(dragging){
+   const step=(stage.clientWidth||320)*.235;
+   bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,startFocus-dx/step));
+   bpPositionDaily();
+   if(e.cancelable)e.preventDefault();
+  }
+ },{passive:false});
+ const finish=e=>{
+  if(!tracking||e.pointerId!==pointerId)return;
+  tracking=false;pointerId=null;
+  if(dragging){
+   bpCarouselSuppressClick=Date.now()+450;
+   bpCarouselFocus=Math.max(1,Math.min(bpCarouselEnd,Math.round(bpCarouselFocus)));
+  }
+  dragging=false;bpCarouselDragActive=false;
+  stage.classList.remove('dragging');bpPositionDaily();
  };
- stage.addEventListener('pointerup',finish);stage.addEventListener('pointercancel',finish);
- stage.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();bpCarouselMove(e.key==='ArrowRight'?1:-1)}});
+ stage.addEventListener('pointerup',finish);
+ stage.addEventListener('pointercancel',finish);
+ stage.addEventListener('lostpointercapture',e=>{if(tracking)finish(e)});
+ stage.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+   e.preventDefault();bpCarouselMove(e.key==='ArrowRight'?1:-1)
+  }
+ });
 })();
 function renderIdle(){
  if(!idle)return;
