@@ -1,4 +1,9 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>Block Party</title><style>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>Block Party</title><style id="bp-dev-sandbox-v2455">
+body.bp-developer-active #arena:not([hidden]) #bpPowerBolt{display:flex!important}
+body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock{display:flex!important}
+body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock[hidden]{display:none!important}
+body.bp-developer-active #arena:not([hidden]) .bp-power-quick{visibility:visible!important}
+</style><style>
 #timeLabel[hidden],#duration[hidden]{display:none!important}
 
 *{box-sizing:border-box}body{margin:0;background:#0d1429;color:white;font:15px system-ui;touch-action:manipulation}button,select{font:inherit;color:white;background:#394c84;border:1px solid #7788c2;border-radius:10px;padding:10px}button{cursor:pointer}#menu{position:fixed;inset:0;z-index:5;background:#0d1429;display:flex;align-items:center;justify-content:center;padding:12px}#menu[hidden],#arena[hidden]{display:none} .menu-card{width:min(420px,100%);background:#202c4e;border:1px solid #8595c9;border-radius:20px;padding:20px;max-height:95dvh;overflow:auto}h1{text-align:center;margin:0 0 12px}label{display:block;margin-top:12px;font-weight:700}select{display:block;width:100%;margin-top:5px}#start{width:100%;background:#5878cc;font-weight:800;margin-top:18px;padding:14px}#arena{height:100dvh;display:flex;flex-direction:column;align-items:center;overflow:hidden}#top{width:100%;display:flex;align-items:center;justify-content:space-around;gap:6px;padding:5px}#top h2{font-size:18px;margin:0}#top button{font-size:12px;padding:6px}#boards{display:flex;width:100%;max-width:760px;gap:6px;justify-content:center;align-items:flex-start;padding:2px 5px} .zone{width:calc(50% - 3px);max-width:370px;border:3px solid #7083c3;border-radius:8px;overflow:hidden;background:#161d37}#cpuZone{border-color:#ff5262;box-shadow:0 0 12px #ed334044} .zone header{font-size:13px;font-weight:800;text-align:center;padding:3px;background:#26365c}.zone iframe{width:100%;height:auto;aspect-ratio:360/760;border:0;display:block}#cpuZone header{background:#6d2335}#bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(96vw,480px);margin-top:7px}#bottom.pad-left{flex-direction:row-reverse}#pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,clamp(47px,7.5dvh,68px));gap:4px;width:58%;flex-shrink:0}#pad button{height:100%;min-height:0;padding:0;border-radius:8px;font-size:clamp(22px,5vw,29px);touch-action:none}#pad .pad-center{grid-column:2;grid-row:2;background:#26365c;border-color:#4c5c8e;pointer-events:none}#pad button[data-key="ArrowUp"]{grid-column:2;grid-row:1}#pad button[data-key="ArrowLeft"]{grid-column:1;grid-row:2}#pad button[data-key="ArrowDown"]{grid-column:2;grid-row:3}#pad button[data-key="ArrowRight"]{grid-column:3;grid-row:2}#swap{width:39%;height:clamp(94px,15dvh,138px);font-weight:900;font-size:19px;touch-action:none}#actions{display:flex;justify-content:center;gap:10px;margin:5px 0 2px}#actions button{padding:7px 14px;font-size:13px}#arena.solo #boards{justify-content:center}#arena.solo #humanZone{width:min(94vw,380px)!important}#arena.solo #human{height:min(65dvh,710px)!important;aspect-ratio:auto!important}#arena.versus #human,#arena.versus #cpu{height:min(60dvh,740px);aspect-ratio:auto}#arena.versus #boards{align-items:stretch}#arena.solo #bottom,#arena.versus #bottom{display:flex!important}#message{text-align:center;font-weight:700;min-height:23px;margin:4px}#details{text-align:center;font-size:11px;color:#aebce6;padding:4px 12px} .scores{font-size:11px;display:flex;justify-content:space-between;gap:5px} @media(max-height:720px){#pad button{min-height:36px}#swap{height:74px}#boards{max-width:520px}.zone iframe{aspect-ratio:360/735}#details{display:none}} 
@@ -1258,7 +1263,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.54 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.55 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2931,12 +2936,7 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,28vh,285px)!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(175px,25vh,240px)!important}}
 </style>`;
-   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('<style id="bp-dev-sandbox-v2454">
-body.bp-developer-active #arena:not([hidden]) #bpPowerBolt{display:flex!important}
-body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock{display:flex!important}
-body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock[hidden]{display:none!important}
-body.bp-developer-active #arena:not([hidden]) .bp-power-quick{visibility:visible!important}
-</style></head>',compactCss+'</head>');
+   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head>');
    scene.replaceChildren(sceneTop,approved);
   }
  }
@@ -3252,7 +3252,7 @@ async function refresh(){
 function row(item,mode){const [id,emoji,name,kind]=item,qty=Number(inventory[id]||0),r=document.createElement('button');r.type='button';r.className='bp-power-item bp-power-select';r.disabled=busy||qty<=0;const left=document.createElement('div'),strong=document.createElement('strong'),small=document.createElement('small');strong.textContent=emoji+' '+name;small.textContent=(kind==='passive'?'Passive':'Active')+' · Owned ×'+qty;left.append(strong,small);const right=document.createElement('strong');right.textContent=mode==='equip'?((kind==='passive'?selectedPassive===id:selectedActive.includes(id))?'✓ EQUIPPED':'EQUIP'):'USE';r.append(left,right);r.onclick=()=>mode==='equip'?toggle(id,kind):mode==='activate'?activatePassive(id):use(id);return r;}
 function render(){list.replaceChildren();const equip=phase==='equip';const session=window.bpPowerSession;const versusBattle=!equip&&$('arena').classList.contains('versus')&&$('mode').value==='battle';
 const source=equip?items.filter(i=>i[3]==='passive'):items.filter(i=>Number(inventory[i[0]]||0)>0&&
- (window.bpDevActive?devEligible(i[0]):(i[3]==='active'||(versusBattle&&['special_block_magnet','garbage_shield','attack_amplifier'].includes(i[0]))));
+ (window.bpDevActive?devEligible(i[0]):(i[3]==='active'||(versusBattle&&['special_block_magnet','garbage_shield','attack_amplifier'].includes(i[0])))));
 for(const item of source){
  if(equip&&!valid(item[0],window.bpPowerUpcoming))continue;
  const passiveInGame=!equip&&item[3]==='passive';
