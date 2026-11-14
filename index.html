@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.96 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.97 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -1519,7 +1519,7 @@ window.addEventListener('message',function(e){
 })();
 </script>
 <style id="bp-tab-balances-v2486">
-/* v2.4.96: larger currency icon and amount, without startup script changes */
+/* v2.4.97: larger currency icon and amount, without startup script changes */
 .bp-wallet-tabs button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:88px!important;padding:11px 4px!important;font-size:clamp(14px,3.6vw,18px)!important;line-height:1.2!important;white-space:nowrap!important}
 .bp-wallet-tabs .bp-tab-value{display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-size:clamp(24px,6vw,31px)!important;font-weight:900!important;line-height:1.15!important;white-space:nowrap!important}
 .bp-wallet-tabs .bp-tab-count{font-size:inherit!important;font-weight:900!important;line-height:inherit!important}
@@ -1551,7 +1551,7 @@ window.addEventListener('message',function(e){
 #bpIdleClock:before{content:'';position:absolute;inset:14px;background:#141d3c;border-radius:50%}
 #bpIdleClockCenter{z-index:1;font-size:31px;font-weight:900;line-height:1.05}#bpIdleClockCenter small{display:block;font-size:11px;letter-spacing:.1em;margin-top:5px}
 #bpIdleClock.ready{background:conic-gradient(#34d399 100%,#34d399 100%);color:#61ffae;cursor:pointer}#bpIdleClock.ready:before{background:#153b34}#bpIdleClock.ready #bpIdleClockCenter{font-size:76px}
-/* v2.4.96: clear idle claim affordance; circular, contained focus/press glow. */
+/* v2.4.97: clear idle claim affordance; circular, contained focus/press glow. */
 #bpIdleClock{isolation:isolate;outline:0!important;-webkit-tap-highlight-color:transparent;box-shadow:0 0 11px 2px #ac74ff30!important}
 #bpIdleClock.ready{box-shadow:0 0 12px 3px #34d39955!important}
 #bpIdleClock:focus,#bpIdleClock:focus-visible,#bpIdleClock:active{outline:0!important;filter:none!important}
@@ -3705,7 +3705,7 @@ document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>set
   arcade.innerHTML='<span class="bp-arcade-title">🎮 ARCADE <span>PLAY ›</span></span><span class="bp-arcade-sub">Classic game modes outside Campaign. Choose Solo or Versus and set your own challenge.</span><span class="bp-arcade-tags">SOLO · VERSUS · LINE CLEAR · TIMED · UNLIMITED</span>';
   campaign.before(home);home.append(campaign,arcade);
   const screen=document.createElement('div');screen.id='bpArcadeScreen';screen.hidden=true;
-  const back=document.createElement('button');back.id='bpArcadeBack';back.type='button';back.textContent='≪ Main Menu';
+  const back=document.createElement('button');back.id='bpArcadeBack';back.type='button';back.textContent='‹ Main Menu';
   const title=document.createElement('div');title.className='bp-arcade-screen-title';title.textContent='🎮 ARCADE';
   const playLaunch=document.createElement('div');playLaunch.className='menu-launch';
   screen.append(back,title,stage,playLaunch);
@@ -3765,4 +3765,24 @@ document.getElementById('bpCampaignStoreOpen')?.addEventListener('click',()=>set
 #bpArcadeScreen{background:transparent!important}
 #bpArcadeScreen .menu-stage,#bpArcadeScreen .menu-launch{background:transparent!important}
 #bpCampaignOverlay .bp-campaign-shell{background:transparent}
+</style><style id="bp-unified-overlay-backgrounds-v2497">
+/* Reuse the same illustrated backdrop on every menu overlay. */
+#bpWalletOverlay,#bpLeaderboard,#tutorialOverlay,#bpCampaignOverlay{
+ background-color:#080d29!important;
+ background-image:linear-gradient(180deg,rgba(5,8,28,.36),rgba(5,8,28,.66)),var(--block-party-bg)!important;
+ background-size:cover!important;
+ background-position:center center!important;
+ background-repeat:no-repeat!important;
+}
+/* The background belongs to the overlay, not its inner card. */
+#menu.bp-menu-ready #bpArcadeScreen #bpArcadeBack{
+ margin:7px 0 17px 18px!important;
+ padding:7px 8px!important;
+ background:transparent!important;
+ border:0!important;
+ box-shadow:none!important;
+ width:max-content!important;
+ position:relative!important;
+ top:auto!important;
+}
 </style></html>
