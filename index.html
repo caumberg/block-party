@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.71 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.72 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2962,13 +2962,7 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,28vh,285px)!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(175px,25vh,240px)!important}}
 </style>`;
-   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('<style id="bp-v2471-solo-power-panel">
-/* Gameplay leaderboards remain accessible in the menu, never over the board. */
-#bpMini{display:none!important}
-#arena:not(.versus) #bpPowerQuickDock{box-sizing:border-box;z-index:50;overflow-y:auto;overflow-x:hidden;pointer-events:auto;padding:7px 3px;gap:9px;border:1px solid #725ab4;border-radius:12px;background:#151131eb;box-shadow:0 0 12px #503c8e66}
-#arena:not(.versus) #bpPowerQuickDock .bp-power-quick{width:min(100%,64px);height:62px;min-height:52px;flex-shrink:0}
-#arena:not(.versus) #bpPowerQuickDock[hidden]{display:none!important}
-</style></head>',compactCss+'</head>');
+   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head>');
    scene.replaceChildren(sceneTop,approved);
   }
  }
@@ -3318,7 +3312,7 @@ window.bpPowerPrepareLaunch=async l=>{
  window.bpPowerSession={passive:null,active:[],used:[],assisted:false};
  if(l.type==='obstacles')return true;
  await refresh();
- const versus=l.type.startsWith('versus-'),mode=l.type.includes('battle')?'battle':l.type.includes('timed')?'timed':'line';
+ const versus=l.type==='versus'||l.type.startsWith('versus-'),mode=(l.type==='versus'||l.type.includes('battle'))?'battle':l.type.includes('timed')?'timed':'line';
  const eligible=items.filter(i=>Number(inventory[i[0]]||0)>0&&(
   ['wild_block','block_bomb','deep_freeze','lifesaver'].includes(i[0])||
   (versus&&['block_lock','blindfold'].includes(i[0]))||
