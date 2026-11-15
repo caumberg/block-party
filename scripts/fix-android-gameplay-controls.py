@@ -5,6 +5,36 @@ anchor='</style>\n</style>\n<div id="menu">'
 assert s.count(anchor)==1, f'Expected exactly one main stylesheet ending, found {s.count(anchor)}'
 css="""
 /* Android gameplay controls: injected into the actual main document stylesheet. */
+/* Quick-use power-ups are a horizontal toolbar below the playing field in
+   BOTH Solo and Versus, never floating over the board or HUD. */
+#arena #bpPowerQuickDock{
+ position:relative!important;
+ inset:auto!important;
+ top:auto!important;
+ left:auto!important;
+ right:auto!important;
+ bottom:auto!important;
+ transform:none!important;
+ display:flex!important;
+ flex-direction:row!important;
+ flex-wrap:wrap!important;
+ justify-content:center!important;
+ align-items:center!important;
+ gap:clamp(6px,1.5vw,11px)!important;
+ width:calc(100% - 28px)!important;
+ max-width:650px!important;
+ min-height:0!important;
+ margin:clamp(12px,1.8dvh,22px) auto 0!important;
+ padding:4px 10px!important;
+ box-sizing:border-box!important;
+ overflow:visible!important;
+}
+#arena #bpPowerQuickDock[hidden]{display:none!important}
+#arena #bpPowerQuickDock .bp-power-quick{flex:0 0 auto!important}
+#arena #bottom{margin-top:clamp(18px,2.5dvh,38px)!important}
+#arena #bottom #actionStack{align-items:stretch!important}
+#arena #bottom #actionStack #raiseRow,
+#arena #bottom #actionStack #swap{margin-inline:0!important;align-self:stretch!important}
 /* Retired rotating in-game leaderboard must never cover power-ups. */
 #bpMini{display:none!important}
 #arena #bottom{width:min(94vw,470px)!important;align-items:center!important;justify-content:center!important;gap:16px!important;overflow:visible!important;position:relative!important;top:0!important;margin-inline:auto!important}
@@ -43,7 +73,7 @@ css="""
 #arena #bottom #actionStack #swap{filter:drop-shadow(0 0 7px rgba(255,84,238,.42))!important}
 /* Scale the intact original directional cross, without replacing its grid placement. */
 #arena #bottom #pad{transform:translateX(-11px) scale(1.11)!important;transform-origin:center center!important}
-#arena #bottom #actionStack #swap{transform:translate(-4px,-8px) scale(1.15)!important;transform-origin:center center!important}
+#arena #bottom #actionStack #swap{transform:scale(1.10)!important;transform-origin:center center!important}
 """
 s=s.replace(anchor,css+anchor,1)
 # The rotating Top 10 sidebar was retired from gameplay. Keep the global
@@ -69,5 +99,11 @@ s=s.replace(old_init,new_init,1)
 # Belt and suspenders: even if another code path unhides it, the sidebar
 # cannot visually cover the game or power-up buttons.
 s=s.replace(anchor, '#bpMini{display:none!important}\\n'+anchor,1) if False else s
+# Move the actual power-up dock OUT of #boards, so CSS layout has a real
+# dedicated row between the play fields and the game controls.
+dock_old="boards.appendChild(dock);"
+dock_new="boards.insertAdjacentElement('afterend',dock);"
+assert s.count(dock_old)==1, f'Expected one quick dock mount, got {s.count(dock_old)}'
+s=s.replace(dock_old,dock_new,1)
 p.write_text(s,encoding='utf-8')
 print('Patched actual main gameplay CSS')
