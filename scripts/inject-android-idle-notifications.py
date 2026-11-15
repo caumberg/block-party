@@ -48,7 +48,7 @@ async function bpIdleNotificationSetup(){
   links.appendChild(settingsLink);
   const modal=document.createElement('div');
   modal.id='bpSettingsOverlay';modal.hidden=true;modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Settings');
-  modal.style.cssText='position:fixed;inset:0;z-index:13000;background:#050917e8;display:flex;align-items:center;justify-content:center;padding:18px';
+  modal.style.cssText='position:fixed;inset:0;z-index:13000;background:#050917e8;display:none;align-items:center;justify-content:center;padding:18px';
   const panel=document.createElement('section');
   panel.style.cssText='box-sizing:border-box;width:min(94vw,450px);border:1px solid #ad8cf7;border-radius:20px;background:linear-gradient(155deg,#26345d,#131b37);padding:22px;color:white;box-shadow:0 0 32px #8c5bf655';
   const header=document.createElement('div');
@@ -62,8 +62,8 @@ async function bpIdleNotificationSetup(){
   const info=document.createElement('p');info.textContent='Get an Android notification when idle tokens are available after 1 hour and when rewards reach their maximum after 3½ hours.';
   info.style.cssText='font-size:13px;color:#cbd6f1;line-height:1.5';section.appendChild(info);
   panel.appendChild(section);modal.appendChild(panel);document.body.appendChild(modal);
-  const dismiss=()=>{modal.hidden=true};
-  settingsLink.addEventListener('click',()=>{modal.hidden=false});
+  const dismiss=()=>{modal.hidden=true;modal.style.display='none'};
+  settingsLink.addEventListener('click',()=>{modal.hidden=false;modal.style.display='flex'});
   close.addEventListener('click',dismiss);
   modal.addEventListener('click',e=>{if(e.target===modal)dismiss()});
   modal.hidden=true;
