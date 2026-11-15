@@ -119,6 +119,22 @@ jobs:
                       '<foreground android:drawable="@mipmap/ic_launcher_foreground"/>'
                       '</adaptive-icon>')
           PY
+      - name: Assign increasing Android version code
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          p = Path('android/app/build.gradle')
+          content = p.read_text()
+          import re
+          version_code = 10000 + int(os.environ['BUILD_NUMBER'])
+          updated, count = re.subn(r'(?m)^(\\s*versionCode\\s+)\\d+', lambda m: m.group(1) + str(version_code), content, count=1)
+          assert count == 1, 'Unable to find Android versionCode in build.gradle'
+          p.write_text(updated)
+          print(f'Android versionCode: {version_code}')
+          PY
       - name: Restore persistent Android debug signing key
         env:
           BLOCK_PARTY_DEBUG_KEYSTORE_BASE64: ${{ secrets.BLOCK_PARTY_DEBUG_KEYSTORE_BASE64 }}
@@ -130,8 +146,23 @@ jobs:
           mkdir -p "$HOME/.android"
           printf '%s' "$BLOCK_PARTY_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$HOME/.android/debug.keystore"
           keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey > /dev/null
+          echo "Expected signing certificate:"
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep 'SHA256:'
       - name: Build debug APK
         run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - name: Verify APK package, version, and signing certificate
+        run: |
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          SDK_BUILD_TOOLS=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
+          "$SDK_BUILD_TOOLS/aapt" dump badging "$APK" | grep '^package:'
+          "$SDK_BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK" | grep -E 'Verified using v[123] scheme|Signer #1 certificate SHA-256 digest'
+          EXPECTED=$(keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep 'SHA256:' | head -1 | sed 's/.*SHA256: //' | tr -d ':' | tr '[:upper:]' '[:lower:]')
+          ACTUAL=$("$SDK_BUILD_TOOLS/apksigner" verify --print-certs "$APK" | grep 'Signer #1 certificate SHA-256 digest:' | head -1 | awk '{print $NF}')
+          if [ "$EXPECTED" != "$ACTUAL" ]; then
+            echo "::error::APK signing certificate differs from persistent signing key."
+            exit 1
+          fi
+          echo "APK signature matches persistent signing key."
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
