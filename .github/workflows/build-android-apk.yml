@@ -1,13 +1,21 @@
 name: Build Block Party Android APK
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'package.json'
+      - 'capacitor.config.json'
+      - '.github/workflows/build-android-apk.yml'
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out exact release source
+        uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -15,7 +23,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - name: Stage game
+      - name: Stage shared web game
         run: |
           mkdir -p www
           cp index.html www/index.html
