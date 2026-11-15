@@ -1,0 +1,16 @@
+{
+  "name": "block-party-android",
+  "private": true,
+  "version": "2.4.104",
+  "scripts": {
+    "android:add": "cap add android",
+    "android:sync": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/android": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}
