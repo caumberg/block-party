@@ -7,7 +7,6 @@ on:
       - 'package.json'
       - 'capacitor.config.json'
       - 'android-controls.css'
-      - 'android-controls.js'
       - 'assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png'
       - '.github/workflows/build-android-apk.yml'
   workflow_dispatch:
@@ -31,14 +30,13 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
           cp android-controls.css www/android-controls.css
-          cp android-controls.js www/android-controls.js
           python3 - <<'PY'
           from pathlib import Path
           p = Path('www/index.html')
           html = p.read_text(encoding='utf-8')
           marker = '</head>'
           assert marker in html, 'Expected closing head tag not found'
-          html = html.replace(marker, '<link rel="stylesheet" href="android-controls.css"><script defer src="android-controls.js"></script>' + marker, 1)
+          html = html.replace(marker, '<link rel="stylesheet" href="android-controls.css">' + marker, 1)
           p.write_text(html, encoding='utf-8')
           PY
       - name: Install dependencies
