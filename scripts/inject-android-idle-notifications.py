@@ -44,8 +44,9 @@ async function bpIdleNotificationSetup(){
   separator.textContent='|';separator.style.color='#8d88ba';links.appendChild(separator);
   const settingsLink=document.createElement('button');
   settingsLink.type='button';settingsLink.id='bpSettingsOpen';settingsLink.textContent='Settings';
-  settingsLink.style.cssText='border:0;background:none;color:#c9b8ff;font:inherit;font-weight:750;padding:5px;cursor:pointer';
+  settingsLink.style.cssText=account.style.cssText+';text-decoration:underline!important;text-underline-offset:3px!important;box-shadow:none!important;outline:none!important';
   links.appendChild(settingsLink);
+  account.style.textDecoration='underline';
   const modal=document.createElement('div');
   modal.id='bpSettingsOverlay';modal.hidden=true;modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Settings');
   modal.style.cssText='position:fixed;inset:0;z-index:13000;background:#050917e8;display:none;align-items:center;justify-content:center;padding:18px';
