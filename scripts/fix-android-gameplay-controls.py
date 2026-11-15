@@ -23,6 +23,22 @@ css="""
  #arena.solo #top,#arena.versus #top{margin-bottom:clamp(8px,1.5dvh,20px)!important}
  #arena.solo #bottom,#arena.versus #bottom{margin-top:10px!important}
 }
+/* The approved mockup has no framed top banner. Keep its controls in place
+   while removing the existing full-width border/background panel. */
+#arena.solo #top,#arena.versus #top{
+ background:transparent!important;
+ background-image:none!important;
+ border:0!important;
+ border-radius:0!important;
+ box-shadow:none!important;
+ outline:0!important;
+ backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important;
+}
+/* Add the soft edge treatment from the approved rendering without changing
+   the D-pad geometry or touch targets. Effects stay outside the buttons. */
+#arena #bottom #pad{filter:drop-shadow(0 0 5px rgba(92,148,255,.35))!important}
+#arena #bottom #actionStack #swap{filter:drop-shadow(0 0 7px rgba(255,84,238,.42))!important}
 /* Scale the intact original directional cross, without replacing its grid placement. */
 #arena #bottom #pad{transform:translateX(-11px) scale(1.11)!important;transform-origin:center center!important}
 #arena #bottom #actionStack #swap{transform:translate(-4px,-8px) scale(1.15)!important;transform-origin:center center!important}
