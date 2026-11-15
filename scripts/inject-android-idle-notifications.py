@@ -29,7 +29,7 @@ async function bpIdleScheduleNotifications(){
       {id:41002,at:start+12600000,title:'Block Party: maximum idle rewards',body:'Your maximum 15 idle tokens are ready to claim!'}
     ].filter(n=>n.at>now+3000).map(n=>({
       id:n.id,title:n.title,body:n.body,
-      schedule:{at:new Date(n.at-serverOffset)},
+      schedule:{at:new Date(n.at)},
       extra:{blockPartyWallet:true}
     }));
     if(notifications.length)await plugin.schedule({notifications});
@@ -77,6 +77,43 @@ async function bpIdleNotificationSetup(){
   button.type='button';button.id='bpIdleNotificationToggle';
   button.style.cssText='display:block;margin:10px 0;padding:9px 13px;border-radius:10px;background:#30235c;color:#fff;border:1px solid #aa8bff;font:inherit;cursor:pointer';
   section.appendChild(button);
+  // Real Android notification diagnostic, independent of the idle-reward server.
+  const testButton=document.createElement('button');
+  testButton.type='button';testButton.id='bpTestNotification';
+  testButton.textContent='Send test notification (10 seconds)';
+  testButton.style.cssText='display:block;margin:12px 0 6px;padding:10px 13px;border-radius:10px;background:#263c78;color:white;border:1px solid #70b9ff;font:inherit;cursor:pointer';
+  section.appendChild(testButton);
+  const testStatus=document.createElement('p');
+  testStatus.id='bpTestNotificationStatus';
+  testStatus.style.cssText='font-size:12px;line-height:1.45;color:#cbd6f1;overflow-wrap:anywhere;margin:6px 0';
+  section.appendChild(testStatus);
+  testButton.addEventListener('click',async()=>{
+    testButton.disabled=true;
+    try{
+      let permission=await plugin.checkPermissions();
+      if(permission.display!=='granted')permission=await plugin.requestPermissions();
+      if(permission.display!=='granted'){
+        testStatus.textContent='Android notification permission is not granted. Enable notifications for Block Party in Android Settings.';
+        return;
+      }
+      const id=41999;
+      await plugin.cancel({notifications:[{id}]});
+      const when=new Date(Date.now()+10000);
+      await plugin.schedule({notifications:[{
+        id,title:'Block Party test notification',
+        body:'Android notifications are working. This is a test, not an idle reward.',
+        schedule:{at:when},extra:{blockPartyNotificationTest:true}
+      }]});
+      const pending=await plugin.getPending();
+      const found=(pending.notifications||[]).some(n=>n.id===id);
+      testStatus.textContent=found
+        ?'Scheduled with Android for 10 seconds from now. Leave the app or lock your phone to test delivery.'
+        :'Schedule call succeeded, but Android did not report the test as pending. Check notification permissions and battery restrictions.';
+    }catch(error){
+      console.warn('Android notification test failed',error);
+      testStatus.textContent='Notification test failed: '+String(error?.message||error);
+    }finally{testButton.disabled=false}
+  });
   const update=()=>{button.textContent='Idle notifications: '+(localStorage.getItem(bpIdleNotifyKey)==='yes'?'On':'Off')};update();
   button.addEventListener('click',async()=>{
     const enabled=localStorage.getItem(bpIdleNotifyKey)==='yes';
