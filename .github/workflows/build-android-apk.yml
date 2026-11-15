@@ -7,7 +7,7 @@ on:
       - 'package.json'
       - 'capacitor.config.json'
       - 'android-controls.css'
-      - 'assets/block-party-icon.png'
+      - 'assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png'
       - '.github/workflows/build-android-apk.yml'
   workflow_dispatch:
 permissions:
@@ -47,15 +47,15 @@ jobs:
         run: npx cap sync android
       - name: Generate Android launcher icons from approved artwork
         run: |
-          if [ ! -f assets/block-party-icon.png ]; then
-            echo "::warning::assets/block-party-icon.png not uploaded yet; using default Capacitor launcher icon."
+          if [ ! -f assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png ]; then
+            echo "::warning::assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png not uploaded yet; using default Capacitor launcher icon."
             exit 0
           fi
           python3 -m pip install --user Pillow
           python3 - <<'PY'
           from PIL import Image
           from pathlib import Path
-          source = Image.open('assets/block-party-icon.png').convert('RGBA')
+          source = Image.open('assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png').convert('RGBA')
           if source.width != source.height:
               side = min(source.size)
               x = (source.width - side) // 2
