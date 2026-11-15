@@ -44,6 +44,17 @@ jobs:
         run: npx cap add android
       - name: Sync web assets
         run: npx cap sync android
+      - name: Restore persistent Android debug signing key
+        env:
+          BLOCK_PARTY_DEBUG_KEYSTORE_BASE64: ${{ secrets.BLOCK_PARTY_DEBUG_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$BLOCK_PARTY_DEBUG_KEYSTORE_BASE64" ]; then
+            echo "::error::Configure repository Actions secret BLOCK_PARTY_DEBUG_KEYSTORE_BASE64 to enable consistent APK updates."
+            exit 1
+          fi
+          mkdir -p "$HOME/.android"
+          printf '%s' "$BLOCK_PARTY_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$HOME/.android/debug.keystore"
+          keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey > /dev/null
       - name: Build debug APK
         run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - name: Upload APK
