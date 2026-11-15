@@ -188,13 +188,13 @@ jobs:
           import re
           key = Path('keystore-certificate.txt').read_text()
           apk = Path('apk-verification.txt').read_text()
-          expected = re.search(r'SHA256:\\s*([0-9A-Fa-f:]{64,95})', key)
-          actual = re.search(r'Signer #1 certificate SHA-256 digest:\\s*([0-9A-Fa-f:]{64,95})', apk, re.I)
+          expected = next((line.split('SHA256:',1)[1].strip() for line in key.splitlines() if 'SHA256:' in line), None)
+          actual = next((line.split('certificate SHA-256 digest:',1)[1].strip() for line in apk.splitlines() if 'certificate SHA-256 digest:' in line), None)
           if not expected or not actual:
-              print('::error::Unable to parse certificate fingerprint; inspect printed apksigner output.')
+              print('::error::Unable to parse certificate fingerprint.')
               raise SystemExit(1)
           normalize = lambda s: s.replace(':', '').lower()
-          a, b = normalize(expected.group(1)), normalize(actual.group(1))
+          a, b = normalize(expected), normalize(actual)
           print('Persistent keystore certificate SHA256:', a)
           print('Built APK certificate SHA256:        ', b)
           if a != b:
