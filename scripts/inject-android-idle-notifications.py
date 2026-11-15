@@ -15,8 +15,13 @@ function bpIdlePlugin(){
 async function bpIdleScheduleNotifications(){
   const plugin=bpIdlePlugin();if(!plugin)return;
   try{
+    if(localStorage.getItem(bpIdleNotifyKey)!=='yes'){
+      await plugin.cancel({notifications:bpIdleNotificationIds.map(id=>({id}))});return;
+    }
+    if(!idle?.started_at)return;
+    const permission=await plugin.checkPermissions();
+    if(permission.display!=='granted')return;
     await plugin.cancel({notifications:bpIdleNotificationIds.map(id=>({id}))});
-    if(localStorage.getItem(bpIdleNotifyKey)!=='yes'||!idle?.started_at)return;
     const start=Date.parse(idle.started_at),now=Date.now()+serverOffset;
     if(!Number.isFinite(start))return;
     const notifications=[
@@ -83,12 +88,16 @@ async function bpIdleNotificationSetup(){
       }catch(e){console.warn(e);return}
     }
     localStorage.setItem(bpIdleNotifyKey,enabled?'no':'yes');
-    update();await bpIdleScheduleNotifications();
+    update();
+    if(!enabled&&typeof refreshIdle==='function')await refreshIdle();
+    else await bpIdleScheduleNotifications();
   });
   try{await plugin.addListener('localNotificationActionPerformed',()=>{
     document.getElementById('bpWalletOpen')?.click();
   })}catch(e){console.warn(e)}
-  await bpIdleScheduleNotifications();
+  // Load the server idle cycle on app launch; the wallet need not be opened.
+  if(typeof refreshIdle==='function')await refreshIdle();
+  else await bpIdleScheduleNotifications();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bpIdleNotificationSetup,{once:true});
 else bpIdleNotificationSetup();
