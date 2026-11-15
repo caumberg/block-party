@@ -1,0 +1,48 @@
+name: Restore last working Block Party game
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/restore-working-game.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore index.html from before broken progress-bar patch
+        run: |
+          git show 8a3c5e791f9d96aceaa144632aa0b0011bc9d051:index.html > index.html
+          grep -q 'v2.4.107' index.html
+          if grep -q 'bp-campaign-progress-bar-restored-v24108' index.html; then
+            echo "Unexpected broken patch in restored file"; exit 1
+          fi
+      - name: Validate all inline JavaScript
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          class P(HTMLParser):
+            def __init__(self):super().__init__();self.ins=False;self.buf=[];self.scripts=[]
+            def handle_starttag(self,tag,attrs):
+              if tag=='script':
+                a=dict(attrs);self.ins=not a.get('src') and a.get('type','') not in ('application/json','application/ld+json');self.buf=[]
+            def handle_data(self,data):
+              if self.ins:self.buf.append(data)
+            def handle_endtag(self,tag):
+              if tag=='script' and self.ins:self.scripts.append(''.join(self.buf));self.ins=False
+          parser=P();parser.feed(Path('index.html').read_text(encoding='utf-8'))
+          assert len(parser.scripts)>=10, f'Only {len(parser.scripts)} scripts found'
+          for i,s in enumerate(parser.scripts):Path(f'/tmp/bp-restored-{i}.js').write_text(s,encoding='utf-8')
+          print('Validating',len(parser.scripts),'scripts')
+          PY
+          for f in /tmp/bp-restored-*.js; do node --check "$f"; done
+      - name: Publish restored working game
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Restore last working game after startup regression"
+          git push origin HEAD:main
