@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'package.json'
       - 'capacitor.config.json'
+      - 'android-controls.css'
       - '.github/workflows/build-android-apk.yml'
   workflow_dispatch:
 permissions:
@@ -27,6 +28,16 @@ jobs:
         run: |
           mkdir -p www
           cp index.html www/index.html
+          cp android-controls.css www/android-controls.css
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('www/index.html')
+          html = p.read_text(encoding='utf-8')
+          marker = '</head>'
+          assert marker in html, 'Expected closing head tag not found'
+          html = html.replace(marker, '<link rel="stylesheet" href="android-controls.css">' + marker, 1)
+          p.write_text(html, encoding='utf-8')
+          PY
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Create Android project
