@@ -130,7 +130,7 @@ jobs:
           content = p.read_text()
           import re
           version_code = 10000 + int(os.environ['BUILD_NUMBER'])
-          updated, count = re.subn(r'(?m)^(\\s*versionCode\\s+)\\d+', lambda m: m.group(1) + str(version_code), content, count=1)
+          updated, count = re.subn(r'(?m)^(\s*versionCode\s+)\d+', lambda m: m.group(1) + str(version_code), content, count=1)
           assert count == 1, 'Unable to find Android versionCode in build.gradle'
           p.write_text(updated)
           print(f'Android versionCode: {version_code}')
