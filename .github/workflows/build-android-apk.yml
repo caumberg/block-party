@@ -33,11 +33,29 @@ jobs:
           python3 scripts/inject-android-idle-notifications.py
           python3 - <<'PY'
           from pathlib import Path
-          import re
-          s=Path('www/index.html').read_text(encoding='utf-8')
-          scripts=re.findall(r'<script\\b[^>]*>(.*?)</script\\s*>',s,re.S|re.I)
-          assert len(scripts)>=10, f'Unexpected script count: {len(scripts)}'
-          for i,body in enumerate(scripts): Path(f'/tmp/bp-android-script-{i}.js').write_text(body,encoding='utf-8')
+          from html.parser import HTMLParser
+          class Scripts(HTMLParser):
+            def __init__(self):
+              super().__init__()
+              self.active=False
+              self.buf=[]
+              self.scripts=[]
+            def handle_starttag(self,tag,attrs):
+              if tag=='script':
+                a=dict(attrs)
+                self.active=not a.get('src') and a.get('type','') not in ('application/json','application/ld+json')
+                self.buf=[]
+            def handle_data(self,data):
+              if self.active:self.buf.append(data)
+            def handle_endtag(self,tag):
+              if tag=='script' and self.active:
+                self.scripts.append(''.join(self.buf))
+                self.active=False
+          parser=Scripts()
+          parser.feed(Path('www/index.html').read_text(encoding='utf-8'))
+          assert len(parser.scripts)>=10, f'Unexpected script count: {len(parser.scripts)}'
+          for i,body in enumerate(parser.scripts):
+            Path(f'/tmp/bp-android-script-{i}.js').write_text(body,encoding='utf-8')
           PY
           for f in /tmp/bp-android-script-*.js; do node --check "$f"; done
           cp android-controls.css www/android-controls.css
