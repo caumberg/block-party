@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Restore index.html from before broken progress-bar patch
         run: |
           git show 93fa0e351da0703ad6baf99e8142fddd129f4b3f:index.html > index.html
