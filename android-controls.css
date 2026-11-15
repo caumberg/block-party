@@ -1,20 +1,67 @@
-/* Android APK only. Loaded during packaging, never by GitHub Pages.
-   Keep the directional hit regions and visual silhouettes in a square coordinate space. */
-#arena.solo #bottom #pad,
-#arena.versus #bottom #pad {
+/* Android-only layout corrections. Loaded only inside Capacitor APK.
+   Use direct IDs, independent of the game mode or ancestor class.
+   No DOM scanning, no JavaScript, and no transforms on interactive controls. */
+
+/* The four-way pad must occupy a square, regardless of the extra
+   vertical room available in the Android fullscreen viewport. */
+#pad,
+#arena #pad,
+#bottom #pad,
+#arena #bottom #pad {
+  box-sizing: border-box !important;
   aspect-ratio: 1 / 1 !important;
-  height: auto !important;
+  width: min(52vw, 38dvh, 380px) !important;
+  height: min(52vw, 38dvh, 380px) !important;
+  min-width: 0 !important;
   min-height: 0 !important;
-  max-height: none !important;
+  max-height: min(52vw, 38dvh, 380px) !important;
+  max-width: min(52vw, 38dvh, 380px) !important;
+  flex: 0 0 auto !important;
   align-self: center !important;
 }
-/* Keep the two action buttons comfortably tappable without tall stretching. */
+
+/* Give the individual D-pad directions equal-sized hit regions. */
+#pad > *,
+#pad button {
+  box-sizing: border-box !important;
+}
+
+/* Buttons should never grow to fill an oversized mobile control row. */
+#swap,
+#raiseRow,
+#actionStack #swap,
+#actionStack #raiseRow,
 #arena #bottom #actionStack #swap,
 #arena #bottom #actionStack #raiseRow {
-  height: clamp(66px, 10dvh, 92px) !important;
+  box-sizing: border-box !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
   min-height: 0 !important;
-  flex: 0 0 auto !important;
+  max-height: none !important;
 }
+#swap,
+#actionStack #swap,
+#arena #bottom #actionStack #swap {
+  height: min(24vw, 100px) !important;
+  min-height: min(24vw, 100px) !important;
+  max-height: min(24vw, 100px) !important;
+}
+#raiseRow,
+#actionStack #raiseRow,
+#arena #bottom #actionStack #raiseRow {
+  height: min(15vw, 68px) !important;
+  min-height: min(15vw, 68px) !important;
+  max-height: min(15vw, 68px) !important;
+}
+#actionStack,
 #arena #bottom #actionStack {
   justify-content: center !important;
+  align-self: center !important;
+  gap: 12px !important;
+}
+
+/* Avoid clipping the existing button glows. */
+#bottom,
+#actionStack {
+  overflow: visible !important;
 }
