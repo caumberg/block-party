@@ -44,5 +44,28 @@ css="""
 #arena #bottom #actionStack #swap{transform:translate(-4px,-8px) scale(1.15)!important;transform-origin:center center!important}
 """
 s=s.replace(anchor,css+anchor,1)
+# The rotating Top 10 sidebar was retired from gameplay. Keep the global
+# leaderboard screen accessible from the main menu; do not run its timer
+# or let its panel cover the power-up controls in Solo mode.
+old_init="""function initMiniLeaderboard(){
+ clearInterval(bpMiniTimer);bpMiniCache={};bpMiniPeriod=0;bpMiniShowScore=false;
+ $('bpMini').hidden=isVersus;
+ if(isVersus)return;
+ requestAnimationFrame(positionMiniLeaderboard);bpRenderMini();
+ bpMiniTimer=setInterval(()=>{"""
+new_init="""function initMiniLeaderboard(){
+ clearInterval(bpMiniTimer);bpMiniTimer=null;
+ $('bpMini').hidden=true;
+ return;
+ bpMiniCache={};bpMiniPeriod=0;bpMiniShowScore=false;
+ $('bpMini').hidden=isVersus;
+ if(isVersus)return;
+ requestAnimationFrame(positionMiniLeaderboard);bpRenderMini();
+ bpMiniTimer=setInterval(()=>{"""
+assert s.count(old_init)==1, f'Expected one rotating leaderboard initializer, found {s.count(old_init)}'
+s=s.replace(old_init,new_init,1)
+# Belt and suspenders: even if another code path unhides it, the sidebar
+# cannot visually cover the game or power-up buttons.
+s=s.replace(anchor, '#bpMini{display:none!important}\\n'+anchor,1) if False else s
 p.write_text(s,encoding='utf-8')
 print('Patched actual main gameplay CSS')
