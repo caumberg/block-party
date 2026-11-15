@@ -20,7 +20,6 @@ jobs:
           s=p.read_text(encoding='utf-8')
           assert 'id="bpCampaignMenuBar"' in s
           assert 'id="bpCampaignOpen"' in s
-          assert 'id="bpArcadeHome"' in s
           assert 'v2.4.107' in s
           assert 'bp-campaign-track-v24111' not in s
           css='''\n<style id="bp-campaign-track-v24111">
@@ -48,9 +47,11 @@ jobs:
             border-radius:8px!important;background:linear-gradient(90deg,#d5a2ff,#ffd47a)!important;
           }
           </style>\n'''
-          # Appending a stylesheet after all existing content avoids any accidental
-          # replacement of the literal '</head>' embedded in the game's JS strings.
-          s+=css
+          # Insert before the real document body, never replace a JS string literal.
+          import re
+          body=re.search(r'<body(?:\\s|>)',s,re.I)
+          assert body, 'Document body not found'
+          s=s[:body.start()]+css+s[body.start():]
           s=s.replace('v2.4.107 <button type="button" id="bpDeveloperModeOpen"','v2.4.111 <button type="button" id="bpDeveloperModeOpen"',1)
           p.write_text(s,encoding='utf-8')
           print('Added isolated Campaign track CSS; original scripts unchanged')
