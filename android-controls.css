@@ -98,3 +98,46 @@
   align-items:center!important;
   overflow:visible!important;
 }
+
+/* v2.4.113: actual compact controls. Previous 22dvh made the pad
+   over 330px tall on portrait phones. Size from screen WIDTH only. */
+#arena #bottom #pad,
+#arena.solo #bottom #pad,
+#arena.versus #bottom #pad {
+  width:min(29vw,190px)!important;
+  height:min(29vw,190px)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:min(29vw,190px)!important;
+  max-height:min(29vw,190px)!important;
+  flex:0 0 min(29vw,190px)!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:repeat(3,minmax(0,1fr))!important;
+  gap:2px!important;
+}
+#arena #bottom #pad button[data-key] {
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  font-size:clamp(16px,3.3vw,24px)!important;
+}
+#arena #bottom #actionStack,
+#arena.solo #bottom #actionStack,
+#arena.versus #bottom #actionStack {
+  width:min(32vw,210px)!important;
+  max-width:min(32vw,210px)!important;
+  flex:0 0 min(32vw,210px)!important;
+}
+#arena #bottom #actionStack #swap {
+  width:100%!important;
+  height:clamp(58px,10vw,85px)!important;
+  min-height:0!important;
+  max-height:85px!important;
+}
+#arena #bottom #actionStack #raiseRow {
+  width:100%!important;
+  height:clamp(42px,7vw,58px)!important;
+  min-height:0!important;
+  max-height:58px!important;
+}
