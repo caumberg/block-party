@@ -3184,8 +3184,8 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-preview-status{display:none!important}
 #bpCampaignOverlay #bpCampaignDetail>button{margin:3px 0 0!important;min-height:41px!important;padding:6px!important;flex:0 0 41px!important;position:sticky!important;bottom:0!important;z-index:3!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-scene-top{padding:4px 8px!important;min-height:28px!important}
-#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,28vh,285px)!important}
-@media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(175px,25vh,240px)!important}}
+#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(340px,46vh,460px)!important;flex-shrink:0!important}
+@media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(300px,43vh,400px)!important}}
 </style>`;
    approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head');
    scene.replaceChildren(sceneTop,approved);
