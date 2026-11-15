@@ -4,75 +4,16 @@ s=p.read_text(encoding='utf-8')
 anchor='</style>\n</style>\n<div id="menu">'
 assert s.count(anchor)==1, f'Expected exactly one main stylesheet ending, found {s.count(anchor)}'
 css="""
-/* Android controls: size actual pad grid AND its rows, not just the wrapper. */
-#arena.solo #bottom,#arena.versus #bottom{
- width:min(96vw,620px)!important;
- display:flex!important;
- align-items:center!important;
- justify-content:center!important;
- gap:clamp(10px,2.2vw,20px)!important;
- position:relative!important;
- top:clamp(50px,7dvh,110px)!important;
- margin:0 auto!important;
- padding:0 8px!important;
- overflow:visible!important;
- box-sizing:border-box!important;
-}
-#arena.solo #bottom #pad,#arena.versus #bottom #pad{
- --bp-pad-size:min(48vw,240px);
- display:grid!important;
- grid-template-columns:repeat(3,minmax(0,1fr))!important;
- grid-template-rows:repeat(3,minmax(0,1fr))!important;
- gap:3px!important;
- box-sizing:border-box!important;
- width:var(--bp-pad-size)!important;
- height:var(--bp-pad-size)!important;
- min-width:var(--bp-pad-size)!important;
- min-height:var(--bp-pad-size)!important;
- max-width:var(--bp-pad-size)!important;
- max-height:var(--bp-pad-size)!important;
- flex:0 0 var(--bp-pad-size)!important;
- margin:0!important;
- align-self:center!important;
- overflow:visible!important;
-}
-#arena #bottom #pad button[data-key]{
- box-sizing:border-box!important;
- width:100%!important;
- height:100%!important;
- min-height:0!important;
- min-width:0!important;
- padding:0!important;
- font-size:clamp(19px,5vw,32px)!important;
- border-radius:12px!important;
-}
-#arena.solo #bottom #actionStack,#arena.versus #bottom #actionStack{
- width:min(34vw,185px)!important;
- max-width:min(34vw,185px)!important;
- flex:0 0 min(34vw,185px)!important;
- display:flex!important;
- flex-direction:column!important;
- align-self:center!important;
- justify-content:center!important;
- gap:12px!important;
- margin:0!important;
-}
-#arena #bottom #actionStack #raiseRow{
- box-sizing:border-box!important;
- width:100%!important;
- height:clamp(48px,8vw,62px)!important;
- min-height:0!important;
- max-height:62px!important;
- flex:0 0 auto!important;
-}
-#arena #bottom #actionStack #swap{
- box-sizing:border-box!important;
- width:100%!important;
- height:clamp(86px,16vw,120px)!important;
- min-height:0!important;
- max-height:120px!important;
- flex:0 0 auto!important;
-}
+/* Android gameplay controls: injected into the actual main document stylesheet. */
+#arena #bottom{width:min(94vw,470px)!important;align-items:center!important;justify-content:center!important;gap:16px!important;overflow:visible!important;position:relative!important;top:clamp(45px,7dvh,110px)!important;margin-inline:auto!important}
+#arena #bottom #pad{display:grid!important;box-sizing:border-box!important;width:min(42vw,212px)!important;height:min(42vw,212px)!important;max-width:min(42vw,212px)!important;max-height:min(42vw,212px)!important;min-width:0!important;min-height:0!important;flex:0 0 min(42vw,212px)!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;gap:3px!important;align-self:center!important}
+#arena #bottom #pad button{box-sizing:border-box!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;padding:0!important;font-size:clamp(16px,4vw,25px)!important;border-radius:10px!important}
+#arena #bottom #actionStack{box-sizing:border-box!important;width:min(34vw,180px)!important;max-width:min(34vw,180px)!important;flex:0 0 min(34vw,180px)!important;align-self:center!important;justify-content:center!important;gap:12px!important}
+#arena #bottom #actionStack #raiseRow{box-sizing:border-box!important;width:100%!important;height:clamp(42px,8vw,58px)!important;min-height:0!important;max-height:58px!important;flex:0 0 auto!important}
+#arena #bottom #actionStack #swap{box-sizing:border-box!important;width:100%!important;height:clamp(75px,15vw,106px)!important;min-height:0!important;max-height:106px!important;flex:0 0 auto!important}
+/* Scale the intact original directional cross, without replacing its grid placement. */
+#arena #bottom #pad{transform:scale(1.08)!important;transform-origin:center center!important}
+#arena #bottom #actionStack #swap{transform:scale(1.08)!important;transform-origin:center center!important}
 """
 s=s.replace(anchor,css+anchor,1)
 p.write_text(s,encoding='utf-8')
