@@ -15,7 +15,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
       - name: Stage game
         run: |
           mkdir -p www
