@@ -18,7 +18,11 @@ async function bpIdleScheduleNotifications(){
     if(localStorage.getItem(bpIdleNotifyKey)!=='yes'){
       await plugin.cancel({notifications:bpIdleNotificationIds.map(id=>({id}))});return;
     }
-    if(!idle?.started_at)return;
+    if(!idle?.started_at){
+      // The first startup check can precede Supabase session restoration.
+      // Do not cancel an already scheduled Android alarm on that failure.
+      return;
+    }
     const permission=await plugin.checkPermissions();
     if(permission.display!=='granted')return;
     await plugin.cancel({notifications:bpIdleNotificationIds.map(id=>({id}))});
@@ -132,9 +136,45 @@ async function bpIdleNotificationSetup(){
   try{await plugin.addListener('localNotificationActionPerformed',()=>{
     document.getElementById('bpWalletOpen')?.click();
   })}catch(e){console.warn(e)}
-  // Load the server idle cycle on app launch; the wallet need not be opened.
-  if(typeof refreshIdle==='function')await refreshIdle();
-  else await bpIdleScheduleNotifications();
+  // Auth restoration is asynchronous. An immediate refresh on DOMContentLoaded
+  // often happens before the Supabase session exists, so retry after startup.
+  // Stop after the server returns a usable idle cycle.
+  let attempts=0;
+  const refreshWhenReady=async()=>{
+    if(localStorage.getItem(bpIdleNotifyKey)!=='yes')return;
+    if(typeof refreshIdle==='function'){
+      try{await refreshIdle()}catch(error){console.warn('Idle notification refresh retry',error)}
+    }
+    if(idle?.started_at)await bpIdleScheduleNotifications();
+  };
+  await refreshWhenReady();
+  const retry=setInterval(async()=>{
+    attempts++;
+    if(idle?.started_at||attempts>=30){clearInterval(retry);return}
+    await refreshWhenReady();
+  },4000);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden)void refreshWhenReady();
+  });
+  // Show the real Android alarm queue, not an assumed success message.
+  const scheduleStatus=document.createElement('p');
+  scheduleStatus.id='bpIdleScheduleStatus';
+  scheduleStatus.style.cssText='font-size:12px;line-height:1.5;color:#cbd6f1;overflow-wrap:anywhere;margin:10px 0';
+  section.insertBefore(scheduleStatus,testButton);
+  async function showScheduleStatus(){
+    try{
+      const pending=await plugin.getPending();
+      const alarms=(pending.notifications||[]).filter(n=>bpIdleNotificationIds.includes(n.id));
+      const first=alarms.find(n=>n.id===41001);
+      const max=alarms.find(n=>n.id===41002);
+      const fmt=n=>n?.schedule?.at?new Date(n.schedule.at).toLocaleString():'Not scheduled';
+      scheduleStatus.textContent='1-hour alert: '+fmt(first)+' | 3½-hour alert: '+fmt(max);
+      if(!alarms.length)scheduleStatus.textContent+=' (No automatic alarms pending)';
+    }catch(error){scheduleStatus.textContent='Cannot read scheduled alerts: '+String(error?.message||error)}
+  }
+  settingsLink.addEventListener('click',async()=>{await refreshWhenReady();await showScheduleStatus()});
+  button.addEventListener('click',()=>{setTimeout(()=>void showScheduleStatus(),700)});
+  await showScheduleStatus();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bpIdleNotificationSetup,{once:true});
 else bpIdleNotificationSetup();
