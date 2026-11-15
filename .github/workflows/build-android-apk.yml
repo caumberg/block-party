@@ -7,6 +7,7 @@ on:
       - 'package.json'
       - 'capacitor.config.json'
       - 'android-controls.css'
+      - 'android-controls.js'
       - 'assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png'
       - '.github/workflows/build-android-apk.yml'
   workflow_dispatch:
@@ -30,19 +31,46 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
           cp android-controls.css www/android-controls.css
+          cp android-controls.js www/android-controls.js
           python3 - <<'PY'
           from pathlib import Path
           p = Path('www/index.html')
           html = p.read_text(encoding='utf-8')
           marker = '</head>'
           assert marker in html, 'Expected closing head tag not found'
-          html = html.replace(marker, '<link rel="stylesheet" href="android-controls.css">' + marker, 1)
+          html = html.replace(marker, '<link rel="stylesheet" href="android-controls.css"><script defer src="android-controls.js"></script>' + marker, 1)
           p.write_text(html, encoding='utf-8')
           PY
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Create Android project
         run: npx cap add android
+      - name: Enable immersive Android fullscreen
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('android/app/src/main/java/com/blockparty/game/MainActivity.java')
+          code = p.read_text()
+          assert 'extends BridgeActivity' in code, 'Unexpected Capacitor MainActivity structure'
+          code = code.replace('extends BridgeActivity {', '''extends BridgeActivity {
+              private void enterImmersiveMode() {
+                  getWindow().getDecorView().setSystemUiVisibility(
+                      android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                      | android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+                      | android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                      | android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                      | android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                      | android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+              }
+              @Override
+              public void onWindowFocusChanged(boolean hasFocus) {
+                  super.onWindowFocusChanged(hasFocus);
+                  if (hasFocus) enterImmersiveMode();
+              }
+          ''', 1)
+          p.write_text(code)
+          PY
       - name: Sync web assets
         run: npx cap sync android
       - name: Generate Android launcher icons from approved artwork
