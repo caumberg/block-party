@@ -61,7 +61,7 @@ else bpIdleNotificationSetup();
 """
 s=s.replace(marker,js+"\n"+marker,1)
 # Refresh native alarms whenever the server provides a fresh idle cycle.
-anchor="serverOffset=Date.parse(result.server_now)-Date.now();renderIdle();"
+anchor="serverOffset=Date.parse(result.server_now)-Date.now();renderIdle()"
 assert s.count(anchor)==1, "Idle refresh anchor missing"
 s=s.replace(anchor,anchor+"void bpIdleScheduleNotifications();",1)
 claim="serverOffset=Date.parse(idle.server_now)-Date.now();"
