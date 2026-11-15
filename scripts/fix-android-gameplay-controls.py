@@ -24,8 +24,8 @@ css="""
  #arena.solo #bottom,#arena.versus #bottom{margin-top:10px!important}
 }
 /* Scale the intact original directional cross, without replacing its grid placement. */
-#arena #bottom #pad{transform:scale(1.04)!important;transform-origin:center center!important}
-#arena #bottom #actionStack #swap{transform:scale(1.08)!important;transform-origin:center center!important}
+#arena #bottom #pad{transform:translateX(-11px) scale(1.11)!important;transform-origin:center center!important}
+#arena #bottom #actionStack #swap{transform:translate(-4px,-8px) scale(1.15)!important;transform-origin:center center!important}
 """
 s=s.replace(anchor,css+anchor,1)
 p.write_text(s,encoding='utf-8')
