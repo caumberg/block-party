@@ -1,0 +1,7 @@
+{
+  "appId": "com.blockparty.game",
+  "appName": "Block Party",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": { "allowMixedContent": false }
+}
