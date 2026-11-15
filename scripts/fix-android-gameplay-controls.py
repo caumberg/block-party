@@ -35,6 +35,78 @@ css="""
 #arena #bottom #actionStack{align-items:stretch!important}
 #arena #bottom #actionStack #raiseRow,
 #arena #bottom #actionStack #swap{margin-inline:0!important;align-self:stretch!important}
+/* Solo HUD becomes three compact cards across the width above the board. */
+#arena.solo #soloHud{
+ position:relative!important;
+ inset:auto!important;
+ transform:none!important;
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:7px!important;
+ width:calc(100% - 24px)!important;
+ max-width:690px!important;
+ margin:0 auto 10px!important;
+ padding:0!important;
+ align-items:stretch!important;
+}
+#arena.solo #soloHud .hud-card{
+ width:auto!important;
+ min-width:0!important;
+ height:auto!important;
+ min-height:68px!important;
+ margin:0!important;
+ padding:7px 4px!important;
+ font-size:clamp(10px,2.5vw,14px)!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ text-align:center!important;
+}
+#arena.solo #soloHud .hud-card strong{font-size:clamp(12px,3.3vw,18px)!important;line-height:1.2!important}
+#arena.solo #soloHud .hud-card .hud-label{font-size:clamp(10px,2.4vw,13px)!important}
+/* Float enlarged power-ups just above the field's lower edge.
+   Negative margin deliberately overlays the field, not the controls. */
+#arena #bpPowerQuickDock{
+ z-index:210!important;
+ position:relative!important;
+ margin:-64px auto 0!important;
+ min-height:64px!important;
+ padding:7px 9px 10px!important;
+ width:max-content!important;
+ max-width:calc(100% - 26px)!important;
+ gap:clamp(7px,1.5vw,13px)!important;
+ flex-wrap:nowrap!important;
+ pointer-events:none!important;
+}
+#arena #bpPowerQuickDock .bp-power-quick{
+ pointer-events:auto!important;
+ width:clamp(44px,8vw,60px)!important;
+ height:clamp(44px,8vw,60px)!important;
+ min-width:0!important;
+ flex:0 1 auto!important;
+ box-shadow:0 0 10px #9d74ff88,0 3px 8px #0009!important;
+}
+#arena #bpPowerQuickDock .bp-power-quick-symbol{font-size:clamp(19px,4vw,27px)!important}
+#arena #bpPowerQuickDock .bp-power-quick-count{font-size:clamp(11px,2.5vw,14px)!important}
+#arena.solo #bottom,#arena.versus #bottom{
+ margin-top:clamp(34px,4.3dvh,66px)!important;
+ align-items:center!important;
+}
+#arena #bottom #actionStack{
+ align-self:center!important;
+ justify-content:center!important;
+ gap:12px!important;
+}
+#arena #bottom #actionStack #raiseRow,
+#arena #bottom #actionStack #swap{
+ position:relative!important;
+ left:0!important;
+ right:auto!important;
+ margin:0!important;
+ transform:none!important;
+ width:100%!important;
+}
 /* Retired rotating in-game leaderboard must never cover power-ups. */
 #bpMini{display:none!important}
 #arena #bottom{width:min(94vw,470px)!important;align-items:center!important;justify-content:center!important;gap:16px!important;overflow:visible!important;position:relative!important;top:0!important;margin-inline:auto!important}
@@ -73,7 +145,7 @@ css="""
 #arena #bottom #actionStack #swap{filter:drop-shadow(0 0 7px rgba(255,84,238,.42))!important}
 /* Scale the intact original directional cross, without replacing its grid placement. */
 #arena #bottom #pad{transform:translateX(-11px) scale(1.11)!important;transform-origin:center center!important}
-#arena #bottom #actionStack #swap{transform:scale(1.10)!important;transform-origin:center center!important}
+#arena #bottom #actionStack #swap{transform:none!important;transform-origin:center center!important}
 """
 s=s.replace(anchor,css+anchor,1)
 # The rotating Top 10 sidebar was retired from gameplay. Keep the global
@@ -105,5 +177,15 @@ dock_old="boards.appendChild(dock);"
 dock_new="boards.insertAdjacentElement('afterend',dock);"
 assert s.count(dock_old)==1, f'Expected one quick dock mount, got {s.count(dock_old)}'
 s=s.replace(dock_old,dock_new,1)
+# Move the existing Solo HUD, with its live counters intact, before the
+# boards. This avoids trying to float a sidebar with absolute positioning.
+hud_old='<div id="boards"><aside id="soloHud"'
+hud_new='<aside id="soloHud"'
+assert s.count(hud_old)==1, f'Expected one Solo HUD markup, found {s.count(hud_old)}'
+s=s.replace(hud_old,hud_new,1)
+zone_old='</aside><section class="zone" id="humanZone">'
+zone_new='</aside><div id="boards"><section class="zone" id="humanZone">'
+assert s.count(zone_old)==1, f'Expected one HUD/zone boundary, found {s.count(zone_old)}'
+s=s.replace(zone_old,zone_new,1)
 p.write_text(s,encoding='utf-8')
 print('Patched actual main gameplay CSS')
