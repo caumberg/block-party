@@ -7,6 +7,7 @@ on:
       - 'package.json'
       - 'capacitor.config.json'
       - 'android-controls.css'
+      - 'assets/block-party-icon.png'
       - '.github/workflows/build-android-apk.yml'
   workflow_dispatch:
 permissions:
@@ -44,6 +45,52 @@ jobs:
         run: npx cap add android
       - name: Sync web assets
         run: npx cap sync android
+      - name: Generate Android launcher icons from approved artwork
+        run: |
+          if [ ! -f assets/block-party-icon.png ]; then
+            echo "::warning::assets/block-party-icon.png not uploaded yet; using default Capacitor launcher icon."
+            exit 0
+          fi
+          python3 -m pip install --user Pillow
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          source = Image.open('assets/block-party-icon.png').convert('RGBA')
+          if source.width != source.height:
+              side = min(source.size)
+              x = (source.width - side) // 2
+              y = (source.height - side) // 2
+              source = source.crop((x, y, x + side, y + side))
+          base = Path('android/app/src/main/res')
+          for density, px in [('mdpi',48),('hdpi',72),('xhdpi',96),('xxhdpi',144),('xxxhdpi',192)]:
+              target = base / ('mipmap-' + density)
+              target.mkdir(parents=True, exist_ok=True)
+              icon = source.resize((px,px), Image.Resampling.LANCZOS)
+              icon.save(target / 'ic_launcher.png')
+              icon.save(target / 'ic_launcher_round.png')
+              # Android adaptive foreground gets safe-zone padding.
+              foreground = Image.new('RGBA', (px * 108 // 48, px * 108 // 48), (0,0,0,0))
+              fg_size = foreground.width * 72 // 108
+              tile = source.resize((fg_size, fg_size), Image.Resampling.LANCZOS)
+              offset = (foreground.width - fg_size) // 2
+              foreground.alpha_composite(tile, (offset, offset))
+              foreground.save(target / 'ic_launcher_foreground.png')
+          # Adaptive launcher uses the generated foreground and solid dark background.
+          values = base / 'values'
+          values.mkdir(parents=True, exist_ok=True)
+          (values / 'block_party_icon_bg.xml').write_text(
+              '<resources><color name="block_party_icon_background">#0C0632</color></resources>')
+          for dirname in ('mipmap-anydpi-v26',):
+              folder = base / dirname
+              folder.mkdir(parents=True, exist_ok=True)
+              for name in ('ic_launcher.xml', 'ic_launcher_round.xml'):
+                  (folder / name).write_text(
+                      '<?xml version="1.0" encoding="utf-8"?>\\n'
+                      '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">'
+                      '<background android:drawable="@color/block_party_icon_background"/>'
+                      '<foreground android:drawable="@mipmap/ic_launcher_foreground"/>'
+                      '</adaptive-icon>')
+          PY
       - name: Restore persistent Android debug signing key
         env:
           BLOCK_PARTY_DEBUG_KEYSTORE_BASE64: ${{ secrets.BLOCK_PARTY_DEBUG_KEYSTORE_BASE64 }}
