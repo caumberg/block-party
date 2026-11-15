@@ -107,6 +107,36 @@ css="""
  transform:none!important;
  width:100%!important;
 }
+/* Compact Solo HUD; remove the excessive vertical padding inherited from
+   the original sidebar cards. */
+#arena.solo #soloHud{margin-bottom:6px!important;align-items:stretch!important}
+#arena.solo #soloHud .hud-card{
+ height:64px!important;min-height:0!important;max-height:64px!important;
+ padding:4px 6px!important;gap:2px!important;
+ overflow:hidden!important;box-sizing:border-box!important;
+}
+#arena.solo #soloHud .hud-card strong{font-size:clamp(12px,3vw,17px)!important}
+#arena.solo #soloHud .hud-card .hud-label{font-size:clamp(9px,2.2vw,12px)!important}
+/* Power-ups belong directly below the field, with no negative margin.
+   Reserve their own height so no playable bottom-row blocks are covered. */
+#arena #bpPowerQuickDock{
+ margin:3px auto 0!important;
+ min-height:64px!important;
+ height:64px!important;
+ z-index:5!important;
+ transform:none!important;
+ align-content:center!important;
+ padding:5px 8px!important;
+}
+#arena.solo #bottom,#arena.versus #bottom{margin-top:clamp(8px,1.4dvh,20px)!important}
+#arena #bottom #actionStack{align-items:stretch!important}
+#arena #bottom #actionStack #raiseRow,
+#arena #bottom #actionStack #swap{width:100%!important;max-width:none!important}
+/* Hide the obsolete Solo lightning-bolt menu launcher, not the individual
+   lightning power-up tiles on the actual game board. */
+#arena.solo #bpPowerMenuTrigger,
+#arena.solo #bpPowerMenuButton,
+#arena.solo #bpPowerupMenuTrigger{display:none!important}
 /* Retired rotating in-game leaderboard must never cover power-ups. */
 #bpMini{display:none!important}
 #arena #bottom{width:min(94vw,470px)!important;align-items:center!important;justify-content:center!important;gap:16px!important;overflow:visible!important;position:relative!important;top:0!important;margin-inline:auto!important}
