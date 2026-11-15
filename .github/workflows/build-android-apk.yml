@@ -148,6 +148,31 @@ jobs:
           keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey > /dev/null
           echo "Expected signing certificate:"
           keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep 'SHA256:'
+      - name: Force debug build to use the persistent signing key
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/build.gradle')
+          content = p.read_text()
+          assert 'android {' in content, 'Android Gradle configuration changed'
+          content = content.replace('android {', '''android {
+              signingConfigs {
+                  debug {
+                      storeFile file(System.getProperty("user.home") + "/.android/debug.keystore")
+                      storePassword "android"
+                      keyAlias "androiddebugkey"
+                      keyPassword "android"
+                  }
+              }
+          ''', 1)
+          assert 'buildTypes {' in content, 'Android buildTypes not found'
+          content = content.replace('buildTypes {', '''buildTypes {
+              debug {
+                  signingConfig signingConfigs.debug
+              }
+          ''', 1)
+          p.write_text(content)
+          PY
       - name: Build debug APK
         run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - name: Verify APK package, version, and signing certificate
