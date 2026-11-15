@@ -1,0 +1,50 @@
+name: Repair campaign gameplay preview
+on:
+  push:
+    paths:
+      - 'scripts/fix-campaign-preview.py'
+      - '.github/workflows/fix-campaign-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore full gameplay preview
+        run: python3 scripts/fix-campaign-preview.py
+      - name: Validate inline JavaScript
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          class Parser(HTMLParser):
+            def __init__(self):
+              super().__init__()
+              self.active=False
+              self.buf=[]
+              self.scripts=[]
+            def handle_starttag(self,tag,attrs):
+              if tag=='script':
+                self.active=not dict(attrs).get('src') and dict(attrs).get('type','') not in ('application/json','application/ld+json')
+                self.buf=[]
+            def handle_data(self,data):
+              if self.active:self.buf.append(data)
+            def handle_endtag(self,tag):
+              if tag=='script' and self.active:
+                self.scripts.append(''.join(self.buf))
+                self.active=False
+          parser=Parser()
+          parser.feed(Path('index.html').read_text(encoding='utf-8'))
+          assert len(parser.scripts)>=10
+          for i,s in enumerate(parser.scripts):
+            Path(f'/tmp/bp-campaign-check-{i}.js').write_text(s,encoding='utf-8')
+          PY
+          for f in /tmp/bp-campaign-check-*.js; do node --check "$f"; done
+      - name: Commit validated game
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "Restore full-size Campaign animation preview" && git push)
