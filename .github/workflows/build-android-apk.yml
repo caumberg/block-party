@@ -7,6 +7,7 @@ on:
       - 'package.json'
       - 'scripts/inject-android-idle-notifications.py'
       - 'scripts/fix-campaign-preview.py'
+      - 'scripts/fix-android-gameplay-controls.py'
       - 'capacitor.config.json'
       - 'android-controls.css'
       - 'assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png'
@@ -32,6 +33,7 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
           python3 scripts/fix-campaign-preview.py www/index.html
+          python3 scripts/fix-android-gameplay-controls.py
           python3 scripts/inject-android-idle-notifications.py
           python3 - <<'PY'
           from pathlib import Path
@@ -60,16 +62,6 @@ jobs:
             Path(f'/tmp/bp-android-script-{i}.js').write_text(body,encoding='utf-8')
           PY
           for f in /tmp/bp-android-script-*.js; do node --check "$f"; done
-          cp android-controls.css www/android-controls.css
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('www/index.html')
-          html = p.read_text(encoding='utf-8')
-          marker = '</head>'
-          assert marker in html, 'Expected closing head tag not found'
-          html = html.replace(marker, '<link rel="stylesheet" href="android-controls.css">' + marker, 1)
-          p.write_text(html, encoding='utf-8')
-          PY
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Create Android project
