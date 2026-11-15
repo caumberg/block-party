@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'package.json'
       - 'scripts/inject-android-idle-notifications.py'
+      - 'scripts/fix-campaign-preview.py'
       - 'capacitor.config.json'
       - 'android-controls.css'
       - 'assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png'
@@ -30,6 +31,7 @@ jobs:
         run: |
           mkdir -p www
           cp index.html www/index.html
+          python3 scripts/fix-campaign-preview.py www/index.html
           python3 scripts/inject-android-idle-notifications.py
           python3 - <<'PY'
           from pathlib import Path
