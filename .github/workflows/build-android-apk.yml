@@ -180,14 +180,28 @@ jobs:
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           SDK_BUILD_TOOLS=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
           "$SDK_BUILD_TOOLS/aapt" dump badging "$APK" | grep '^package:'
-          "$SDK_BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK" | grep -E 'Verified using v[123] scheme|Signer #1 certificate SHA-256 digest'
-          EXPECTED=$(keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey | grep 'SHA256:' | head -1 | sed 's/.*SHA256: //' | tr -d ':' | tr '[:upper:]' '[:lower:]')
-          ACTUAL=$("$SDK_BUILD_TOOLS/apksigner" verify --print-certs "$APK" | grep 'Signer #1 certificate SHA-256 digest:' | head -1 | awk '{print $NF}')
-          if [ "$EXPECTED" != "$ACTUAL" ]; then
-            echo "::error::APK signing certificate differs from persistent signing key."
-            exit 1
-          fi
-          echo "APK signature matches persistent signing key."
+          "$SDK_BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK" > apk-verification.txt
+          cat apk-verification.txt
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey > keystore-certificate.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          key = Path('keystore-certificate.txt').read_text()
+          apk = Path('apk-verification.txt').read_text()
+          expected = re.search(r'SHA256:\\s*([0-9A-Fa-f:]{64,95})', key)
+          actual = re.search(r'Signer #1 certificate SHA-256 digest:\\s*([0-9A-Fa-f:]{64,95})', apk, re.I)
+          if not expected or not actual:
+              print('::error::Unable to parse certificate fingerprint; inspect printed apksigner output.')
+              raise SystemExit(1)
+          normalize = lambda s: s.replace(':', '').lower()
+          a, b = normalize(expected.group(1)), normalize(actual.group(1))
+          print('Persistent keystore certificate SHA256:', a)
+          print('Built APK certificate SHA256:        ', b)
+          if a != b:
+              print('::error::APK is signed by a different certificate than the persistent keystore.')
+              raise SystemExit(1)
+          print('APK signature matches persistent signing key.')
+          PY
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
