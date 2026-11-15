@@ -5,6 +5,7 @@ on:
     paths:
       - 'index.html'
       - 'package.json'
+      - 'scripts/inject-android-idle-notifications.py'
       - 'capacitor.config.json'
       - 'android-controls.css'
       - 'assets/a_high_gloss_neon_styled_app_icon_a_close_up_of.png'
@@ -30,6 +31,15 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
           python3 scripts/inject-android-idle-notifications.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('www/index.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script\\b[^>]*>(.*?)</script\\s*>',s,re.S|re.I)
+          assert len(scripts)>=10, f'Unexpected script count: {len(scripts)}'
+          for i,body in enumerate(scripts): Path(f'/tmp/bp-android-script-{i}.js').write_text(body,encoding='utf-8')
+          PY
+          for f in /tmp/bp-android-script-*.js; do node --check "$f"; done
           cp android-controls.css www/android-controls.css
           python3 - <<'PY'
           from pathlib import Path
