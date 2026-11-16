@@ -9,22 +9,20 @@ css="""
 #arena.solo #top,#arena.versus #top{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;margin:0 0 clamp(8px,1.2dvh,16px)!important;padding:4px 8px!important}
 #arena #bpPowerBolt,body.bp-developer-active #arena:not([hidden]) #bpPowerBolt{display:none!important}
 #bpMini{display:none!important}
-#arena.solo #soloHud{position:relative!important;inset:auto!important;transform:none!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:calc(100% - 20px)!important;max-width:690px!important;gap:7px!important;margin:0 auto 6px!important;padding:0!important}
-#arena.solo #soloHud .hud-card{box-sizing:border-box!important;min-width:0!important;width:auto!important;height:clamp(54px,4.5dvh,68px)!important;min-height:0!important;max-height:68px!important;margin:0!important;padding:4px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;text-align:center!important;gap:2px!important}
+/* Solo side HUD: anchor to the boards, not a separate full-width row. */
+#arena.solo #boards{position:relative!important;width:100%!important;max-width:710px!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;margin:4px auto 0!important}
+#arena.solo #soloHud{position:absolute!important;inset:0 0 auto 0!important;transform:none!important;display:block!important;width:100%!important;max-width:none!important;height:0!important;margin:0!important;padding:0!important;pointer-events:none!important;z-index:2!important}
+#arena.solo #soloHud .hud-card{box-sizing:border-box!important;position:absolute!important;min-width:0!important;width:min(23vw,155px)!important;height:clamp(64px,7dvh,94px)!important;min-height:0!important;max-height:none!important;margin:0!important;padding:5px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;text-align:center!important;gap:3px!important}
+#arena.solo #soloHud .hud-card:nth-child(1){left:2%!important;top:0!important}
+#arena.solo #soloHud .hud-card:nth-child(2){left:2%!important;top:clamp(72px,8dvh,105px)!important}
+#arena.solo #soloHud .hud-card:nth-child(3){left:auto!important;right:2%!important;top:0!important}
 #arena.solo #soloHud .hud-label{font-size:clamp(10px,2vw,13px)!important}
-#arena.solo #soloHud .hud-card strong{font-size:clamp(12px,2.7vw,18px)!important;line-height:1.15!important}
+#arena.solo #soloHud .hud-card strong{font-size:clamp(11px,2.6vw,17px)!important;line-height:1.15!important;overflow-wrap:anywhere!important}
 #arena #boards{flex:0 0 auto!important;margin:0 auto!important}
-/* Solo: use one geometry rule, not contradictory 43/44dvh overrides.
-   The board must preserve its 6:12 cell proportions and sit immediately
-   beneath the horizontal HUD, leaving a dedicated dock row below it. */
-#arena.solo #boards{margin:-34px auto 0!important}
-#arena.solo #humanZone{width:min(82vw,21.5dvh,330px)!important;flex:0 0 min(82vw,21.5dvh,330px)!important;max-width:none!important}
-#arena.solo #human{width:100%!important;height:min(43dvh,660px)!important;max-height:none!important;aspect-ratio:auto!important;display:block!important}
+#arena.solo #humanZone{box-sizing:border-box!important;width:min(46vw,330px)!important;flex:0 0 min(46vw,330px)!important;max-width:none!important;margin:0 auto!important}
+#arena.solo #human{box-sizing:border-box!important;width:100%!important;height:min(43dvh,660px)!important;max-height:none!important;aspect-ratio:auto!important;display:block!important}
 #arena.solo #bpPowerQuickDock{margin:8px auto 0!important}
-#arena.solo #bottom{margin:10px auto 0!important}
-#arena.solo #bottom #pad{width:min(48vw,220px)!important;height:min(48vw,220px)!important;flex:0 0 min(48vw,220px)!important}
-#arena.solo #bottom #actionStack{align-self:center!important}
-#arena.solo #bottom #actionStack #swap{height:clamp(70px,13vw,98px)!important}
+#arena.solo #bottom{margin:clamp(5px,1dvh,14px) auto 0!important}
 #arena.versus #human,#arena.versus #cpu{height:min(43dvh,660px)!important;max-height:660px!important;aspect-ratio:auto!important}
 #arena #bpPowerQuickDock{box-sizing:border-box!important;position:relative!important;inset:auto!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;z-index:10!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;gap:clamp(5px,1.2vw,10px)!important;width:max-content!important;max-width:calc(100% - 16px)!important;height:clamp(54px,5dvh,70px)!important;min-height:0!important;margin:3px auto 0!important;padding:3px 8px!important;overflow:visible!important;pointer-events:none!important}
 #arena #bpPowerQuickDock[hidden]{display:none!important}
@@ -71,11 +69,11 @@ s=s.replace(dock_old,dock_new,1)
 # Move the existing Solo HUD, with its live counters intact, before the
 # boards. This avoids trying to float a sidebar with absolute positioning.
 hud_old='<div id="boards"><aside id="soloHud"'
-hud_new='<aside id="soloHud"'
+hud_new='<div id="boards"><aside id="soloHud"'
 assert s.count(hud_old)==1, f'Expected one Solo HUD markup, found {s.count(hud_old)}'
 s=s.replace(hud_old,hud_new,1)
 zone_old='</aside><section class="zone" id="humanZone">'
-zone_new='</aside><div id="boards"><section class="zone" id="humanZone">'
+zone_new='</aside><section class="zone" id="humanZone">'
 assert s.count(zone_old)==1, f'Expected one HUD/zone boundary, found {s.count(zone_old)}'
 s=s.replace(zone_old,zone_new,1)
 p.write_text(s,encoding='utf-8')
