@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'package.json'
       - 'scripts/inject-android-idle-notifications.py'
+      - 'scripts/style-daily-reward.py'
       - 'scripts/fix-campaign-preview.py'
       - 'scripts/fix-android-gameplay-controls.py'
       - 'capacitor.config.json'
@@ -35,6 +36,7 @@ jobs:
           python3 scripts/fix-campaign-preview.py www/index.html
           python3 scripts/fix-android-gameplay-controls.py
           python3 scripts/inject-android-idle-notifications.py
+          python3 scripts/style-daily-reward.py
           python3 - <<'PY'
           from pathlib import Path
           from html.parser import HTMLParser
