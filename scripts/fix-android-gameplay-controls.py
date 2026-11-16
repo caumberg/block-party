@@ -14,18 +14,17 @@ css="""
 #arena.solo #soloHud .hud-label{font-size:clamp(10px,2vw,13px)!important}
 #arena.solo #soloHud .hud-card strong{font-size:clamp(12px,2.7vw,18px)!important;line-height:1.15!important}
 #arena #boards{flex:0 0 auto!important;margin:0 auto!important}
-/* Fit all twelve rows inside the iframe. The old 360px-wide board needed
-   ~720px of height, but its 43dvh cap was only ~660px on this phone.
-   That cropped the final row before the quick-use dock even appeared. */
-#arena.solo #humanZone{width:min(82vw,330px)!important}
-#arena.solo #human{height:min(44dvh,660px)!important;max-height:660px!important}
-#arena.solo #bpPowerQuickDock{margin:12px auto 0!important}
+/* Solo: use one geometry rule, not contradictory 43/44dvh overrides.
+   The board must preserve its 6:12 cell proportions and sit immediately
+   beneath the horizontal HUD, leaving a dedicated dock row below it. */
+#arena.solo #boards{margin:-34px auto 0!important}
+#arena.solo #humanZone{width:min(82vw,21.5dvh,330px)!important;flex:0 0 min(82vw,21.5dvh,330px)!important;max-width:none!important}
+#arena.solo #human{width:100%!important;height:min(43dvh,660px)!important;max-height:none!important;aspect-ratio:auto!important;display:block!important}
+#arena.solo #bpPowerQuickDock{margin:8px auto 0!important}
 #arena.solo #bottom{margin:10px auto 0!important}
 #arena.solo #bottom #pad{width:min(48vw,220px)!important;height:min(48vw,220px)!important;flex:0 0 min(48vw,220px)!important}
 #arena.solo #bottom #actionStack{align-self:center!important}
 #arena.solo #bottom #actionStack #swap{height:clamp(70px,13vw,98px)!important}
-#arena.solo #humanZone{width:min(82vw,330px)!important}
-#arena.solo #human{height:min(43dvh,660px)!important;max-height:660px!important;aspect-ratio:auto!important}
 #arena.versus #human,#arena.versus #cpu{height:min(43dvh,660px)!important;max-height:660px!important;aspect-ratio:auto!important}
 #arena #bpPowerQuickDock{box-sizing:border-box!important;position:relative!important;inset:auto!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;z-index:10!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;gap:clamp(5px,1.2vw,10px)!important;width:max-content!important;max-width:calc(100% - 16px)!important;height:clamp(54px,5dvh,70px)!important;min-height:0!important;margin:3px auto 0!important;padding:3px 8px!important;overflow:visible!important;pointer-events:none!important}
 #arena #bpPowerQuickDock[hidden]{display:none!important}
