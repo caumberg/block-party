@@ -161,3 +161,23 @@
   min-height:clamp(54px,6dvh,76px)!important;
   overflow:visible!important;
 }
+
+/* Final D-pad lock: four solid contiguous arms with one shared center.
+   Do not double-clip a second inset layer: it created the black seams. */
+#arena:not([hidden]) #bottom #pad button[data-key]::before{display:none!important}
+#arena:not([hidden]) #bottom #pad button[data-key]{
+ background:linear-gradient(145deg,#405985,#293b67)!important;
+ box-shadow:none!important;
+}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"]{
+ clip-path:polygon(29% 0,71% 0,71% 29%,50% 50%,29% 29%)!important;
+}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"]{
+ clip-path:polygon(0 29%,29% 29%,50% 50%,29% 71%,0 71%)!important;
+}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"]{
+ clip-path:polygon(50% 50%,71% 29%,100% 29%,100% 71%,71% 71%)!important;
+}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"]{
+ clip-path:polygon(50% 50%,71% 71%,71% 100%,29% 100%,29% 71%)!important;
+}
