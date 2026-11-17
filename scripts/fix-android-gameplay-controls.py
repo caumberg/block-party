@@ -83,9 +83,9 @@ s=s.replace(zone_old,zone_new,1)
 quick_anchor=""" const versusBattle=$('arena').classList.contains('versus')&&$('mode').value==='battle';
  const usable=items.filter(i=>window.bpPowerSession.active.includes(i[0])"""
 quick_replacement=""" const versusBattle=$('arena').classList.contains('versus')&&$('mode').value==='battle';
- if($('arena').classList.contains('bp-campaign-power')&&session.active.length===0){
-  session.active=items.filter(i=>i[3]==='active'&&Number(inventory[i[0]]||0)>0&&devEligible(i[0])).slice(0,6).map(i=>i[0]);
- }
+ // Always populate the dock from owned, eligible consumables.
+ // Do not require Developer Mode or a separately selected loadout.
+ session.active=items.filter(i=>i[3]==='active'&&Number(inventory[i[0]]||0)>0&&devEligible(i[0])).slice(0,6).map(i=>i[0]);
  const usable=items.filter(i=>window.bpPowerSession.active.includes(i[0])"""
 assert s.count(quick_anchor)==1, f'Expected one quick-use eligibility section, got {s.count(quick_anchor)}'
 s=s.replace(quick_anchor,quick_replacement,1)
