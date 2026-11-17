@@ -10,6 +10,7 @@ on:
       - 'scripts/style-daily-reward.py'
       - 'scripts/fix-campaign-preview.py'
       - 'scripts/compact-campaign-layout.py'
+      - 'scripts/normalize-campaign-previews.py'
       - 'scripts/fix-android-gameplay-controls.py'
       - 'capacitor.config.json'
       - 'android-controls.css'
@@ -37,6 +38,7 @@ jobs:
           cp index.html www/index.html
           python3 scripts/fix-campaign-preview.py www/index.html
           python3 scripts/compact-campaign-layout.py www/index.html
+          python3 scripts/normalize-campaign-previews.py www/index.html
           python3 scripts/fix-android-gameplay-controls.py
           python3 scripts/inject-android-idle-notifications.py
           python3 scripts/inject-android-daily-notifications.py
