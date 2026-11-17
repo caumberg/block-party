@@ -4089,4 +4089,41 @@ $('bpAccountSignOut').addEventListener('click',async()=>{if(busy)return;if(!conf
   margin-bottom:clamp(58px,8dvh,95px)!important;
 }
 </style>
+<style id="bp-circuit-perfection-v245">
+#bpPerfectionLauncher{display:none;width:100%;margin:8px 0;padding:11px;border:1px solid #f8d475;border-radius:12px;background:linear-gradient(115deg,#55348d,#28205b);color:#fff;font-weight:850;box-shadow:0 0 12px #b47cff55}
+#bpPerfectionLauncher.ready{display:block}
+#bpPerfectionModal{position:fixed;inset:0;z-index:100000;background:#050518ed;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+#bpPerfectionModal[hidden]{display:none!important}
+.bp-perfection-panel{width:min(480px,100%);max-height:92dvh;overflow-y:auto;text-align:center;background:linear-gradient(145deg,#31206a,#0c1738);border:2px solid #f9d678;border-radius:22px;padding:22px 16px;box-shadow:0 0 28px #e6b94c66;color:white}
+.bp-perfection-panel h2{color:#ffe49c;font-size:clamp(23px,6vw,32px);margin:0 0 9px;text-shadow:0 0 10px #eebd54aa}
+.bp-perfection-panel p{color:#d8d4ff;margin:8px 0 15px}.bp-perfection-prize{padding:12px;border-radius:13px;background:#151b48;border:1px solid #8e79dc;margin:10px 0 15px}
+.bp-perfection-gifts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.bp-perfection-gift{min-height:108px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 3px;border:1.5px solid #ac8cfb;border-radius:13px;background:linear-gradient(150deg,#5932a3,#2c215b);box-shadow:inset 0 1px 4px #fff4,0 0 7px #b16fff55;overflow:visible;color:#fff}
+.bp-perfection-gift .gift-icon{font-size:33px;line-height:1.1}.bp-perfection-gift .gift-name{font-size:11px;line-height:1.25;overflow-wrap:anywhere}.bp-perfection-gift.opened{background:linear-gradient(150deg,#204d66,#25245b);border-color:#76e4ff}.bp-perfection-gift:disabled{opacity:.48;cursor:default}.bp-perfection-gift.opened:disabled{opacity:1}
+.bp-perfection-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.bp-perfection-actions button{padding:11px 15px;background:#6543b3;border:1px solid #c3a4ff;border-radius:11px;font-weight:800}.bp-perfection-error{color:#ffb6bf!important;font-size:13px}
+</style>
+<script id="bp-circuit-perfection-js-v245">
+(()=>{'use strict';
+const names={power_pause:['⏸️','Power Pause'],special_block_generator:['✨','Special Block Generator'],garbage_shield:['🛡️','Garbage Shield'],attack_amplifier:['⚡','Attack Amplifier'],wild_block:['🌈','Wild Block'],block_bomb:['💣','Block Bomb'],block_lock:['🔒','Block Lock'],deep_freeze:['🧊','Deep Freeze'],lifesaver:['❤️','Lifesaver']};
+const $=id=>document.getElementById(id);let status=null,active=null,working=false,checking=false,queued=false,lastCheck=0;
+const modal=document.createElement('div');modal.id='bpPerfectionModal';modal.hidden=true;modal.innerHTML='<div class="bp-perfection-panel" role="dialog" aria-modal="true" aria-labelledby="bpPerfectionHeading"><h2 id="bpPerfectionHeading">🏆 CIRCUIT PERFECTION!</h2><p id="bpPerfectionSubtitle"></p><div class="bp-perfection-prize">🎟️ 50 Tickets &nbsp; • &nbsp; 🪙 50 Tokens<br>🎁 Choose 3 of 9 mystery gifts</div><div class="bp-perfection-gifts" id="bpPerfectionGifts"></div><p id="bpPerfectionFeedback" aria-live="polite"></p><div class="bp-perfection-actions"><button type="button" id="bpPerfectionLater">Continue Later</button><button type="button" id="bpPerfectionDone" hidden>Finish Celebration</button></div></div>';
+document.body.append(modal);
+const launcher=document.createElement('button');launcher.id='bpPerfectionLauncher';launcher.type='button';launcher.textContent='🏆 Claim Circuit Perfection Rewards';
+const home=$('bpArcadeHome')||$('bpCampaignOpen')?.parentElement||$('menu');home?.append(launcher);
+const circuitName=c=>({1:'Red',2:'Purple',3:'Blue',4:'Green',5:'Yellow',6:'Orange'}[c]||'Circuit '+c);
+function pending(){const done=new Set((status?.rewards||[]).filter(r=>Number(r.remaining)===0).map(r=>Number(r.circuit)));return (status?.completed_circuits||[]).map(Number).filter(c=>!done.has(c)).sort((a,b)=>a-b)}
+function updateLauncher(){const p=pending();launcher.classList.toggle('ready',p.length>0&&!window.bpDevActive);launcher.textContent=p.length?'🏆 Circuit Perfection: '+p.length+' reward'+(p.length===1?'':'s')+' to claim':'🏆 Circuit Perfection';}
+async function refresh(show=false){if(checking||window.bpDevActive||typeof window.bpCampaignRpc!=='function')return;checking=true;try{status=await window.bpCampaignRpc('bp_circuit_perfection_status');updateLauncher();if(show&&pending().length&&!active)await open(pending()[0]);}catch(e){console.warn('Circuit Perfection status:',e.message)}finally{checking=false}}
+async function open(c){if(working||window.bpDevActive)return;working=true;modal.hidden=false;active={circuit:c,opened:[],remaining:3};$('bpPerfectionSubtitle').textContent=circuitName(c)+' Circuit • All 150 stars earned!';$('bpPerfectionFeedback').textContent='Preparing your rewards…';$('bpPerfectionGifts').replaceChildren();try{const data=await window.bpCampaignRpc('bp_circuit_perfection_start',{p_circuit:c});active={circuit:c,opened:data.opened||[],remaining:Number(data.remaining)};render();window.bpCampaignRefreshWallet?.();window.bpCampaignRefreshTickets?.();}catch(e){$('bpPerfectionFeedback').textContent='Unable to load reward: '+e.message;$('bpPerfectionFeedback').className='bp-perfection-error';}finally{working=false}}
+function render(){if(!active)return;const opened=new Map(active.opened.map(x=>[Number(x.slot),x.item_id]));$('bpPerfectionGifts').replaceChildren();for(let slot=1;slot<=9;slot++){const item=opened.get(slot),info=names[item]||['🎁',item||'Mystery Gift'];const b=document.createElement('button');b.type='button';b.className='bp-perfection-gift'+(item?' opened':'');b.disabled=!!item||active.remaining<=0||working;b.innerHTML='<span class="gift-icon"></span><span class="gift-name"></span>';b.querySelector('.gift-icon').textContent=item?info[0]:'🎁';b.querySelector('.gift-name').textContent=item?info[1]:'OPEN GIFT';if(!b.disabled)b.addEventListener('click',()=>pick(slot));$('bpPerfectionGifts').append(b)}$('bpPerfectionFeedback').className='';$('bpPerfectionFeedback').textContent=active.remaining>0?'Choose '+active.remaining+' more gift'+(active.remaining===1?'':'s')+'!':'🎉 All three power-ups added to your inventory!';$('bpPerfectionDone').hidden=active.remaining>0;$('bpPerfectionLater').hidden=active.remaining===0;}
+async function pick(slot){if(working||!active||active.remaining<=0)return;working=true;render();try{const d=await window.bpCampaignRpc('bp_circuit_perfection_pick',{p_circuit:active.circuit,p_slot:slot});if(!active.opened.some(x=>Number(x.slot)===slot))active.opened.push({slot,item_id:d.item_id});active.remaining=Number(d.remaining);window.bpCampaignRefreshWallet?.();window.bpCampaignRefreshTickets?.();}catch(e){$('bpPerfectionFeedback').textContent='Gift could not be opened: '+e.message;$('bpPerfectionFeedback').className='bp-perfection-error';}finally{working=false;render()}}
+function close(){modal.hidden=true;active=null;refresh(false)}
+launcher.addEventListener('click',async()=>{await refresh(false);if(pending().length)open(pending()[0])});$('bpPerfectionLater').addEventListener('click',close);$('bpPerfectionDone').addEventListener('click',async()=>{close();await refresh(false);if(pending().length)open(pending()[0])});
+// Refresh when Campaign opens or a completed match updates progress; no duplicate awards are possible server-side.
+const overlay=$('bpCampaignOverlay');if(overlay)new MutationObserver(()=>{if(!overlay.hidden)refresh(true)}).observe(overlay,{attributes:true,attributeFilter:['hidden']});
+function hook(){if(typeof window.bpCampaignRpc!=='function')return false;if(window.bpCampaignRpc.__perfectionHook)return true;const old=window.bpCampaignRpc;const wrapped=async(name,params)=>{const result=await old(name,params);if(name==='bp_campaign_complete'&&!window.bpDevActive)setTimeout(()=>refresh(true),700);return result};wrapped.__perfectionHook=true;window.bpCampaignRpc=wrapped;return true}
+const boot=setInterval(()=>{if(hook()){clearInterval(boot);setTimeout(()=>refresh(true),1600)}},300);setTimeout(()=>clearInterval(boot),30000);
+window.bpCircuitPerfectionRefresh=()=>refresh(true);
+})();
+</script>
+
 </html>
