@@ -42,85 +42,54 @@
   overflow:visible!important;
   filter:drop-shadow(0 0 6px #4968bd77)!important;
 }
-/* All four buttons cover the SAME square. Their polygon hit regions meet
-   at the center, exactly like the original large connected cross. */
+/* Reference D-pad: four broad beveled arms, joined at a common center.
+   One geometry for Arcade/Campaign, Solo/Versus, with or without powers. */
+#arena:not([hidden]) #bottom #pad{
+  isolation:isolate!important;
+  filter:drop-shadow(0 4px 7px #080b2baa)!important;
+}
 #arena:not([hidden]) #bottom #pad button[data-key]{
   box-sizing:border-box!important;
   position:absolute!important;
   inset:0!important;
-  left:0!important;top:0!important;
   width:100%!important;height:100%!important;
   min-width:0!important;min-height:0!important;
   max-width:none!important;max-height:none!important;
-  margin:0!important;padding:0!important;
+  padding:0!important;margin:0!important;
   border:0!important;border-radius:0!important;
+  background:linear-gradient(155deg,#415b8b 0%,#314774 55%,#25365e 100%)!important;
   transform:none!important;
-  background:#0a1024!important;
-  font-size:0!important;
-  overflow:hidden!important;
-  touch-action:none!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key]::before{
-  content:""!important;position:absolute!important;inset:0!important;
-  background:linear-gradient(145deg,#455d91,#293b67 65%,#1b2c53)!important;
-  pointer-events:none!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"]{
-  clip-path:polygon(29% 1%,71% 1%,71% 29%,50% 49%,29% 29%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"]::before{
-  clip-path:polygon(31% 3%,69% 3%,69% 28%,50% 46%,31% 28%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"]{
-  clip-path:polygon(1% 29%,29% 29%,49% 50%,29% 71%,1% 71%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"]::before{
-  clip-path:polygon(3% 31%,28% 31%,46% 50%,28% 69%,3% 69%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"]{
-  clip-path:polygon(51% 50%,71% 29%,99% 29%,99% 71%,71% 71%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"]::before{
-  clip-path:polygon(54% 50%,72% 31%,97% 31%,97% 69%,72% 69%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"]{
-  clip-path:polygon(50% 51%,71% 71%,71% 99%,29% 99%,29% 71%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"]::before{
-  clip-path:polygon(50% 54%,69% 72%,69% 97%,31% 97%,31% 72%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key]::after{
-  z-index:2!important;
-  font-size:clamp(26px,6vw,39px)!important;
-}
-#arena:not([hidden]) #bottom #pad .pad-center{display:none!important}
-/* Seamless cross: remove the heavy black polygon outlines and join at center. */
-#arena:not([hidden]) #bottom #pad button[data-key]{
-  background:transparent!important;
-  border:0!important;
-  font-size:clamp(25px,5.5vw,38px)!important;
+  overflow:visible!important;
   color:#fff!important;
-  text-shadow:0 2px 3px #111c38!important;
+  font-size:0!important;
+  touch-action:none!important;
+  -webkit-tap-highlight-color:transparent!important;
 }
-#arena:not([hidden]) #bottom #pad button[data-key]::before{
-  background:linear-gradient(145deg,#405985,#2b406e)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"],
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"]::before{
+/* No double-clipping. Each polygon includes the exact center point. */
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"]{
   clip-path:polygon(29% 0,71% 0,71% 29%,50% 50%,29% 29%)!important;
 }
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"],
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"]::before{
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"]{
   clip-path:polygon(0 29%,29% 29%,50% 50%,29% 71%,0 71%)!important;
 }
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"],
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"]::before{
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"]{
   clip-path:polygon(50% 50%,71% 29%,100% 29%,100% 71%,71% 71%)!important;
 }
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"],
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"]::before{
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"]{
   clip-path:polygon(50% 50%,71% 71%,71% 100%,29% 100%,29% 71%)!important;
 }
+#arena:not([hidden]) #bottom #pad button[data-key]::before{display:none!important}
+#arena:not([hidden]) #bottom #pad button[data-key]::after{
+  position:absolute!important;
+  z-index:2!important;
+  display:flex!important;
+  align-items:center!important;justify-content:center!important;
+  color:#fff!important;
+  font-size:clamp(25px,5.5vw,38px)!important;
+  text-shadow:0 2px 3px #0a1024!important;
+  pointer-events:none!important;
+}
+#arena:not([hidden]) #bottom #pad .pad-center{display:none!important}
 #arena:not([hidden]) #bottom #actionStack {
   box-sizing:border-box!important;
   position:relative!important;
@@ -160,24 +129,4 @@
 #arena:not([hidden]) #bpPowerQuickDock {
   min-height:clamp(54px,6dvh,76px)!important;
   overflow:visible!important;
-}
-
-/* Final D-pad lock: four solid contiguous arms with one shared center.
-   Do not double-clip a second inset layer: it created the black seams. */
-#arena:not([hidden]) #bottom #pad button[data-key]::before{display:none!important}
-#arena:not([hidden]) #bottom #pad button[data-key]{
- background:linear-gradient(145deg,#405985,#293b67)!important;
- box-shadow:none!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"]{
- clip-path:polygon(29% 0,71% 0,71% 29%,50% 50%,29% 29%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"]{
- clip-path:polygon(0 29%,29% 29%,50% 50%,29% 71%,0 71%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"]{
- clip-path:polygon(50% 50%,71% 29%,100% 29%,100% 71%,71% 71%)!important;
-}
-#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"]{
- clip-path:polygon(50% 50%,71% 71%,71% 100%,29% 100%,29% 71%)!important;
 }
