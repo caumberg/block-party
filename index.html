@@ -4017,4 +4017,26 @@ $('bpAccountRecover').addEventListener('click',async()=>{if(busy)return;setBusy(
 $('bpAccountSignOut').addEventListener('click',async()=>{if(busy)return;if(!confirm('Sign out of this player account? The next launch will create a new anonymous profile. Your registered account remains on Supabase and can be restored by signing in.'))return;setBusy(true);try{const s=await window.bpAccountGetSession();await request('logout','POST',{},s.access_token).catch(()=>{});localStorage.removeItem('bp-supabase-anon-v1');location.reload()}catch(e){setStatus(e.message)}finally{setBusy(false)}});
 })();
 </script>
+
+<style id="bp-campaign-detail-vertical-center-v1">
+/* Center the existing complete level content as one group, without changing preview internals. */
+#bpCampaignOverlay .bp-campaign-right #bpCampaignDetail {
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:safe center!important;
+  align-items:stretch!important;
+}
+#bpCampaignOverlay #bpCampaignDetail > :first-child {
+  margin-top:auto!important;
+}
+#bpCampaignOverlay #bpCampaignDetail > :last-child {
+  margin-bottom:auto!important;
+}
+/* The play action participates in the centered stack rather than sticking to its edge. */
+#bpCampaignOverlay #bpCampaignDetail > button {
+  position:relative!important;
+  bottom:auto!important;
+  margin-top:3px!important;
+}
+</style>
 </html>
