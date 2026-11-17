@@ -20,13 +20,13 @@ s=s.replace(anchor,css,1)
 # The frame shrinks to its content instead of hiding the Play action below it.
 fit_css='''</style><style id="bp-campaign-fit-v3">
 #bpCampaignOverlay .bp-campaign-card{height:auto!important;min-height:0!important;max-height:calc(100dvh - 16px)!important}
-#bpCampaignOverlay .bp-campaign-workspace{height:min(59dvh,670px)!important;flex:0 1 auto!important;min-height:0!important}
+#bpCampaignOverlay .bp-campaign-workspace{height:min(64dvh,690px)!important;flex:0 1 auto!important;min-height:0!important}
 #bpCampaignOverlay #bpCampaignDetail{gap:4px!important;justify-content:flex-start!important}
-#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(260px,36dvh,360px)!important;min-height:0!important;flex-shrink:0!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(220px,31dvh,320px)!important;min-height:0!important;flex-shrink:0!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-cinematic-body{gap:3px!important;flex:0 0 auto!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-cinematic-objectives{gap:2px!important;flex-shrink:0!important}
 #bpCampaignOverlay #bpCampaignDetail>button{margin-top:4px!important;flex-shrink:0!important;position:relative!important;bottom:auto!important}
-@media(max-height:800px){#bpCampaignOverlay .bp-campaign-workspace{height:min(59dvh,560px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(225px,35dvh,330px)!important;min-height:0!important}}
+@media(max-height:800px){#bpCampaignOverlay .bp-campaign-workspace{height:min(63dvh,570px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(205px,29dvh,290px)!important;min-height:0!important}}
 </style><style id="bp-campaign-quick-actions-css">'''
 assert s.count(anchor)==1
 assert s.count('</style><style id="bp-campaign-quick-actions-css">')==1
