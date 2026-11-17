@@ -204,8 +204,33 @@ jobs:
           ''', 1)
           p.write_text(content)
           PY
-      - name: Build debug APK
-        run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('package-lock.json', 'package.json') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+      - name: Build debug APK (retry transient Maven rate limits)
+        shell: bash
+        run: |
+          cd android
+          chmod +x gradlew
+          for attempt in 1 2 3 4; do
+            echo "Gradle build attempt $attempt of 4"
+            if ./gradlew assembleDebug --no-daemon --max-workers=2; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 4 ]; then
+              echo "::error::Android build failed after four attempts."
+              exit 1
+            fi
+            delay=$((attempt * 60))
+            echo "Build failed; waiting ${delay}s before retry to avoid Maven 429 rate limits."
+            sleep "$delay"
+          done
       - name: Verify APK package, version, and signing certificate
         run: |
           APK=android/app/build/outputs/apk/debug/app-debug.apk
