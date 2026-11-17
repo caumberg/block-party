@@ -36,8 +36,8 @@ s=s.replace(needle3,'.eyebrow,.title,.status,.bottom,.footer,.note{display:none!
 # Timed mode: make the clock a small, centered overlay on the actual boards.
 # It is absolutely positioned so it consumes no extra vertical layout space.
 clock_css='''.shell{position:relative!important}
-.clock{display:flex!important;position:absolute!important;top:20%!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;pointer-events:none!important;margin:0!important;padding:2px 5px!important;min-height:0!important;width:max-content!important;max-width:100%!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;font-size:16px!important;line-height:1.05!important;background:#101a39b8!important;border-radius:8px!important}
-.clock small{font-size:8px!important;letter-spacing:0!important;white-space:nowrap!important}'''
+html body .shell .clock{display:flex!important;position:absolute!important;top:20%!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;pointer-events:none!important;margin:0!important;padding:2px 5px!important;min-height:0!important;width:max-content!important;max-width:100%!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;font-size:16px!important;line-height:1.05!important;background:#101a39b8!important;border-radius:8px!important}
+html body .shell .clock small{font-size:8px!important;letter-spacing:0!important;white-space:nowrap!important}'''
 timed_anchor='   }"""'
 assert s.count(timed_anchor)==1, 'Preview mode replacement anchor changed'
 s=s.replace(timed_anchor,'''   }
