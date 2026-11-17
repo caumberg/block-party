@@ -7,7 +7,7 @@
   left:50%!important;
   right:auto!important;
   top:auto!important;
-  bottom:clamp(28px,5dvh,62px)!important;
+  bottom:calc(clamp(28px,5dvh,62px) + 30px)!important;
   transform:translateX(-50%)!important;
   width:min(calc(100vw - 22px),580px)!important;
   height:clamp(205px,28dvh,285px)!important;
@@ -138,7 +138,7 @@
   left:50%!important;
   right:auto!important;
   top:auto!important;
-  bottom:calc(clamp(28px,5dvh,62px) + clamp(205px,28dvh,285px) + 4px)!important;
+  bottom:calc(clamp(28px,5dvh,62px) + clamp(205px,28dvh,285px) + 34px)!important;
   transform:translateX(-50%)!important;
   margin:0!important;
   width:max-content!important;
