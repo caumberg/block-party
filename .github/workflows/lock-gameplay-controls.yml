@@ -1,0 +1,107 @@
+name: Lock gameplay controls across all modes
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/lock-gameplay-controls.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply isolated unified controls stylesheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          marker='bp-controls-locked-v1'
+          assert marker not in s
+          for required in ('id="bottom"','id="pad"','id="actionStack"','id="swap"','id="raiseRow"'):
+            assert required in s, 'Missing gameplay control '+required
+          end=s.lower().rfind('</html>')
+          assert end>len(s)//2
+          css="""
+          <style id="bp-controls-locked-v1">
+          /* One physical location for the controls in every gameplay mode.
+             Reserving space above this layer prevents optional powerups from shifting it. */
+          #arena:not([hidden]) #bottom {
+            position:fixed!important;
+            left:50%!important;
+            bottom:clamp(24px,4dvh,58px)!important;
+            transform:translateX(-50%)!important;
+            margin:0!important;
+            width:min(calc(100vw - 24px),580px)!important;
+            height:clamp(220px,30dvh,290px)!important;
+            min-height:0!important;
+            display:flex!important;
+            flex-direction:row!important;
+            justify-content:space-between!important;
+            align-items:center!important;
+            z-index:90!important;
+            padding:0 10px!important;
+            gap:0!important;
+          }
+          #arena:not([hidden]) #bottom #pad {
+            width:59%!important;max-width:59%!important;
+            flex:0 0 59%!important;
+            height:100%!important;
+            margin:0!important;
+          }
+          #arena:not([hidden]) #bottom #actionStack {
+            width:33%!important;max-width:33%!important;
+            flex:0 0 33%!important;
+            height:82%!important;
+            display:flex!important;
+            flex-direction:column!important;
+            justify-content:space-between!important;
+            gap:10px!important;
+            margin:0!important;
+          }
+          #arena:not([hidden]) #bottom #raiseRow {
+            height:34%!important;min-height:0!important;
+            flex:0 0 34%!important;
+          }
+          #arena:not([hidden]) #bottom #swap {
+            height:62%!important;min-height:0!important;
+            flex:0 0 62%!important;
+          }
+          /* Preserve a dedicated region between boards and controls even without powerups. */
+          #arena:not([hidden]) #boards {
+            margin-bottom:clamp(58px,8dvh,95px)!important;
+          }
+          </style>
+          """
+          s=s[:end]+css+s[end:]
+          Path('index.html').write_text(s,encoding='utf-8')
+          PY
+      - name: Check inline JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import subprocess,tempfile
+          class P(HTMLParser):
+            def __init__(self):super().__init__();self.on=False;self.parts=[]
+            def handle_starttag(self,tag,attrs):
+              if tag=='script' and not dict(attrs).get('src'):self.on=True;self.parts.append('')
+            def handle_endtag(self,tag):
+              if tag=='script':self.on=False
+            def handle_data(self,data):
+              if self.on:self.parts[-1]+=data
+          p=P();p.feed(Path('index.html').read_text())
+          for code in p.parts:
+            if not code.strip():continue
+            with tempfile.NamedTemporaryFile(mode='w',suffix='.js') as tmp:
+              tmp.write(code);tmp.flush();subprocess.run(['node','--check',tmp.name],check=True)
+          print('Checked',len(p.parts),'inline scripts')
+          PY
+      - name: Commit layout
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Lock D-pad and action buttons in identical viewport positions across modes"
+          git push
