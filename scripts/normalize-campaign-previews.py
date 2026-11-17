@@ -38,13 +38,12 @@ s=s.replace(needle3,'.eyebrow,.title,.status,.bottom,.footer,.note{display:none!
 clock_css='''.shell{position:relative!important}
 html body .shell .clock{display:flex!important;position:absolute!important;top:20%!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;pointer-events:none!important;margin:0!important;padding:2px 5px!important;min-height:0!important;width:max-content!important;max-width:100%!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;font-size:16px!important;line-height:1.05!important;background:#101a39b8!important;border-radius:8px!important}
 html body .shell .clock small{font-size:8px!important;letter-spacing:0!important;white-space:nowrap!important}'''
-# Modify the one replacement template, rather than matching a generic closing brace.
-template_end='   }"""\ns=s.replace(needle,replacement,1)'
-assert s.count(template_end)==1, 'Preview replacement template changed'
-timed_insert="""   }
-   if(approvedKey==='versus-timed'){
+# Insert into the replacement variable directly; no fragile source-text matching.
+assert replacement.endswith('   }'), 'Preview replacement structure changed'
+timed_insert="""\n   if(approvedKey==='versus-timed'){
     previewHtml=previewHtml.replace('</head>','<style>'+""" + repr(clock_css) + """+'</style></head>');
    }"""
-s=s.replace(template_end,timed_insert+'"""\ns=s.replace(needle,replacement,1)',1)
+replacement += timed_insert
+s=s.replace(needle,replacement,1)
 p.write_text(s,encoding='utf-8')
 print('Normalized versus preview canvas geometry')
