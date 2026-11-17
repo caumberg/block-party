@@ -1,188 +1,109 @@
-/* Android-only layout corrections. Loaded only inside Capacitor APK.
-   Use direct IDs, independent of the game mode or ancestor class.
-   No DOM scanning, no JavaScript, and no transforms on interactive controls. */
-
-/* The four-way pad must occupy a square, regardless of the extra
-   vertical room available in the Android fullscreen viewport. */
-#pad,
-#arena #pad,
-#bottom #pad,
-#arena #bottom #pad {
-  box-sizing: border-box !important;
-  aspect-ratio: 1 / 1 !important;
-  width: min(52vw, 38dvh, 380px) !important;
-  height: min(52vw, 38dvh, 380px) !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  max-height: min(52vw, 38dvh, 380px) !important;
-  max-width: min(52vw, 38dvh, 380px) !important;
-  flex: 0 0 auto !important;
-  align-self: center !important;
-}
-
-/* Give the individual D-pad directions equal-sized hit regions. */
-#pad > *,
-#pad button {
-  box-sizing: border-box !important;
-}
-
-/* Buttons should never grow to fill an oversized mobile control row. */
-#swap,
-#raiseRow,
-#actionStack #swap,
-#actionStack #raiseRow,
-#arena #bottom #actionStack #swap,
-#arena #bottom #actionStack #raiseRow {
-  box-sizing: border-box !important;
-  flex-grow: 0 !important;
-  flex-shrink: 0 !important;
-  min-height: 0 !important;
-  max-height: none !important;
-}
-#swap,
-#actionStack #swap,
-#arena #bottom #actionStack #swap {
-  height: min(24vw, 100px) !important;
-  min-height: min(24vw, 100px) !important;
-  max-height: min(24vw, 100px) !important;
-}
-#raiseRow,
-#actionStack #raiseRow,
-#arena #bottom #actionStack #raiseRow {
-  height: min(15vw, 68px) !important;
-  min-height: min(15vw, 68px) !important;
-  max-height: min(15vw, 68px) !important;
-}
-#actionStack,
-#arena #bottom #actionStack {
-  justify-content: center !important;
-  align-self: center !important;
-  gap: 12px !important;
-}
-
-/* Avoid clipping the existing button glows. */
-#bottom,
-#actionStack {
-  overflow: visible !important;
-}
-
-/* Compact, square four-direction D-pad: override the legacy tall grid rows. */
-#arena.solo #bottom #pad,
-#arena.versus #bottom #pad,
-#arena #bottom #pad {
-  display:grid!important;
-  width:min(38vw,22dvh,260px)!important;
-  height:min(38vw,22dvh,260px)!important;
-  max-width:min(38vw,22dvh,260px)!important;
-  max-height:min(38vw,22dvh,260px)!important;
-  min-width:0!important;
-  min-height:0!important;
-  flex:0 0 auto!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  grid-template-rows:repeat(3,minmax(0,1fr))!important;
-  gap:2px!important;
-  align-self:center!important;
-  overflow:visible!important;
-}
-#arena.solo #bottom #pad button[data-key],
-#arena.versus #bottom #pad button[data-key],
-#arena #bottom #pad button[data-key] {
-  width:100%!important;
-  height:100%!important;
-  min-height:0!important;
-  padding:0!important;
-  border-radius:12px!important;
-  font-size:clamp(20px,4.5vw,30px)!important;
-}
-#arena #bottom {
-  align-items:center!important;
-  overflow:visible!important;
-}
-
-/* v2.4.113: actual compact controls. Previous 22dvh made the pad
-   over 330px tall on portrait phones. Size from screen WIDTH only. */
-#arena #bottom #pad,
-#arena.solo #bottom #pad,
-#arena.versus #bottom #pad {
-  width:min(29vw,190px)!important;
-  height:min(29vw,190px)!important;
-  min-width:0!important;
-  min-height:0!important;
-  max-width:min(29vw,190px)!important;
-  max-height:min(29vw,190px)!important;
-  flex:0 0 min(29vw,190px)!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  grid-template-rows:repeat(3,minmax(0,1fr))!important;
-  gap:2px!important;
-}
-#arena #bottom #pad button[data-key] {
-  width:100%!important;
-  height:100%!important;
-  min-width:0!important;
-  min-height:0!important;
-  font-size:clamp(16px,3.3vw,24px)!important;
-}
-#arena #bottom #actionStack,
-#arena.solo #bottom #actionStack,
-#arena.versus #bottom #actionStack {
-  width:min(32vw,210px)!important;
-  max-width:min(32vw,210px)!important;
-  flex:0 0 min(32vw,210px)!important;
-}
-#arena #bottom #actionStack #swap {
-  width:100%!important;
-  height:clamp(58px,10vw,85px)!important;
-  min-height:0!important;
-  max-height:85px!important;
-}
-#arena #bottom #actionStack #raiseRow {
-  width:100%!important;
-  height:clamp(42px,7vw,58px)!important;
-  min-height:0!important;
-  max-height:58px!important;
-}
-
-
-/* v2.4.114: fixed universal orientation, never follow arcade preferences. */
+/* Android gameplay controls: one fixed layout for all modes.
+   Restore the original full-size cross-shaped D-pad rather than resizing
+   its individual arrow cells into tiny detached buttons. */
 #arena:not([hidden]) #bottom {
+  box-sizing:border-box!important;
+  position:fixed!important;
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:clamp(18px,3dvh,44px)!important;
+  transform:translateX(-50%)!important;
+  width:min(calc(100vw - 22px),580px)!important;
+  height:clamp(205px,28dvh,285px)!important;
   display:flex!important;
   flex-direction:row!important;
   direction:ltr!important;
-  justify-content:space-between!important;
   align-items:center!important;
-  left:50%!important;
-  right:auto!important;
-  transform:translateX(-50%)!important;
-  width:min(calc(100vw - 24px),580px)!important;
-  gap:8px!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  margin:0!important;
+  padding:0 7px!important;
+  overflow:visible!important;
+  z-index:90!important;
 }
 #arena:not([hidden]) #bottom #pad {
-  order:0!important;
-  direction:ltr!important;
-  margin:0!important;
-  transform:none!important;
+  box-sizing:border-box!important;
   position:relative!important;
-  left:auto!important;
-  right:auto!important;
+  left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+  order:0!important;
+  transform:none!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:repeat(3,minmax(0,1fr))!important;
+  gap:0!important;
+  width:min(56vw,265px)!important;
+  height:min(56vw,265px)!important;
+  min-width:0!important;min-height:0!important;
+  max-width:none!important;max-height:none!important;
+  flex:0 0 min(56vw,265px)!important;
+  aspect-ratio:1/1!important;
+  margin:0!important;
+  padding:0!important;
+  align-self:center!important;
+  overflow:visible!important;
+  filter:drop-shadow(0 0 6px #4968bd77)!important;
+}
+#arena:not([hidden]) #bottom #pad button {
+  box-sizing:border-box!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;min-height:0!important;
+  max-width:none!important;max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:0!important;
+  font-size:clamp(21px,5vw,31px)!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowUp"]{grid-column:2!important;grid-row:1!important}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowLeft"]{grid-column:1!important;grid-row:2!important}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowRight"]{grid-column:3!important;grid-row:2!important}
+#arena:not([hidden]) #bottom #pad button[data-key="ArrowDown"]{grid-column:2!important;grid-row:3!important}
+#arena:not([hidden]) #bottom #pad .pad-center {
+  grid-column:2!important;grid-row:2!important;
+  background:#334877!important;
+  border:0!important;
+  pointer-events:none!important;
 }
 #arena:not([hidden]) #bottom #actionStack {
-  order:1!important;
-  direction:ltr!important;
-  margin:0!important;
+  box-sizing:border-box!important;
   position:relative!important;
-  left:auto!important;
-  right:auto!important;
+  left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+  order:1!important;
   transform:none!important;
+  width:min(32vw,190px)!important;
+  max-width:none!important;
+  flex:0 0 min(32vw,190px)!important;
   display:flex!important;
   flex-direction:column!important;
+  justify-content:center!important;
+  align-items:stretch!important;
+  align-self:center!important;
+  gap:12px!important;
+  margin:0!important;
+  overflow:visible!important;
 }
-#arena:not([hidden]) #bottom #actionStack #raiseRow {order:0!important}
+#arena:not([hidden]) #bottom #actionStack #raiseRow {
+  box-sizing:border-box!important;
+  order:0!important;
+  width:100%!important;
+  height:clamp(42px,7dvh,64px)!important;
+  min-height:0!important;max-height:none!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+}
 #arena:not([hidden]) #bottom #actionStack #swap {
+  box-sizing:border-box!important;
   order:1!important;
-  height:clamp(78px,13vw,112px)!important;
-  max-height:112px!important;
+  width:100%!important;
+  height:clamp(78px,12dvh,116px)!important;
+  min-height:0!important;max-height:none!important;
+  flex:0 0 auto!important;
+  margin:0!important;
 }
 #arena:not([hidden]) #bpPowerQuickDock {
   min-height:clamp(54px,6dvh,76px)!important;
-  visibility:visible!important;
+  overflow:visible!important;
 }
