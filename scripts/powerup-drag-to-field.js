@@ -10,21 +10,53 @@ const style=document.createElement('style');style.id='bp-power-drag-style';style
 #bpPowerDragGhost{position:fixed;z-index:999999;pointer-events:none;transform:translate(-50%,-50%);display:grid;place-items:center;width:54px;height:54px;border:2px solid #e4c4ff;border-radius:50%;background:#24154eef;box-shadow:0 0 18px #a86dff88;color:#fff;font-size:24px}
 #human.bp-power-drop-target,#cpu.bp-power-drop-target{outline:3px solid #d9a5ff!important;outline-offset:2px;box-shadow:0 0 15px #a86dff99!important}
 `;document.head.appendChild(style);
-// The developer loadout dialog saves the user's six choices by match type.
-// Restore those choices after the arena becomes visible, when its UI is rebuilt.
-function restoreSelectedLoadout(){
- if(!window.bpDevActive||arena.hidden||!window.bpPowerSession)return;
+// Capture the actual six highlighted choices from the loadout dialog at START MATCH.
+// Never infer the user's choices from the first six available items.
+const loadoutNames={
+ 'Double Points':'double_points','Power Pause':'power_pause','Super Multiplier':'super_multiplier',
+ 'Special Block Generator':'special_block_generator','Garbage Shield':'garbage_shield',
+ 'Attack Amplifier':'attack_amplifier','Wild Block':'wild_block','Block Bomb':'block_bomb',
+ 'Block Lock':'block_lock','Return To Sender':'return_to_sender','Deep Freeze':'deep_freeze',
+ 'Mirror Match':'mirror_match','Lifesaver':'lifesaver','Blindfold':'blindfold'
+};
+let confirmedLoadout=null,applying=false;
+function currentType(){
  const mode=document.getElementById('mode')?.value;
- const versus=arena.classList.contains('versus');
- const type=(versus?'versus-':'solo-')+(mode==='battle'?'battle':mode==='timed'?'timed':'line');
- const saved=window.bpDevLoadouts?.[type];
+ const versus=document.getElementById('play')?.value==='versus';
+ return (versus?'versus-':'solo-')+(mode==='battle'?'battle':mode==='timed'?'timed':'line');
+}
+document.addEventListener('click',e=>{
+ const confirm=e.target.closest('#bpDevLoadoutDialog .bp-loadout-confirm');
+ if(!confirm||confirm.disabled)return;
+ const dialog=document.getElementById('bpDevLoadoutDialog');
+ if(!dialog)return;
+ const selected=Array.from(dialog.querySelectorAll('.bp-loadout-choice.selected'))
+  .map(b=>Object.entries(loadoutNames).find(([name])=>b.textContent.trim().endsWith(name))?.[1])
+  .filter(Boolean);
+ if(!selected.length)return;
+ confirmedLoadout={type:currentType(),ids:selected};
+ // The underlying game owns the confirm action; this capture only preserves its actual UI selection.
+},true);
+function restoreSelectedLoadout(){
+ if(applying||arena.hidden||!window.bpPowerSession)return;
+ const type=currentType();
+ const saved=confirmedLoadout?.type===type?confirmedLoadout.ids:window.bpDevLoadouts?.[type];
  if(!Array.isArray(saved)||!saved.length)return;
  const current=window.bpPowerSession.active||[];
  if(current.length===saved.length&&current.every((id,i)=>id===saved[i]))return;
  window.bpPowerSession.active=[...saved];
- window.dispatchEvent(new Event('resize'));
+ window.bpDevLoadouts=window.bpDevLoadouts||{};
+ window.bpDevLoadouts[type]=[...saved];
+ applying=true;
+ Promise.resolve(window.bpPowerRefreshQuick?.()).catch(console.warn).finally(()=>{applying=false});
 }
-new MutationObserver(()=>{setTimeout(restoreSelectedLoadout,0);setTimeout(restoreSelectedLoadout,250)}).observe(arena,{attributes:true,attributeFilter:['class','hidden']});
+new MutationObserver(()=>{
+ if(arena.hidden){confirmedLoadout=null;return;}
+ setTimeout(restoreSelectedLoadout,0);
+ setTimeout(restoreSelectedLoadout,300);
+}).observe(arena,{attributes:true,attributeFilter:['class','hidden']});
+const dockObserver=new MutationObserver(()=>{if(!applying&&!arena.hidden)setTimeout(restoreSelectedLoadout,0)});
+dockObserver.observe(dock,{childList:true});
 let drag=null;
 const fields=()=>[document.getElementById('human'),document.getElementById('cpu')].filter(Boolean);
 function targetAt(x,y){
