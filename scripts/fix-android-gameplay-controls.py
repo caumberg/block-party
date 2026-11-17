@@ -95,5 +95,13 @@ sync_old="function sync(){const dest=$('arena').classList.contains('versus')?boa
 sync_new="function sync(){const dest=$('arena').classList.contains('versus')?boards:header;if(bolt.parentElement!==dest)dest.appendChild(bolt);bolt.hidden=true;bolt.style.setProperty('display','none','important');renderQuick()}"
 assert s.count(sync_old)==1, f'Expected one bolt sync, got {s.count(sync_old)}'
 s=s.replace(sync_old,sync_new,1)
+# Normal Arcade also needs a wallet inventory refresh after the arena opens.
+# The previous observer refreshed only Campaign, leaving inventory empty
+# outside Developer Mode. Refresh once per launch and on account changes.
+observer_old="new MutationObserver(()=>{sync();if(!$('arena').hidden&&$('arena').classList.contains('bp-campaign-power'))refresh().catch(()=>{})}).observe($('arena'),{attributes:true,attributeFilter:['class','hidden']});"
+observer_new="new MutationObserver(()=>{sync();if(!$('arena').hidden)refresh().catch(e=>console.warn('Power-up inventory refresh failed',e))}).observe($('arena'),{attributes:true,attributeFilter:['class','hidden']});"
+assert s.count(observer_old)==1, 'Arena inventory observer missing'
+s=s.replace(observer_old,observer_new,1)
+
 p.write_text(s,encoding='utf-8')
 print('Patched actual main gameplay CSS')
