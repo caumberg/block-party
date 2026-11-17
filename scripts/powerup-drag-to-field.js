@@ -10,6 +10,21 @@ const style=document.createElement('style');style.id='bp-power-drag-style';style
 #bpPowerDragGhost{position:fixed;z-index:999999;pointer-events:none;transform:translate(-50%,-50%);display:grid;place-items:center;width:54px;height:54px;border:2px solid #e4c4ff;border-radius:50%;background:#24154eef;box-shadow:0 0 18px #a86dff88;color:#fff;font-size:24px}
 #human.bp-power-drop-target,#cpu.bp-power-drop-target{outline:3px solid #d9a5ff!important;outline-offset:2px;box-shadow:0 0 15px #a86dff99!important}
 `;document.head.appendChild(style);
+// The developer loadout dialog saves the user's six choices by match type.
+// Restore those choices after the arena becomes visible, when its UI is rebuilt.
+function restoreSelectedLoadout(){
+ if(!window.bpDevActive||arena.hidden||!window.bpPowerSession)return;
+ const mode=document.getElementById('mode')?.value;
+ const versus=arena.classList.contains('versus');
+ const type=(versus?'versus-':'solo-')+(mode==='battle'?'battle':mode==='timed'?'timed':'line');
+ const saved=window.bpDevLoadouts?.[type];
+ if(!Array.isArray(saved)||!saved.length)return;
+ const current=window.bpPowerSession.active||[];
+ if(current.length===saved.length&&current.every((id,i)=>id===saved[i]))return;
+ window.bpPowerSession.active=[...saved];
+ window.dispatchEvent(new Event('resize'));
+}
+new MutationObserver(()=>{setTimeout(restoreSelectedLoadout,0);setTimeout(restoreSelectedLoadout,250)}).observe(arena,{attributes:true,attributeFilter:['class','hidden']});
 let drag=null;
 const fields=()=>[document.getElementById('human'),document.getElementById('cpu')].filter(Boolean);
 function targetAt(x,y){
