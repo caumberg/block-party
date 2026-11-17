@@ -1,0 +1,84 @@
+name: Center Campaign level detail content
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/center-campaign-detail.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  center:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add scoped Campaign detail vertical alignment
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='bp-campaign-detail-vertical-center-v1'
+          assert marker not in s, 'Alignment patch already installed'
+          assert 'id="bpCampaignDetail"' in s, 'Campaign detail container missing'
+          assert '.bp-approved-preview' in s, 'Approved preview styles missing'
+          closing=s.lower().rfind('</html>')
+          assert closing > len(s)//2, 'Final HTML closing tag not found'
+          css="""
+          <style id="bp-campaign-detail-vertical-center-v1">
+          /* Center the existing complete level content as one group, without changing preview internals. */
+          #bpCampaignOverlay .bp-campaign-right #bpCampaignDetail {
+            display:flex!important;
+            flex-direction:column!important;
+            justify-content:safe center!important;
+            align-items:stretch!important;
+          }
+          #bpCampaignOverlay #bpCampaignDetail > :first-child {
+            margin-top:auto!important;
+          }
+          #bpCampaignOverlay #bpCampaignDetail > :last-child {
+            margin-bottom:auto!important;
+          }
+          /* The play action participates in the centered stack rather than sticking to its edge. */
+          #bpCampaignOverlay #bpCampaignDetail > button {
+            position:relative!important;
+            bottom:auto!important;
+            margin-top:3px!important;
+          }
+          </style>
+          """
+          s=s[:closing]+css+s[closing:]
+          p.write_text(s,encoding='utf-8')
+          print('Installed scoped vertical centering without editing animations.')
+          PY
+      - name: Verify HTML patch and JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import subprocess,tempfile
+          s=Path('index.html').read_text()
+          assert s.count('bp-campaign-detail-vertical-center-v1')==1
+          class Scripts(HTMLParser):
+            def __init__(self):super().__init__();self.active=False;self.scripts=[]
+            def handle_starttag(self,tag,attrs):
+              if tag=='script' and not dict(attrs).get('src'):self.active=True;self.scripts.append('')
+            def handle_endtag(self,tag):
+              if tag=='script':self.active=False
+            def handle_data(self,data):
+              if self.active:self.scripts[-1]+=data
+          parser=Scripts();parser.feed(s)
+          for i,script in enumerate(parser.scripts):
+            if not script.strip():continue
+            with tempfile.NamedTemporaryFile(mode='w',suffix='.js') as tmp:
+              tmp.write(script);tmp.flush()
+              subprocess.run(['node','--check',tmp.name],check=True)
+          print('Checked',len(parser.scripts),'inline scripts.')
+          PY
+      - name: Commit the isolated layout change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Center Campaign level details vertically without altering preview animations"
+          git push
