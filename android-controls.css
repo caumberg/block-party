@@ -7,7 +7,7 @@
   left:50%!important;
   right:auto!important;
   top:auto!important;
-  bottom:clamp(18px,3dvh,44px)!important;
+  bottom:clamp(28px,5dvh,62px)!important;
   transform:translateX(-50%)!important;
   width:min(calc(100vw - 22px),580px)!important;
   height:clamp(205px,28dvh,285px)!important;
@@ -130,3 +130,25 @@
   min-height:clamp(54px,6dvh,76px)!important;
   overflow:visible!important;
 }
+
+/* Power-up dock: same fixed slot in Arcade and Campaign, Solo and Versus.
+   Controls do not move when inventory is empty or Developer Mode changes. */
+#arena:not([hidden]) #bpPowerQuickDock{
+  position:fixed!important;
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:calc(clamp(28px,5dvh,62px) + clamp(205px,28dvh,285px) + 4px)!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  width:max-content!important;
+  max-width:calc(100vw - 20px)!important;
+  height:clamp(54px,6dvh,76px)!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  flex-wrap:nowrap!important;
+  z-index:91!important;
+  overflow:visible!important;
+}
+#arena:not([hidden]) #bpPowerQuickDock[hidden]{display:none!important}
