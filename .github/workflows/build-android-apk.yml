@@ -54,8 +54,8 @@ jobs:
           from pathlib import Path
           p=Path('www/index.html')
           s=p.read_text(encoding='utf-8')
-          assert '</body>' in s, 'Missing closing body tag'
-          s=s.replace('</body>', '<script src="powerup-drag-to-field.js"></script>\n</body>', 1)
+          assert '</html>' in s, 'Missing closing html tag'
+          s=s.replace('</html>', '<script src="powerup-drag-to-field.js"></script>\n</html>', 1)
           p.write_text(s,encoding='utf-8')
           PY
           python3 - <<'PY'
