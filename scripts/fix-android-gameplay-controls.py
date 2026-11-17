@@ -76,5 +76,24 @@ zone_old='</aside><section class="zone" id="humanZone">'
 zone_new='</aside><section class="zone" id="humanZone">'
 assert s.count(zone_old)==1, f'Expected one HUD/zone boundary, found {s.count(zone_old)}'
 s=s.replace(zone_old,zone_new,1)
+# Campaign uses the same active quick-use dock as Arcade. A campaign launch can
+# bypass the Arcade loadout initializer, leaving active=[] and an empty dock.
+# Populate eligible campaign power-ups from the existing inventory on render,
+# without consuming inventory or changing Arcade's chosen loadout.
+quick_anchor=""" const versusBattle=$('arena').classList.contains('versus')&&$('mode').value==='battle';
+ const usable=items.filter(i=>window.bpPowerSession.active.includes(i[0])"""
+quick_replacement=""" const versusBattle=$('arena').classList.contains('versus')&&$('mode').value==='battle';
+ if($('arena').classList.contains('bp-campaign-power')&&session.active.length===0){
+  session.active=items.filter(i=>i[3]==='active'&&Number(inventory[i[0]]||0)>0&&devEligible(i[0])).slice(0,6).map(i=>i[0]);
+ }
+ const usable=items.filter(i=>window.bpPowerSession.active.includes(i[0])"""
+assert s.count(quick_anchor)==1, f'Expected one quick-use eligibility section, got {s.count(quick_anchor)}'
+s=s.replace(quick_anchor,quick_replacement,1)
+# Campaign has older selectors which explicitly show the retired bolt.
+# Hide the actual element, including in Developer Mode, on each dock sync.
+sync_old="function sync(){const dest=$('arena').classList.contains('versus')?boards:header;if(bolt.parentElement!==dest)dest.appendChild(bolt);bolt.hidden=true;renderQuick()}"
+sync_new="function sync(){const dest=$('arena').classList.contains('versus')?boards:header;if(bolt.parentElement!==dest)dest.appendChild(bolt);bolt.hidden=true;bolt.style.setProperty('display','none','important');renderQuick()}"
+assert s.count(sync_old)==1, f'Expected one bolt sync, got {s.count(sync_old)}'
+s=s.replace(sync_old,sync_new,1)
 p.write_text(s,encoding='utf-8')
 print('Patched actual main gameplay CSS')
