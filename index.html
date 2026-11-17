@@ -4039,4 +4039,54 @@ $('bpAccountSignOut').addEventListener('click',async()=>{if(busy)return;if(!conf
   margin-top:3px!important;
 }
 </style>
+
+<style id="bp-controls-locked-v1">
+/* One physical location for the controls in every gameplay mode.
+   Reserving space above this layer prevents optional powerups from shifting it. */
+#arena:not([hidden]) #bottom {
+  position:fixed!important;
+  left:50%!important;
+  bottom:clamp(24px,4dvh,58px)!important;
+  transform:translateX(-50%)!important;
+  margin:0!important;
+  width:min(calc(100vw - 24px),580px)!important;
+  height:clamp(220px,30dvh,290px)!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:row!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  z-index:90!important;
+  padding:0 10px!important;
+  gap:0!important;
+}
+#arena:not([hidden]) #bottom #pad {
+  width:59%!important;max-width:59%!important;
+  flex:0 0 59%!important;
+  height:100%!important;
+  margin:0!important;
+}
+#arena:not([hidden]) #bottom #actionStack {
+  width:33%!important;max-width:33%!important;
+  flex:0 0 33%!important;
+  height:82%!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  margin:0!important;
+}
+#arena:not([hidden]) #bottom #raiseRow {
+  height:34%!important;min-height:0!important;
+  flex:0 0 34%!important;
+}
+#arena:not([hidden]) #bottom #swap {
+  height:62%!important;min-height:0!important;
+  flex:0 0 62%!important;
+}
+/* Preserve a dedicated region between boards and controls even without powerups. */
+#arena:not([hidden]) #boards {
+  margin-bottom:clamp(58px,8dvh,95px)!important;
+}
+</style>
 </html>
