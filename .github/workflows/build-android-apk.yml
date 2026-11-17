@@ -49,6 +49,16 @@ jobs:
           python3 scripts/style-daily-reward.py
           python3 - <<'PY'
           from pathlib import Path
+          p=Path('www/index.html')
+          css=Path('android-controls.css').read_text(encoding='utf-8')
+          s=p.read_text(encoding='utf-8')
+          assert s.endswith('</html>') or s.rstrip().endswith('</html>')
+          pos=s.rfind('</html>')
+          s=s[:pos]+'<style id="bp-android-control-lock">'+css+'</style>\n'+s[pos:]
+          p.write_text(s,encoding='utf-8')
+          PY
+          python3 - <<'PY'
+          from pathlib import Path
           from html.parser import HTMLParser
           class Scripts(HTMLParser):
             def __init__(self):
