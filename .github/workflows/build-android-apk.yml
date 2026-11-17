@@ -1,3 +1,4 @@
+# Rebuild Android APK with centered Campaign level details (v1)
 name: Build Block Party Android APK
 on:
   push:
