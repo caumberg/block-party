@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'scripts/powerup-drag-to-field.js'
       - 'package.json'
       - 'scripts/inject-android-idle-notifications.py'
       - 'scripts/inject-android-daily-notifications.py'
@@ -47,6 +48,16 @@ jobs:
           python3 scripts/inject-android-idle-notifications.py
           python3 scripts/inject-android-daily-notifications.py
           python3 scripts/style-daily-reward.py
+          cp scripts/powerup-drag-to-field.js www/powerup-drag-to-field.js
+          node --check www/powerup-drag-to-field.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('www/index.html')
+          s=p.read_text(encoding='utf-8')
+          assert '</body>' in s, 'Missing closing body tag'
+          s=s.replace('</body>', '<script src="powerup-drag-to-field.js"></script>\\n</body>', 1)
+          p.write_text(s,encoding='utf-8')
+          PY
           python3 - <<'PY'
           from pathlib import Path
           p=Path('www/index.html')
