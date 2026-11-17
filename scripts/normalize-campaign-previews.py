@@ -27,5 +27,22 @@ s=s.replace(needle2,'.wrap{width:auto!important;height:auto!important;max-height
 top_gap='justify-content:center!important;padding:2px!important;margin:0!important;border:0!important;background:transparent!important}'
 assert s.count(top_gap)==1, 'Versus arena CSS anchor changed'
 s=s.replace(top_gap,top_gap.replace('justify-content:center','justify-content:flex-start'),1)
+# The standalone Replay footer is not part of Campaign and was peeking
+# out from beneath the Line Clear preview. Hide it for every versus mode.
+needle3='.eyebrow,.title,.status,.bottom,.note{display:none!important}'
+assert s.count(needle3)==1, 'Versus embedded CSS selector changed'
+s=s.replace(needle3,'.eyebrow,.title,.status,.bottom,.footer,.note{display:none!important}',1)
+
+# Timed mode: make the clock a small, centered overlay on the actual boards.
+# It is absolutely positioned so it consumes no extra vertical layout space.
+clock_css='''.shell{position:relative!important}
+.clock{display:flex!important;position:absolute!important;top:20%!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;pointer-events:none!important;margin:0!important;padding:2px 5px!important;min-height:0!important;width:max-content!important;max-width:100%!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;font-size:16px!important;line-height:1.05!important;background:#101a39b8!important;border-radius:8px!important}
+.clock small{font-size:8px!important;letter-spacing:0!important;white-space:nowrap!important}'''
+timed_anchor='   }"""'
+assert s.count(timed_anchor)==1, 'Preview mode replacement anchor changed'
+s=s.replace(timed_anchor,'''   }
+   if(approvedKey==='versus-timed'){
+    previewHtml=previewHtml.replace('</head>','<style>'+''' + repr(clock_css) + '''+'</style></head>');
+   }"""''',1)
 p.write_text(s,encoding='utf-8')
 print('Normalized versus preview canvas geometry')
