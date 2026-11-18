@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.107 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.108 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -2230,10 +2230,10 @@ function bpStartObstacle(l){
 })();
 window.addEventListener('message',e=>{if(e.data?.bp!=='obstacle-finish'||bpCampaignSettings?.type!=='obstacles'||!started)return;
  const l=bpCampaignSettings;$('human').removeAttribute('srcdoc');$('arena').classList.remove('bp-obstacle-active');started=false;$('arena').hidden=true;$('menu').hidden=false;$('bottom').hidden=false;
- const left=Number(e.data.remaining)||0;const fourMatchMade=!!e.data.fourMatchMade;const won=left<=6&&fourMatchMade;
+ const left=Number(e.data.remaining)||0;const fourMatchMade=!!e.data.fourMatchMade;const requiresFourMatch=l.n>=151;const won=left<=6&&(!requiresFourMatch||fourMatchMade);
  window.bpCampaignOnResult?.({won,score:fourMatchMade?Math.max(0,1000-left):0,elapsedMs:e.data.elapsedMs,remaining:left});
- bpResetCampaignResult();$('victoryTitle').textContent=!fourMatchMade?'4-BLOCK MATCH REQUIRED':left===0?'BOARD CLEARED!':left<=6?'OBSTACLE COMPLETE!':'OBSTACLE FAILED';
- $('victorySubtitle').textContent=left+' colored blocks remaining · '+(fourMatchMade?'4-block match completed':'No 4-block match')+' · '+e.data.stars+' stars';
+ bpResetCampaignResult();$('victoryTitle').textContent=requiresFourMatch&&!fourMatchMade?'4-BLOCK MATCH REQUIRED':left===0?'BOARD CLEARED!':left<=6?'OBSTACLE COMPLETE!':'OBSTACLE FAILED';
+ $('victorySubtitle').textContent=left+' colored blocks remaining · '+(requiresFourMatch?(fourMatchMade?'4-block match completed':'No 4-block match')+' · ':'')+(left===0?3:left<=3?2:left<=6?1:0)+' stars';
  $('victoryDialog').hidden=false;if(!won)bpShowCampaignLoss();
 });
 
