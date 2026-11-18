@@ -1,0 +1,9 @@
+
+#bpCampaignOverlay .bp-campaign-right{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden;gap:9px}
+#bpCampaignOverlay .bp-campaign-right #bpCampaignDetail{flex:1 1 auto;min-height:0;min-width:0;width:100%;box-sizing:border-box}
+#bpCampaignOverlay .bp-campaign-quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:0 0 auto;min-width:0;padding:2px 1px 0}
+#bpCampaignOverlay .bp-campaign-quick-actions button{min-width:0;min-height:47px;border-radius:13px;color:white;font-size:clamp(12px,3vw,17px);font-weight:900;cursor:pointer;border:2px solid #c7b2ff;background:linear-gradient(115deg,#6652ae,#463481);box-shadow:0 0 13px #8d5bdc66}
+#bpCampaignOverlay #bpCampaignWalletOpen{position:relative!important;display:inline-flex;align-items:center;justify-content:center;gap:5px;background:#6850b3!important;border:1.5px solid #ad94f3!important;color:#fff!important;box-shadow:inset 0 1px 0 #ffffff44,0 0 10px #2a66ff55!important;font-size:clamp(15px,3.6vw,21px)!important;font-weight:500!important;letter-spacing:0!important;text-shadow:none!important;white-space:nowrap!important;overflow:visible!important}
+#bpCampaignOverlay #bpCampaignWalletOpen .bp-idle-badge{position:absolute;top:-9px;right:-8px;min-width:20px;height:20px;border-radius:50%;background:#f04470;color:#fff;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid #202b4c;text-shadow:none}
+#bpCampaignOverlay #bpCampaignStoreOpen{background:linear-gradient(115deg,#bf2de4,#6536d8);border-color:#ed9fff}
+@media(max-width:430px){#bpCampaignOverlay .bp-campaign-right{gap:6px}#bpCampaignOverlay .bp-campaign-quick-actions{gap:6px}#bpCampaignOverlay .bp-campaign-quick-actions button{min-height:43px;font-size:12px}}

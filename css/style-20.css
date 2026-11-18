@@ -1,0 +1,11 @@
+
+#bpCampaignMilestones{display:none!important}
+#bpCampaignGrid .bp-checkpoint-inline{grid-column:1/-1;flex:0 0 auto;box-sizing:border-box;width:100%;margin:8px 0 13px;padding:13px 7px;border:2px solid #d95bff;border-radius:17px;background:linear-gradient(150deg,#252356,#141b43);box-shadow:0 0 16px #a94cfa77,inset 0 0 16px #a54bfa22;text-align:center;color:#fff;overflow:hidden}
+.bp-checkpoint-inline-title{font-size:clamp(12px,2.9vw,16px);font-weight:1000;letter-spacing:.015em;color:#fff;text-shadow:0 0 9px #ffb6ff}
+.bp-checkpoint-inline-range{font-size:11px;letter-spacing:.06em;color:#d9caff;margin-top:3px}
+.bp-checkpoint-inline-stats{font-size:11px;margin-top:9px;line-height:1.5;color:#ffdc77;white-space:normal}
+.bp-checkpoint-inline-rewards{font-size:14px;font-weight:900;margin-top:8px;color:#ffe18b}
+.bp-checkpoint-inline-status{font-size:10px;font-weight:800;margin-top:5px;color:#bfe9ff;line-height:1.35}
+#bpCampaignGrid .bp-checkpoint-complete{border-color:#ffce5a;box-shadow:0 0 18px #ffb74266}
+.bp-checkpoint-inline-total{font-size:clamp(13px,3.1vw,17px);font-weight:900;color:#ffe18b;margin-top:10px;line-height:1.35}
+.bp-checkpoint-inline-next{font-size:clamp(11px,2.7vw,13px);font-weight:900;color:#8fffe2;margin-top:8px;line-height:1.3;text-shadow:0 0 7px #2ceac366}

@@ -1,0 +1,38 @@
+
+/* One shared close-control geometry; only the screen accent changes. */
+#bpCampaignOverlay #bpCampaignClose,#bpWalletClose,#tutorialClose,#bpLbTopClose,#bpArcadeClose{
+ --close-accent:#7ecbff;
+ --close-fill:rgba(14,31,65,.72);
+ appearance:none!important;box-sizing:border-box!important;
+ width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;
+ flex:0 0 36px!important;padding:0!important;
+ border:1.4px solid var(--close-accent)!important;border-radius:50%!important;
+ background:var(--close-fill)!important;
+ box-shadow:0 0 7px color-mix(in srgb,var(--close-accent) 25%,transparent)!important;
+ color:transparent!important;font-size:0!important;line-height:0!important;
+ position:relative;isolation:isolate;align-items:center!important;justify-content:center!important;
+ text-shadow:none!important;transform:none!important;
+}
+#bpCampaignOverlay #bpCampaignClose::before,#bpCampaignOverlay #bpCampaignClose::after,
+#bpWalletClose::before,#bpWalletClose::after,
+#tutorialClose::before,#tutorialClose::after,
+#bpLbTopClose::before,#bpLbTopClose::after,
+#bpArcadeClose::before,#bpArcadeClose::after{
+ content:"";position:absolute;top:50%;left:50%;width:22px;height:2px;
+ background:#fff;border-radius:2px;transform:translate(-50%,-50%) rotate(45deg);
+ pointer-events:none;
+}
+#bpCampaignOverlay #bpCampaignClose::after,#bpWalletClose::after,#tutorialClose::after,#bpLbTopClose::after,#bpArcadeClose::after{transform:translate(-50%,-50%) rotate(-45deg)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] #bpCampaignClose{--close-accent:#ff8198;--close-fill:rgba(87,19,45,.7)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] #bpCampaignClose{--close-accent:#c18bfa;--close-fill:rgba(64,25,91,.7)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="blue"] #bpCampaignClose{--close-accent:#6acaff;--close-fill:rgba(19,48,88,.7)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="green"] #bpCampaignClose{--close-accent:#6fe7b0;--close-fill:rgba(16,74,59,.7)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="yellow"] #bpCampaignClose{--close-accent:#ffdc77;--close-fill:rgba(90,66,20,.7)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="orange"] #bpCampaignClose{--close-accent:#ffb578;--close-fill:rgba(94,50,22,.7)}
+#bpWalletClose{--close-accent:#b58af3;--close-fill:rgba(64,36,100,.68)}
+#tutorialClose{--close-accent:#59d8ff;--close-fill:rgba(10,68,96,.68)}
+#bpLbTopClose{--close-accent:#b38bff;--close-fill:rgba(65,37,106,.68)}
+#bpArcadeClose{--close-accent:#5bd8ff;--close-fill:rgba(17,60,96,.68)}
+/* Preserve campaign header positioning, while matching the other controls. */
+#bpCampaignOverlay #bpCampaignClose{position:absolute!important;top:2px!important;right:2px!important;z-index:8!important}
+#menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) #bpArcadeClose{top:20px!important;right:20px!important}

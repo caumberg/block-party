@@ -1,0 +1,11 @@
+
+#bpPerfectionLauncher{display:none;width:100%;margin:8px 0;padding:11px;border:1px solid #f8d475;border-radius:12px;background:linear-gradient(115deg,#55348d,#28205b);color:#fff;font-weight:850;box-shadow:0 0 12px #b47cff55}
+#bpPerfectionLauncher.ready{display:block}
+#bpPerfectionModal{position:fixed;inset:0;z-index:100000;background:#050518ed;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+#bpPerfectionModal[hidden]{display:none!important}
+.bp-perfection-panel{width:min(480px,100%);max-height:92dvh;overflow-y:auto;text-align:center;background:linear-gradient(145deg,#31206a,#0c1738);border:2px solid #f9d678;border-radius:22px;padding:22px 16px;box-shadow:0 0 28px #e6b94c66;color:white}
+.bp-perfection-panel h2{color:#ffe49c;font-size:clamp(23px,6vw,32px);margin:0 0 9px;text-shadow:0 0 10px #eebd54aa}
+.bp-perfection-panel p{color:#d8d4ff;margin:8px 0 15px}.bp-perfection-prize{padding:12px;border-radius:13px;background:#151b48;border:1px solid #8e79dc;margin:10px 0 15px}
+.bp-perfection-gifts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.bp-perfection-gift{min-height:108px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 3px;border:1.5px solid #ac8cfb;border-radius:13px;background:linear-gradient(150deg,#5932a3,#2c215b);box-shadow:inset 0 1px 4px #fff4,0 0 7px #b16fff55;overflow:visible;color:#fff}
+.bp-perfection-gift .gift-icon{font-size:33px;line-height:1.1}.bp-perfection-gift .gift-name{font-size:11px;line-height:1.25;overflow-wrap:anywhere}.bp-perfection-gift.opened{background:linear-gradient(150deg,#204d66,#25245b);border-color:#76e4ff}.bp-perfection-gift:disabled{opacity:.48;cursor:default}.bp-perfection-gift.opened:disabled{opacity:1}
+.bp-perfection-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.bp-perfection-actions button{padding:11px 15px;background:#6543b3;border:1px solid #c3a4ff;border-radius:11px;font-weight:800}.bp-perfection-error{color:#ffb6bf!important;font-size:13px}

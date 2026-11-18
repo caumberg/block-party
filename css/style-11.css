@@ -1,0 +1,16 @@
+
+/* v2.4.51: symmetrical circuit chevrons and corner close button */
+#bpCampaignOverlay .bp-campaign-head{position:relative!important}
+#bpCampaignOverlay #bpCircuitPrev,
+#bpCampaignOverlay #bpCircuitNext{position:absolute!important;top:50%!important;transform:translateY(-50%)!important;width:30px!important;height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+#bpCampaignOverlay #bpCircuitPrev{left:10%!important;right:auto!important}
+#bpCampaignOverlay #bpCircuitNext{right:10%!important;left:auto!important}
+#bpCampaignOverlay #bpCampaignClose{position:absolute!important;top:2px!important;right:2px!important;transform:none!important;width:33px!important;height:33px!important;min-width:0!important;min-height:0!important;font-size:24px!important;line-height:1!important;padding:0!important;z-index:5!important}
+#bpCampaignOverlay .bp-campaign-grid{scrollbar-width:none!important;-ms-overflow-style:none!important}
+#bpCampaignOverlay .bp-campaign-grid::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+#bpCampaignOverlay .bp-campaign-rail{position:relative!important}
+#bpCampaignOverlay .bp-level-scroll-indicator{position:absolute;right:5px;width:4px;pointer-events:none;z-index:7;opacity:0;transition:opacity .28s ease}
+#bpCampaignOverlay .bp-level-scroll-indicator.active{opacity:1}
+#bpCampaignOverlay .bp-level-scroll-thumb{width:100%;min-height:18px;border-radius:8px;background:linear-gradient(#e88aff,#a53aff);box-shadow:0 0 7px #b349fbbb;position:absolute;left:0;top:0}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-level-scroll-thumb{background:linear-gradient(#ff99a9,#ff315d);box-shadow:0 0 7px #ff315d99}
+@media(max-width:420px){#bpCampaignOverlay #bpCircuitPrev{left:8%!important}#bpCampaignOverlay #bpCircuitNext{right:8%!important}#bpCampaignOverlay #bpCampaignClose{top:1px!important;right:1px!important;width:30px!important;height:30px!important}}

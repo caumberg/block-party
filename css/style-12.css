@@ -1,0 +1,19 @@
+
+/* v2.4.51: push the arrows toward the annotated outer circles. */
+#bpCampaignOverlay #bpCircuitPrev{left:2.5%!important;right:auto!important}
+#bpCampaignOverlay #bpCircuitNext{right:2.5%!important;left:auto!important}
+/* Wallet is a circuit surface, not an unchanging blue card. */
+#bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] .bp-campaign-stats #bpCampaignWalletOpen{
+ background:linear-gradient(145deg,#5c2688,#351454 65%,#26113e)!important;
+ border-color:#b568f5!important;
+ box-shadow:inset 0 0 0 1px #d89aff33,0 0 12px #a54df488!important;
+}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-campaign-stats #bpCampaignWalletOpen{
+ background:linear-gradient(145deg,#712139,#411525 65%,#2c101e)!important;
+ border-color:#ff597b!important;
+ box-shadow:inset 0 0 0 1px #ffafbf22,0 0 12px #ff375d77!important;
+}
+@media(max-width:420px){
+ #bpCampaignOverlay #bpCircuitPrev{left:1.5%!important}
+ #bpCampaignOverlay #bpCircuitNext{right:1.5%!important}
+}

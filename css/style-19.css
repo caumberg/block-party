@@ -1,0 +1,11 @@
+
+#bpNextLevelBriefing .bp-next-brief-card{overflow:hidden!important;display:flex;flex-direction:column;max-height:calc(100dvh - 24px);padding:12px!important}
+#bpNextLevelBriefing .bp-next-brief-heading{flex-shrink:0;gap:8px}
+#bpNextLevelBriefing .bp-next-brief-heading h2{flex:1;min-width:0;font-size:clamp(15px,4.2vw,21px);line-height:1.15}
+#bpNextLevelBriefing .bp-next-duration-chip{flex-shrink:0;white-space:nowrap;font-size:12px;font-weight:900;color:#d9ecff;border:1px solid #759de8;background:#21365e;border-radius:10px;padding:6px 8px}
+#bpNextLevelBriefing #bpNextBriefContent{min-height:0;gap:8px;margin-top:8px;flex:1 1 auto}
+#bpNextLevelBriefing .bp-next-preview{height:clamp(220px,40dvh,370px)!important;flex:1 1 auto;min-height:160px!important}
+#bpNextLevelBriefing .bp-next-objectives{flex:0 0 auto;gap:5px}
+#bpNextLevelBriefing .bp-next-objective{padding:6px 9px}
+#bpNextLevelBriefing .bp-next-brief-actions{flex-shrink:0;margin-top:9px}
+@media(max-height:650px){#bpNextLevelBriefing .bp-next-preview{min-height:120px!important}#bpNextLevelBriefing .bp-next-objective{padding:4px 7px}#bpNextLevelBriefing .bp-next-brief-actions button{min-height:38px}}

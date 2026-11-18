@@ -1,0 +1,36 @@
+
+#humanZone>header{position:relative;display:flex;align-items:center;justify-content:center;padding-right:34px!important;padding-left:6px!important}
+#bpPowerBolt{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:none;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1.5px solid #a9e8ff;background:radial-gradient(circle,#5940a5,#151c55);color:#ffe36e;font-size:20px;line-height:1;box-shadow:0 0 11px #9b62ff,0 0 7px #4aeaff;cursor:pointer;z-index:8;padding:0}
+#arena.bp-campaign-power #bpPowerBolt{display:flex}
+#bpPowerCount{position:absolute;right:-5px;top:-8px;font-size:10px;min-width:15px;border-radius:20px;background:#a22af0;color:white;padding:2px}
+#arena.bp-campaign-power.versus #humanZone>header{padding-right:6px!important}
+/* In Versus, the bolt is moved outside the clipped board and anchored to the
+   shared boards container. This keeps the whole circle visible in the gap. */
+#arena.bp-campaign-power.versus #boards{position:relative!important}
+#arena.bp-campaign-power.versus #boards>#bpPowerBolt{display:flex!important;position:absolute!important;left:50%!important;right:auto!important;top:4px!important;transform:translateX(-50%)!important;z-index:200!important;width:30px!important;height:30px!important;font-size:18px!important;padding:0!important}
+#arena.bp-campaign-power.versus #humanZone>header{padding-right:6px!important}
+#bpPowerOverlay[hidden]{display:none!important}
+#bpPowerOverlay{position:fixed;inset:0;z-index:999999;background:#020519cc;display:flex;align-items:center;justify-content:center;padding:16px}
+.bp-power-panel{width:min(440px,96vw);max-height:85dvh;overflow:auto;background:linear-gradient(155deg,#263d78,#11183f 55%,#11132e);border:2px solid #dfbaff;border-radius:22px;box-shadow:0 0 0 3px #2b1d6c,0 0 30px #a04aff77;color:#f7f5ff;padding:20px;font:14px system-ui,sans-serif}
+.bp-power-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.bp-power-head h2{font-size:23px;margin:0;color:#ffe07b}.bp-power-close{font-size:25px;background:transparent;border:0;color:white;cursor:pointer}.bp-power-list{display:grid;gap:9px;margin:16px 0}.bp-power-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px;background:#111a47;border:1px solid #675ca6;border-radius:12px}.bp-power-item strong{display:block;font-size:15px}.bp-power-item small{color:#c1c5e7}.bp-power-status{color:#d4d5f5;line-height:1.5}.bp-power-footer{display:flex;gap:10px}.bp-power-footer button{flex:1;background:linear-gradient(125deg,#aa26dd,#7035da);border:1px solid #f0aaff;border-radius:12px;color:white;font-weight:800;padding:12px;cursor:pointer}
+
+/* v2.4.11: Solo has no visible board header. Make its header layout-transparent
+   so the lightning control can sit on the board without showing the YOU label. */
+#arena.solo.bp-campaign-power #humanZone{position:relative!important}
+#arena.solo.bp-campaign-power #humanZone>header{display:contents!important}
+#arena.solo.bp-campaign-power #humanZone>header>span{display:none!important}
+#arena.solo.bp-campaign-power #bpPowerBolt{display:flex!important;position:absolute!important;top:8px!important;right:8px!important;transform:none!important;z-index:100!important;width:36px!important;height:36px!important}
+#bpPowerOverlay .bp-power-select{width:100%;text-align:left;color:#f4f0ff;cursor:pointer;background:rgba(75,50,130,.35);border:1px solid rgba(170,140,250,.22);border-radius:13px;padding:11px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}#bpPowerOverlay .bp-power-select:hover{background:rgba(110,75,190,.5)}#bpPowerOverlay .bp-power-select:disabled{opacity:.42;cursor:not-allowed}#bpPowerOverlay .bp-power-select small{display:block;opacity:.75;margin-top:3px}
+
+/* v2.4.51: compact, non-scrolling power-up selector */
+#bpPowerOverlay{padding:10px!important;overflow:hidden!important}
+#bpPowerOverlay .bp-power-panel{box-sizing:border-box;width:min(440px,96vw);max-height:calc(100dvh - 20px)!important;overflow:hidden!important;padding:clamp(9px,2dvh,16px)!important;display:flex;flex-direction:column;gap:0}
+#bpPowerOverlay .bp-power-head h2{font-size:clamp(18px,4.8vw,23px)!important}
+#bpPowerOverlay .bp-power-status{font-size:clamp(11px,2.8vw,13px)!important;line-height:1.35!important;margin:10px 0!important}
+#bpPowerOverlay .bp-power-list{display:grid;gap:clamp(4px,.9dvh,8px)!important;margin:6px 0 10px!important;min-height:0;flex:0 1 auto}
+#bpPowerOverlay .bp-power-item{padding:clamp(6px,1dvh,10px) 10px!important;min-height:0}
+#bpPowerOverlay .bp-power-item strong{font-size:clamp(12px,3.2vw,15px)!important}
+#bpPowerOverlay .bp-power-item small{font-size:clamp(10px,2.6vw,12px)!important}
+#bpPowerOverlay .bp-power-footer{flex-shrink:0}
+#bpPowerOverlay .bp-power-footer button{padding:9px 7px!important;font-size:13px!important}
+@media(max-height:650px){#bpPowerOverlay .bp-power-status{margin:6px 0!important}#bpPowerOverlay .bp-power-list{gap:3px!important;margin:3px 0 6px!important}#bpPowerOverlay .bp-power-item{padding:4px 8px!important}}

@@ -1,0 +1,15 @@
+
+#bpCampaignLoss[hidden]{display:none!important}
+.victoryCard:has(#bpCampaignLoss:not([hidden])){padding:30px 18px 25px;max-width:470px}
+.victoryCard:has(#bpCampaignLoss:not([hidden])) #victoryTrophy,
+.victoryCard:has(#bpCampaignLoss:not([hidden])) #victoryTitle,
+.victoryCard:has(#bpCampaignLoss:not([hidden])) #victorySubtitle,
+.victoryCard:has(#bpCampaignLoss:not([hidden])) #victoryDiag,
+.victoryCard:has(#bpCampaignLoss:not([hidden])) .bp-result-buttons{display:none!important}
+#bpCampaignLoss{text-align:center}
+.bp-loss-heading{font-size:clamp(42px,10vw,68px);font-weight:1000;letter-spacing:.035em;color:#ff637d;text-shadow:0 0 12px #f91d62,0 0 28px #ee125b;animation:bpLossPop .5s ease-out both}
+.bp-loss-question{font-size:clamp(22px,5vw,31px);font-weight:900;margin:20px 0 25px;color:#fff}
+.bp-loss-actions{display:flex;gap:12px}
+.bp-loss-actions button{flex:1;min-width:0;min-height:58px;border-radius:14px;border:2px solid #b8bbf5;background:#5064a5;color:#fff;font-size:20px;font-weight:900}
+#bpLossYes{background:linear-gradient(120deg,#b729e8,#6632ec);border-color:#e6b3ff}
+@keyframes bpLossPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}

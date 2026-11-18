@@ -1,0 +1,20 @@
+
+/* Center the existing complete level content as one group, without changing preview internals. */
+#bpCampaignOverlay .bp-campaign-right #bpCampaignDetail {
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:safe center!important;
+  align-items:stretch!important;
+}
+#bpCampaignOverlay #bpCampaignDetail > :first-child {
+  margin-top:auto!important;
+}
+#bpCampaignOverlay #bpCampaignDetail > :last-child {
+  margin-bottom:auto!important;
+}
+/* The play action participates in the centered stack rather than sticking to its edge. */
+#bpCampaignOverlay #bpCampaignDetail > button {
+  position:relative!important;
+  bottom:auto!important;
+  margin-top:3px!important;
+}

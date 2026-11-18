@@ -1,0 +1,6 @@
+
+#bpCampaignOverlay .bp-campaign-stats #bpCampaignWalletOpen{position:relative!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;width:100%!important;min-width:0!important;min-height:62px!important;margin:0!important;padding:6px 3px!important;border:2px solid #9b5cf5!important;border-radius:14px!important;background:linear-gradient(145deg,#24449e,#14175b)!important;color:white!important;cursor:pointer!important;box-shadow:0 0 12px #9259ff55!important;font-weight:900!important}
+#bpCampaignOverlay .bp-campaign-stats #bpCampaignWalletOpen strong{display:block;font-size:clamp(17px,4.5vw,25px)!important;line-height:1.25;color:#fff!important}
+#bpCampaignOverlay .bp-campaign-quick-actions{grid-template-columns:minmax(0,1fr)!important;width:100%!important}
+#bpCampaignOverlay .bp-campaign-quick-actions #bpCampaignStoreOpen{display:block;width:100%!important;min-width:0!important}
+#bpCampaignOverlay .bp-campaign-sync-status{font-size:10px;color:#58f9ba;text-align:right;line-height:1.1;margin:-4px 2px 3px;min-height:10px;opacity:.85}

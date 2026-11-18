@@ -1,0 +1,12 @@
+
+#menu.bp-menu-ready #bpArcadeScreen #bpArcadeBack{
+ width:auto!important;min-height:0!important;display:inline-block!important;
+ padding:5px 2px!important;margin:3px 0 13px!important;
+ border:0!important;border-radius:0!important;background:transparent!important;
+ box-shadow:none!important;outline-offset:4px;
+ color:#b9c9ed!important;font-size:15px!important;font-weight:700!important;
+ text-align:left!important;letter-spacing:.01em;position:relative!important;
+ top:auto!important;z-index:2!important;flex:none!important;
+}
+#menu.bp-menu-ready #bpArcadeScreen #bpArcadeBack:hover,
+#menu.bp-menu-ready #bpArcadeScreen #bpArcadeBack:focus-visible{color:#fff!important;text-decoration:underline}

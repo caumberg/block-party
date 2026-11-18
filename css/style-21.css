@@ -1,0 +1,17 @@
+
+#bpCampaignGrid button.bp-checkpoint-inline{cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-family:inherit;min-height:155px;appearance:none;-webkit-appearance:none}
+#bpCampaignGrid .bp-checkpoint-inline-stats,#bpCampaignGrid .bp-checkpoint-inline-rewards,#bpCampaignGrid .bp-checkpoint-inline-status{display:none!important}
+#bpCampaignGrid .bp-checkpoint-inline-total{font-size:clamp(15px,3.5vw,20px);font-weight:900;color:#ffe19b;line-height:1.25}
+#bpCampaignGrid .bp-checkpoint-inline-next{font-size:clamp(11px,2.7vw,14px);font-weight:900;color:#67f4d0;line-height:1.35}
+#bpCampaignGrid .bp-checkpoint-selected{border-color:#fff!important;box-shadow:0 0 19px #f8d778!important}
+.bp-checkpoint-detail{display:flex;flex-direction:column;gap:12px;padding:12px;overflow-y:auto;min-height:0}
+.bp-checkpoint-detail-range{text-align:center;font-weight:900;letter-spacing:.08em;color:#d6c8ff}
+.bp-checkpoint-detail-total{text-align:center;font-size:clamp(23px,5vw,34px);font-weight:1000;color:#ffe18b;text-shadow:0 0 12px #eaa94e}
+.bp-checkpoint-detail p{margin:0;color:#e8eaff;font-size:clamp(12px,3vw,15px);line-height:1.45}
+.bp-checkpoint-detail-tiers{display:flex;flex-direction:column;gap:9px}
+.bp-checkpoint-detail-tier{display:grid;grid-template-columns:1fr auto;gap:4px;padding:12px 10px;border:1px solid #6679bb;border-radius:12px;background:#202b61}
+.bp-checkpoint-detail-tier strong{color:#ffe08c;font-size:clamp(13px,3.3vw,17px)}
+.bp-checkpoint-detail-tier span{color:#d5e4ff;font-weight:800;font-size:clamp(11px,2.8vw,14px)}
+.bp-checkpoint-detail-tier small{grid-column:1/-1;color:#c4d0ee;font-size:12px}
+.bp-checkpoint-detail-tier.earned{border-color:#4cf0b7;background:#163d48}
+.bp-checkpoint-detail-next{text-align:center;font-weight:900;color:#65f3d0;font-size:clamp(14px,3.4vw,18px)}

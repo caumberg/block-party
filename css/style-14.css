@@ -1,0 +1,9 @@
+
+/* v2.4.100: larger currency icon and amount, without startup script changes */
+.bp-wallet-tabs button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:88px!important;padding:11px 4px!important;font-size:clamp(14px,3.6vw,18px)!important;line-height:1.2!important;white-space:nowrap!important}
+.bp-wallet-tabs .bp-tab-value{display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-size:clamp(24px,6vw,31px)!important;font-weight:900!important;line-height:1.15!important;white-space:nowrap!important}
+.bp-wallet-tabs .bp-tab-count{font-size:inherit!important;font-weight:900!important;line-height:inherit!important}
+
+.bp-wallet-tabs button{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.bp-wallet-tabs .bp-tab-count{font-weight:900;color:#ffe19b;font-variant-numeric:tabular-nums}
+#bpWalletTokensPane>.bp-wallet-balance{display:none!important}

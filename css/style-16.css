@@ -1,0 +1,4 @@
+
+#bpWalletStorePane:not([hidden]){min-height:0!important}
+#bpWalletStoreMount{padding:0!important;margin:0!important;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important}
+#bpWalletStoreMount iframe{display:block!important;width:100%!;height:min(68dvh,850px)!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}

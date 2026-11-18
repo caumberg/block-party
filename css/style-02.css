@@ -1,0 +1,5 @@
+
+body.bp-developer-active #arena:not([hidden]) #bpPowerBolt{display:flex!important}
+body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock{display:flex!important}
+body.bp-developer-active #arena:not([hidden]) #bpPowerQuickDock[hidden]{display:none!important}
+body.bp-developer-active #arena:not([hidden]) .bp-power-quick{visibility:visible!important}

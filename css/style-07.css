@@ -1,0 +1,12 @@
+
+#bpCampaignOverlay .bp-campaign-head h2{gap:0;line-height:1;justify-content:center;overflow:visible}
+#bpCampaignOverlay .bp-circuit-logo{display:block;white-space:nowrap;font-family:Impact,"Arial Black",system-ui,sans-serif;font-weight:900;font-stretch:condensed;font-size:clamp(24px,7.2vw,51px);line-height:1.1;letter-spacing:.035em;color:#ff4353;-webkit-text-stroke:0;text-shadow:0 0 3px #ff243b,0 0 9px #ff102f,0 0 19px rgba(255,0,36,.95),0 0 38px rgba(255,0,32,.8),0 0 62px rgba(255,0,25,.55);filter:none}
+#bpCampaignOverlay .bp-tier-logo{display:block;margin-top:5px;font-family:Impact,"Arial Black",system-ui,sans-serif;font-size:clamp(15px,3.9vw,26px);font-weight:1000;line-height:1.1;letter-spacing:.21em;color:#fff;-webkit-text-stroke:.4px #fff;text-shadow:0 0 4px #fff,0 0 10px #e4eaff,0 0 18px #9caeff,0 0 26px #7894ff}
+@media(max-width:410px){#bpCampaignOverlay .bp-campaign-head{padding-left:10px;padding-right:10px}#bpCampaignOverlay .bp-circuit-logo{font-size:clamp(22px,6.8vw,32px)}#bpCampaignOverlay .bp-tier-logo{font-size:clamp(14px,3.8vw,18px)}}
+
+/* Tier carousel: a single tier label, bounded chevrons, no pagination dots. */
+#bpCampaignOverlay .bp-tier-carousel{display:grid;grid-template-columns:24px minmax(0,1fr) 24px;align-items:center;gap:2px;margin:8px 0 10px;width:100%;min-width:0}
+#bpCampaignOverlay .bp-tier-carousel button{appearance:none;-webkit-appearance:none;display:flex;align-items:center;justify-content:center;width:24px;height:40px;min-width:0;padding:0;margin:0;border:0;border-radius:0;background:none;box-shadow:none;color:#e4d9ff;font-size:35px;font-weight:600;line-height:1;cursor:pointer;text-shadow:0 0 9px #a46cff}
+#bpCampaignOverlay .bp-tier-carousel button:disabled{opacity:.22;filter:grayscale(1);cursor:default;text-shadow:none}
+#bpCampaignOverlay .bp-tier-carousel button:not(:disabled):active{color:#fff;transform:scale(.9)}
+#bpCampaignOverlay .bp-tier-carousel #bpTierCurrent{min-width:0;white-space:nowrap;text-align:center;color:#f4edff;font-size:clamp(11px,2.4vw,16px);font-weight:900;letter-spacing:0;text-shadow:0 0 10px #b16dff}

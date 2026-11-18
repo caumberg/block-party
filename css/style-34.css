@@ -1,0 +1,30 @@
+
+/* Campaign-style circular close buttons, themed to each panel. */
+#bpWalletClose,#tutorialClose,#bpLbTopClose,#bpArcadeClose{
+ box-sizing:border-box!important;width:43px!important;height:43px!important;
+ min-width:43px!important;min-height:43px!important;padding:0!important;
+ display:grid!important;place-items:center!important;
+ border:1.5px solid var(--bp-close-accent,#a7b8ff)!important;
+ border-radius:50%!important;
+ background:var(--bp-close-bg,linear-gradient(145deg,#31446e,#1a2549))!important;
+ color:#fff!important;font-size:29px!important;font-weight:400!important;
+ line-height:1!important;box-shadow:0 0 9px var(--bp-close-glow,#769bff33)!important;
+ text-decoration:none!important;cursor:pointer!important;
+}
+#bpWalletClose{--bp-close-accent:#ae92f1;--bp-close-bg:linear-gradient(145deg,#514187,#292554);--bp-close-glow:#aa7fff30}
+#tutorialClose{--bp-close-accent:#66d8ff;--bp-close-bg:linear-gradient(145deg,#20517b,#112a51);--bp-close-glow:#56ccff30}
+#bpLbTopClose{--bp-close-accent:#b88aff;--bp-close-bg:linear-gradient(145deg,#553b92,#2a2054);--bp-close-glow:#b28aff30}
+#bpArcadeClose{--bp-close-accent:#61d6ff;--bp-close-bg:linear-gradient(145deg,#215b85,#182b61);--bp-close-glow:#50c8ff35}
+#bpLeaderboard .bp-lb-top{display:flex!important;align-items:center!important;gap:10px!important}
+#bpLeaderboard .bp-lb-top h2{flex:1;min-width:0}
+#bpLeaderboard #bpLbTopClose{margin-left:4px;flex-shrink:0}
+#menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) .menu-card{position:relative!important}
+#bpArcadeClose{display:none!important}
+#menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) #bpArcadeClose{
+ display:grid!important;position:absolute!important;top:21px!important;right:21px!important;z-index:20!important
+}
+#menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) .menu-hero{padding-top:48px!important}
+@media(max-width:420px){
+ #bpWalletClose,#tutorialClose,#bpLbTopClose,#bpArcadeClose{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;font-size:27px!important}
+ #menu.bp-menu-ready:has(#bpArcadeScreen:not([hidden])) #bpArcadeClose{top:16px!important;right:16px!important}
+}

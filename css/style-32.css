@@ -1,0 +1,13 @@
+
+/* Keep the main-menu artwork consistent across Arcade and Campaign screens. */
+#menu,
+#bpCampaignOverlay{
+ background-color:#080d29!important;
+ background-image:linear-gradient(180deg,rgba(5,8,28,.36),rgba(5,8,28,.66)),var(--block-party-bg)!important;
+ background-size:cover!important;
+ background-position:center center!important;
+ background-repeat:no-repeat!important;
+}
+#bpArcadeScreen{background:transparent!important}
+#bpArcadeScreen .menu-stage,#bpArcadeScreen .menu-launch{background:transparent!important}
+#bpCampaignOverlay .bp-campaign-shell{background:transparent}

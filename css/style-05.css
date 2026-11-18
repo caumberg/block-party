@@ -1,0 +1,10 @@
+
+#bpCampaignOverlay .bp-campaign-head h2{width:100%;min-width:0;flex:1}
+#bpCampaignOverlay .bp-circuit-nav{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;align-items:center;gap:5px;width:100%;max-width:510px;margin:0 auto}
+#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{min-width:0;text-align:center;font-size:clamp(21px,6.1vw,47px)}
+#bpCampaignOverlay .bp-circuit-nav button{appearance:none;border:0;background:none;box-shadow:none;display:flex;align-items:center;justify-content:center;padding:0;width:34px;height:46px;font-size:43px;font-weight:800;line-height:1;color:#f6e9ff;text-shadow:0 0 9px #c080ff;cursor:pointer}
+#bpCampaignOverlay .bp-circuit-nav button:disabled{opacity:.18;cursor:default}
+#bpCampaignOverlay .bp-circuit-nav button:not(:disabled):active{transform:scale(.9)}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="red"] .bp-circuit-nav button:not(:disabled){color:#ffc2cb;text-shadow:0 0 10px #ff395a}
+#bpCampaignOverlay .bp-campaign-card[data-circuit="purple"] .bp-circuit-nav button:not(:disabled){color:#ebc5ff;text-shadow:0 0 10px #b748ff}
+@media(max-width:410px){#bpCampaignOverlay .bp-circuit-nav{grid-template-columns:26px minmax(0,1fr) 26px;gap:2px}#bpCampaignOverlay .bp-circuit-nav button{width:26px;font-size:35px}#bpCampaignOverlay .bp-circuit-nav .bp-circuit-logo{font-size:clamp(18px,5.6vw,30px)}}
