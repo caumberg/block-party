@@ -111,7 +111,10 @@ jobs:
           for i,body in enumerate(parser.scripts):
             Path(f'/tmp/bp-android-script-{i}.js').write_text(body,encoding='utf-8')
           PY
-          for f in /tmp/bp-android-script-*.js; do node --check "$f"; done
+          for f in /tmp/bp-android-script-*.js; do
+            [ -f "$f" ] || continue
+            node --check "$f"
+          done
       - name: Install dependencies
         run: npm install --no-audit --no-fund
       - name: Create Android project
