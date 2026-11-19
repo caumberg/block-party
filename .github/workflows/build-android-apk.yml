@@ -3,7 +3,7 @@
 name: Build Block Party Android APK
 on:
   push:
-    branches: [main]
+    branches: [main, refactor/modular-structure]
     paths:
       - 'index.html'
       - 'css/**'
