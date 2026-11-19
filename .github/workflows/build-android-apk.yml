@@ -50,14 +50,18 @@ jobs:
             for f in js/*.js; do node --check "$f"; done
             node --test tests/modular-smoke.test.cjs tests/obstacle-stars.test.cjs
           fi
-          python3 scripts/fix-campaign-preview.py www/index.html
-          python3 scripts/compact-campaign-layout.py www/index.html
-          python3 scripts/rebuild-versus-timed-preview.py www/index.html
-          python3 scripts/normalize-campaign-previews.py www/index.html
-          python3 scripts/fix-android-gameplay-controls.py
-          python3 scripts/inject-android-idle-notifications.py
-          python3 scripts/inject-android-daily-notifications.py
-          python3 scripts/style-daily-reward.py
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            python3 scripts/fix-campaign-preview.py www/index.html
+            python3 scripts/compact-campaign-layout.py www/index.html
+            python3 scripts/rebuild-versus-timed-preview.py www/index.html
+            python3 scripts/normalize-campaign-previews.py www/index.html
+            python3 scripts/fix-android-gameplay-controls.py
+            python3 scripts/inject-android-idle-notifications.py
+            python3 scripts/inject-android-daily-notifications.py
+            python3 scripts/style-daily-reward.py
+          else
+            echo 'Modular branch: skipping legacy inline-HTML patch scripts.'
+          fi
           cp scripts/powerup-drag-to-field.js www/powerup-drag-to-field.js
           node --check www/powerup-drag-to-field.js
           python3 - <<'PY'
