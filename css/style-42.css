@@ -9,3 +9,31 @@
 .bp-perfection-gifts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.bp-perfection-gift{min-height:108px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 3px;border:1.5px solid #ac8cfb;border-radius:13px;background:linear-gradient(150deg,#5932a3,#2c215b);box-shadow:inset 0 1px 4px #fff4,0 0 7px #b16fff55;overflow:visible;color:#fff}
 .bp-perfection-gift .gift-icon{font-size:33px;line-height:1.1}.bp-perfection-gift .gift-name{font-size:11px;line-height:1.25;overflow-wrap:anywhere}.bp-perfection-gift.opened{background:linear-gradient(150deg,#204d66,#25245b);border-color:#76e4ff}.bp-perfection-gift:disabled{opacity:.48;cursor:default}.bp-perfection-gift.opened:disabled{opacity:1}
 .bp-perfection-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.bp-perfection-actions button{padding:11px 15px;background:#6543b3;border:1px solid #c3a4ff;border-radius:11px;font-weight:800}.bp-perfection-error{color:#ffb6bf!important;font-size:13px}
+
+/* Selected Campaign level only: expanded vertical spotlight card. */
+#bpCampaignOverlay .bp-campaign-level.selected{
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  gap:6px!important;min-height:96px!important;padding:10px 5px!important;text-align:center!important;
+  border:2px solid #f5b5ff!important;border-radius:15px!important;
+  background:linear-gradient(145deg,#a83de3,#7021c7 58%,#421579)!important;
+  box-shadow:inset 0 1px 5px #fff5,0 0 10px #e678ff99!important;
+}
+#bpCampaignOverlay .bp-campaign-level.selected .bp-level-number{
+  flex:0 0 auto!important;display:block!important;width:100%!important;padding:0!important;margin:0!important;
+  border:0!important;font-size:clamp(32px,7vw,45px)!important;line-height:1.05!important;text-align:center!important;
+}
+#bpCampaignOverlay .bp-campaign-level.selected .bp-level-copy{
+  flex:0 0 auto!important;width:100%!important;display:flex!important;flex-direction:column!important;
+  align-items:center!important;gap:5px!important;
+}
+#bpCampaignOverlay .bp-campaign-level.selected .bp-level-copy strong{
+  font-size:clamp(10px,2.8vw,14px)!important;line-height:1.1!important;color:#fff!important;
+  border:1.5px solid #f4b8ff;border-radius:999px;padding:4px 9px;
+  box-shadow:0 0 7px #e9a0ff99;
+}
+#bpCampaignOverlay .bp-campaign-level.selected .bp-level-stars{
+  display:flex!important;justify-content:center!important;gap:3px!important;margin:3px 0 0!important;
+}
+#bpCampaignOverlay .bp-campaign-level.selected .bp-star{
+  font-size:clamp(22px,5.5vw,32px)!important;line-height:1!important;
+}
