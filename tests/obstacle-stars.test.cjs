@@ -6,8 +6,8 @@ const source = fs.readFileSync(path.join(__dirname,'../js/script-04.js'),'utf8')
 const handler = source.match(/const left=Number\(e\.data\.remaining\)\|\|0;[^\n]+/);
 assert.ok(handler, 'Obstacle finish handler not found');
 const logic = handler[0];
-const compute = new Function('remaining','level','fourMatchMade', `
-  const e={data:{remaining,fourMatchMade}};
+const compute = new Function('remaining','level','matched', `
+  const e={data:{remaining,fourMatchMade:matched}};
   const l={n:level};
   ${logic}
   return {won,score:won?Math.max(1,1000-left):0};
