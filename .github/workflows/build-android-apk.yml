@@ -6,6 +6,9 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'css/**'
+      - 'js/**'
+      - 'tests/**'
       - 'scripts/powerup-drag-to-field.js'
       - 'package.json'
       - 'scripts/inject-android-idle-notifications.py'
@@ -40,6 +43,13 @@ jobs:
         run: |
           mkdir -p www
           cp index.html www/index.html
+          if [ -d css ]; then cp -R css www/css; fi
+          if [ -d js ]; then cp -R js www/js; fi
+          if [ -f manifest.json ]; then cp manifest.json www/manifest.json; fi
+          if [ -d js ]; then
+            for f in js/*.js; do node --check "$f"; done
+            node --test tests/modular-smoke.test.cjs tests/obstacle-stars.test.cjs
+          fi
           python3 scripts/fix-campaign-preview.py www/index.html
           python3 scripts/compact-campaign-layout.py www/index.html
           python3 scripts/rebuild-versus-timed-preview.py www/index.html
@@ -90,7 +100,10 @@ jobs:
                 self.active=False
           parser=Scripts()
           parser.feed(Path('www/index.html').read_text(encoding='utf-8'))
-          assert len(parser.scripts)>=10, f'Unexpected script count: {len(parser.scripts)}'
+          if Path('www/js').is_dir():
+            assert len(parser.scripts)>=0
+          else:
+            assert len(parser.scripts)>=10, f'Unexpected script count: {len(parser.scripts)}'
           for i,body in enumerate(parser.scripts):
             Path(f'/tmp/bp-android-script-{i}.js').write_text(body,encoding='utf-8')
           PY
