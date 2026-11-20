@@ -49,7 +49,7 @@ function renderQuick(){
  }
 }
 
-function sync(){const dest=$('arena').classList.contains('versus')?boards:header;if(bolt.parentElement!==dest)dest.appendChild(bolt);bolt.hidden=true;renderQuick()}new MutationObserver(()=>{sync();if(!$('arena').hidden&&$('arena').classList.contains('bp-campaign-power'))refresh().catch(()=>{})}).observe($('arena'),{attributes:true,attributeFilter:['class','hidden']});sync();window.addEventListener('resize',()=>{if(!$('arena').hidden)renderQuick()});
+function sync(){if(bolt?.isConnected)bolt.remove();renderQuick()}new MutationObserver(()=>{sync();if(!$('arena').hidden&&$('arena').classList.contains('bp-campaign-power'))refresh().catch(()=>{})}).observe($('arena'),{attributes:true,attributeFilter:['class','hidden']});sync();window.addEventListener('resize',()=>{if(!$('arena').hidden)renderQuick()});
 function valid(item,l){if(!l)return true;if(l.type==='obstacles')return false;if(item==='time_extension')return l.type==='solo-timed';if(['special_block_magnet' ,'garbage_shield','attack_amplifier'].includes(item))return l.type==='versus';return true}
 async function refresh(){
  if(window.bpDevActive){
@@ -130,7 +130,7 @@ let bpDevTimers={};
 function bpDevAnimation(id){const item=items.find(i=>i[0]===id);if(!item)return;const fx=document.createElement('div');fx.className='bp-dev-power-fx';fx.textContent=item[1]+' '+item[2];document.body.appendChild(fx);setTimeout(()=>fx.remove(),1500);
  const seconds={double_points:20,power_pause:20,super_multiplier:20,special_block_generator:20,garbage_shield:30,block_lock:20,deep_freeze:15,blindfold:10}[id];if(seconds){bpDevTimers[id]=Date.now()+seconds*1000;const timer=document.getElementById('bpDevTimer')||Object.assign(document.createElement('div'),{id:'bpDevTimer',className:'bp-dev-timer'});document.body.appendChild(timer);}}
 setInterval(()=>{const timer=document.getElementById('bpDevTimer');if(!timer)return;if($('arena').hidden){timer.remove();bpDevTimers={};return;}const active=Object.entries(bpDevTimers).filter(([id,until])=>until>Date.now());bpDevTimers=Object.fromEntries(active);timer.textContent=active.map(([id,until])=>names[id]+': '+Math.ceil((until-Date.now())/1000)+'s').join(' · ');if(!active.length)timer.remove()},250);
-bolt.onclick=openGame;window.bpPowerRefreshQuick=async()=>{try{await refresh()}catch(e){quickNotice('Power-ups unavailable')}};$('bpPowerClose').onclick=()=>close(false);$('bpPowerDone').onclick=()=>close(phase==='equip');$('bpPowerStore').onclick=()=>{close(false);window.bpOpenTicketStore?.()};overlay.addEventListener('click',e=>{if(e.target===overlay)close(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)close(false)});new MutationObserver(()=>{
+window.bpPowerRefreshQuick=async()=>{try{await refresh()}catch(e){quickNotice('Power-ups unavailable')}};$('bpPowerClose').onclick=()=>close(false);$('bpPowerDone').onclick=()=>close(phase==='equip');$('bpPowerStore').onclick=()=>{close(false);window.bpOpenTicketStore?.()};overlay.addEventListener('click',e=>{if(e.target===overlay)close(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)close(false)});new MutationObserver(()=>{
  if($('arena').hidden&&phase==='game'&&!overlay.hidden)close(false);
  if(!$('arena').hidden){refresh().then(render).catch(console.warn)}
 }).observe($('arena'),{attributes:true,attributeFilter:['hidden']});
