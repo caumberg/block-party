@@ -152,7 +152,7 @@ function layoutGame(){
  // Reserve the ENTIRE control height, top header, and margins before sizing the board.
  const reserve=top+padHeight+104; // Solo: reserve a dedicated horizontal power-up row below the playfield
  const available=Math.max(220,vh-reserve);
- const boardWidth=Math.max(105,Math.min(335,Math.floor(vw-2*(side+8)),Math.floor((available-14)/2)));
+ const boardWidth=Math.max(105,Math.min(310,Math.floor(vw-2*(side+8)),Math.floor((available-14)/2)));
  const boardHeight=boardWidth*2+12; // extra room for the frame's glow/border
  arena.style.setProperty('--solo-board-width',boardWidth+'px');
  arena.style.setProperty('--solo-board-height',boardHeight+'px');
@@ -602,6 +602,7 @@ function showVictory(winner){
   ?('You: '+scores.human.toLocaleString()+' points · Computer: '+scores.cpu.toLocaleString()+' points'+(winner==='tie'?' · Tied scores!':''))
   :(winner==='tie'?'Both players survived the round.':winner==='human'?'You outlasted the computer!':'The computer survived longer this time.');
  updateVictoryDiag();
+ $('message').textContent='';
  $('victoryDialog').hidden=false;
 }
 let bpMilestoneTimer=null;
@@ -670,6 +671,9 @@ $('victoryNext').onclick=()=>{
 };
 $('victoryAgain').onclick=()=>{hideVictory();if(bpCampaignSettings||bpCampaignResultLevel!==null){const n=bpCampaignResultLevel;hideVictory();$('back').click();if(n!=null)window.bpCampaignStartLevel?.(n);return;}if($('play').value==='versus'||$('play').value==='solo'&&$('diff').value==='super-easy')start();else promptPlayerName()};
 $('victoryMenu').onclick=()=>{hideVictory();$('back').click()};
+// Keep the result dialog above the D-pad, regardless of arena stacking contexts.
+const bpResultDialog=$('victoryDialog');
+if(bpResultDialog&&bpResultDialog.parentElement!==document.body)document.body.appendChild(bpResultDialog);
 function finishSolo(message,finalScore){
  bpResetCampaignResult();
  if(!started)return;
@@ -684,6 +688,7 @@ function finishSolo(message,finalScore){
    :timed?'Time is up! Final score: '+score.toLocaleString()+'.'
    :'Final score: '+score.toLocaleString()+'. Try to beat it!';
  updateVictoryDiag();
+ $('message').textContent='';
  $('victoryDialog').hidden=false;
  if(bpCampaignSettings)window.bpCampaignOnResult?.({won:completed||timed&&score>=bpCampaignSettings.target,score,elapsedMs:performance.now()-bpSoloStartedAt});
  if(!bpCampaignSettings&&!window.bpPowerSession?.assisted&&(settings.mode!=='line'||completed))submitCompletedScore(score,settings.mode==='line'?performance.now()-bpSoloStartedAt:null);
