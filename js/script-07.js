@@ -37,7 +37,7 @@ function renderQuick(){
  dock.hidden=!dock.childElementCount;
  // Solo: center the quick-use row beneath the board, not beside it.
  if(!$('arena').classList.contains('versus')){
-  const field=$('humanZone').getBoundingClientRect();
+  const field=$('human').getBoundingClientRect();
   dock.style.position='fixed';
   dock.style.left=(field.left+field.width/2)+'px';
   dock.style.top=Math.max(0,field.bottom+8)+'px';
