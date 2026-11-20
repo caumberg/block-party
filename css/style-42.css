@@ -133,3 +133,25 @@
   overflow-y:auto!important;
 }
 #victoryDialog .victoryCard{max-height:calc(100dvh - 40px);overflow-y:auto}
+
+/* Solo board sizing: enforce the JS-calculated 6x12 frame dimensions.
+   Earlier styles used viewport-height clamps that could override the intended size. */
+#arena.solo #boards #humanZone{
+  width:var(--solo-board-width,290px)!important;
+  flex:0 0 var(--solo-board-width,290px)!important;
+  min-width:0!important;
+  height:var(--solo-board-height,592px)!important;
+  max-height:var(--solo-board-height,592px)!important;
+  overflow:visible!important;
+}
+#arena.solo #boards #humanZone #human{
+  display:block!important;
+  width:100%!important;
+  height:var(--solo-board-height,592px)!important;
+  min-height:0!important;
+  max-height:var(--solo-board-height,592px)!important;
+  aspect-ratio:auto!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+#arena.solo #boards{align-items:flex-start!important}
