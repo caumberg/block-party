@@ -1362,7 +1362,29 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(340px,46vh,460px)!important;flex-shrink:0!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(300px,43vh,400px)!important}}
 </style>`;
-   approved.srcdoc=approvedKey==='obstacles'?previewHtml:previewHtml.replace('</head>',compactCss+'</head');
+   // Versus Timed: restore the approved tall two-board cinematic, not just
+   // a taller iframe around the original wide/short canvas.
+   let fittedHtml=previewHtml;
+   let fittedCss=compactCss;
+   if(approvedKey==='versus-timed'){
+    fittedHtml=fittedHtml
+     .replace('width="660" height="480"','width="660" height="620"')
+     .replace('const W=660,H=480,C=6,R=12,S=35,LEFT=43,RIGHT=393,Y=16',
+              'const W=660,H=620,C=6,R=12,S=43,LEFT=28,RIGHT=374,Y=18');
+    fittedCss+=`<style id="bp-campaign-tall-versus-timed">
+html,body{height:100%!important;overflow:hidden!important}
+body{position:relative!important}
+.shell{position:relative!important;display:flex!important;flex-direction:column!important}
+.arena{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;gap:0!important;padding:2px 5px!important}
+.labels{width:100%!important;margin:0 0 6px!important;flex:0 0 auto!important}
+.wrap{width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:660/620!important;flex:1 1 auto!important;margin:0 auto!important}
+canvas{width:100%!important;height:100%!important;object-fit:contain!important}
+.scores{display:grid!important;flex:0 0 auto!important;margin:4px 0 0!important;gap:8px!important;font-size:13px!important}
+.clock{display:block!important;position:absolute!important;top:56px!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;margin:0!important;padding:5px 9px!important;border:1px solid #7197d9!important;border-radius:10px!important;background:#132447e8!important;font-size:18px!important;line-height:1.1!important;white-space:nowrap!important}
+.clock small{font-size:9px!important}
+</style>`;
+   }
+   approved.srcdoc=approvedKey==='obstacles'?fittedHtml:fittedHtml.replace('</head>',fittedCss+'</head');
    scene.replaceChildren(sceneTop,approved);
   }
  }
