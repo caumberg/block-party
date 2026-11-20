@@ -1,20 +1,34 @@
-
-/* Center the existing complete level content as one group, without changing preview internals. */
-#bpCampaignOverlay .bp-campaign-right #bpCampaignDetail {
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:safe center!important;
-  align-items:stretch!important;
+/* Restore the approved tall Campaign detail composition.
+   The old auto margins centered a short preview in the middle of the panel,
+   leaving a large empty band above it. */
+#bpCampaignOverlay .bp-campaign-right #bpCampaignDetail{
+ display:flex!important;
+ flex-direction:column!important;
+ justify-content:flex-start!important;
+ align-items:stretch!important;
+ gap:8px!important;
 }
-#bpCampaignOverlay #bpCampaignDetail > :first-child {
-  margin-top:auto!important;
+#bpCampaignOverlay #bpCampaignDetail > :first-child{margin-top:0!important}
+#bpCampaignOverlay #bpCampaignDetail > :last-child{margin-bottom:0!important}
+#bpCampaignOverlay #bpCampaignDetail > button{
+ position:relative!important;
+ bottom:auto!important;
+ margin-top:8px!important;
+ flex-shrink:0!important;
 }
-#bpCampaignOverlay #bpCampaignDetail > :last-child {
-  margin-bottom:auto!important;
+/* The approved animation is an embedded preview: give its viewport the
+   vertical room used by the original tall Campaign layout. */
+#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{
+ display:block!important;
+ width:100%!important;
+ height:clamp(380px,43dvh,510px)!important;
+ max-height:none!important;
+ flex:0 0 auto!important;
 }
-/* The play action participates in the centered stack rather than sticking to its edge. */
-#bpCampaignOverlay #bpCampaignDetail > button {
-  position:relative!important;
-  bottom:auto!important;
-  margin-top:3px!important;
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){
+ flex:0 0 auto!important;
+ min-height:0!important;
+}
+@media(max-height:720px){
+ #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(300px,40dvh,390px)!important}
 }
