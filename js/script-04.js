@@ -153,7 +153,9 @@ function layoutGame(){
  // The Solo board must be resized as a whole, not cropped at its bottom.
  const versusAvailable=Math.max(250,vh-top-padHeight-54);
  const versusZoneWidth=Math.max(105,Math.min((Math.min(vw,760)-28)/2,(versusAvailable-26)/2));
- const boardHeight=Math.floor(versusZoneWidth*2+5);
+ // Give Solo 30px more height than the Versus-sized baseline, scaling width
+ // proportionally so the complete 6x12 grid remains visible.
+ const boardHeight=Math.floor(versusZoneWidth*2+5)+30;
  const boardWidth=Math.floor((boardHeight-5)/2);
  arena.style.setProperty('--solo-board-width',boardWidth+'px');
  arena.style.setProperty('--solo-board-height',boardHeight+'px');
