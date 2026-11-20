@@ -95,3 +95,25 @@
 }
 #arena.versus #boards #bpPowerQuickDock .bp-power-quick-symbol{font-size:clamp(17px,5vw,26px)!important}
 #arena.versus #boards #bpPowerQuickDock .bp-power-quick-count{font-size:clamp(9px,2.7vw,12px)!important}
+
+/* Solo quick-use dock: a centered horizontal row below the board. */
+#arena.solo #bpPowerQuickDock{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:clamp(4px,1.8vw,10px)!important;
+  padding:3px 5px!important;
+  max-width:calc(100vw - 20px)!important;
+  box-sizing:border-box!important;
+}
+#arena.solo #bpPowerQuickDock[hidden]{display:none!important}
+#arena.solo #bpPowerQuickDock .bp-power-quick{
+  flex:0 0 auto!important;
+  width:clamp(35px,9.5vw,60px)!important;
+  height:clamp(35px,9.5vw,60px)!important;
+  min-width:0!important;
+}
+#arena.solo #bpPowerQuickDock .bp-power-quick-symbol{font-size:clamp(17px,5vw,26px)!important}
+#arena.solo #bpPowerQuickDock .bp-power-quick-count{font-size:clamp(9px,2.7vw,12px)!important}
