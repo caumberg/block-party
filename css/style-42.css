@@ -70,7 +70,7 @@
 #arena.versus #boards #bpPowerQuickDock{
   position:absolute!important;
   top:auto!important;
-  bottom:-70px!important;
+  bottom:-48px!important;
   left:50%!important;
   right:auto!important;
   transform:translateX(-50%)!important;
@@ -89,8 +89,8 @@
 #arena.versus #boards #bpPowerQuickDock[hidden]{display:none!important}
 #arena.versus #boards #bpPowerQuickDock .bp-power-quick{
   flex:0 0 auto!important;
-  width:clamp(37px,10.5vw,66px)!important;
-  height:clamp(37px,10.5vw,66px)!important;
+  width:clamp(35px,9.5vw,60px)!important;
+  height:clamp(35px,9.5vw,60px)!important;
   min-width:0!important;
 }
 #arena.versus #boards #bpPowerQuickDock .bp-power-quick-symbol{font-size:clamp(17px,5vw,26px)!important}
