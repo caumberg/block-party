@@ -35,14 +35,15 @@ function renderQuick(){
   b.append(symbol,count);b.onclick=()=>use(id);dock.appendChild(b);
  }
  dock.hidden=!dock.childElementCount;
- // Solo: use the former leaderboard column for the equipped power-up buttons.
+ // Solo: center the quick-use row beneath the board, not beside it.
  if(!$('arena').classList.contains('versus')){
   const field=$('humanZone').getBoundingClientRect();
-  const available=Math.max(48,window.innerWidth-field.right-5);
-  const width=Math.min(112,available);
-  dock.style.position='fixed';dock.style.left=(field.right+3)+'px';
-  dock.style.top=Math.max(0,field.top)+'px';dock.style.width=width+'px';
-  dock.style.transform='none';dock.style.maxHeight=Math.max(120,field.height)+'px';
+  dock.style.position='fixed';
+  dock.style.left=(field.left+field.width/2)+'px';
+  dock.style.top=Math.max(0,field.bottom+8)+'px';
+  dock.style.width='max-content';
+  dock.style.transform='translateX(-50%)';
+  dock.style.maxHeight='none';
  }else{
   for(const key of ['position','left','top','width','transform','maxHeight'])dock.style[key]='';
  }
