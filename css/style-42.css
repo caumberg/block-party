@@ -155,3 +155,31 @@
   overflow:hidden!important;
 }
 #arena.solo #boards{align-items:flex-start!important}
+
+/* Versus Timed campaign: fit the cinematic to its content, without a dead
+   empty lower half. Only this preview type is affected. */
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-versus-timed-preview){
+  flex:0 0 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+#bpCampaignOverlay #bpCampaignDetail .bp-versus-timed-preview{
+  flex:0 0 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow:visible!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+#bpCampaignOverlay #bpCampaignDetail .bp-versus-timed-preview .bp-approved-preview{
+  display:block!important;
+  height:clamp(380px,52vh,480px)!important;
+  flex:0 0 auto!important;
+  overflow:hidden!important;
+}
+@media(max-height:800px){
+  #bpCampaignOverlay #bpCampaignDetail .bp-versus-timed-preview .bp-approved-preview{
+    height:clamp(330px,48vh,425px)!important;
+  }
+}
