@@ -117,3 +117,6 @@
 }
 #arena.solo #bpPowerQuickDock .bp-power-quick-symbol{font-size:clamp(17px,5vw,26px)!important}
 #arena.solo #bpPowerQuickDock .bp-power-quick-count{font-size:clamp(9px,2.7vw,12px)!important}
+
+/* Retired lightning-bolt menu must never appear in any game mode. */
+#bpPowerBolt{display:none!important;visibility:hidden!important;pointer-events:none!important}
