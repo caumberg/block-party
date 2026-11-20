@@ -149,11 +149,12 @@ function layoutGame(){
    return;
  }
  const side=Math.max(78,Math.min(108,Math.round(vw*.22)));
- // Reserve the ENTIRE control height, top header, and margins before sizing the board.
- const reserve=top+padHeight+104; // Solo: reserve a dedicated horizontal power-up row below the playfield
- const available=Math.max(220,vh-reserve);
- const boardWidth=Math.max(105,Math.min(290,Math.floor(vw-2*(side+8)),Math.floor((available-14)/2)));
- const boardHeight=boardWidth*2+12; // extra room for the frame's glow/border
+ // Match the Versus iframe height exactly, using the SAME calculation.
+ // The Solo board must be resized as a whole, not cropped at its bottom.
+ const versusAvailable=Math.max(250,vh-top-padHeight-54);
+ const versusZoneWidth=Math.max(105,Math.min((Math.min(vw,760)-28)/2,(versusAvailable-26)/2));
+ const boardHeight=Math.floor(versusZoneWidth*2+5);
+ const boardWidth=Math.floor((boardHeight-5)/2);
  arena.style.setProperty('--solo-board-width',boardWidth+'px');
  arena.style.setProperty('--solo-board-height',boardHeight+'px');
  // Force the actual Solo frame and iframe to use the same dimensions.
