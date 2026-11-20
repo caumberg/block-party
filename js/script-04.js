@@ -152,7 +152,7 @@ function layoutGame(){
  // Reserve the ENTIRE control height, top header, and margins before sizing the board.
  const reserve=top+padHeight+104; // Solo: reserve a dedicated horizontal power-up row below the playfield
  const available=Math.max(220,vh-reserve);
- const boardWidth=Math.max(105,Math.min(360,Math.floor(vw-2*(side+8)),Math.floor((available-14)/2)));
+ const boardWidth=Math.max(105,Math.min(335,Math.floor(vw-2*(side+8)),Math.floor((available-14)/2)));
  const boardHeight=boardWidth*2+12; // extra room for the frame's glow/border
  arena.style.setProperty('--solo-board-width',boardWidth+'px');
  arena.style.setProperty('--solo-board-height',boardHeight+'px');
