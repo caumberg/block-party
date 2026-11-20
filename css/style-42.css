@@ -64,3 +64,34 @@
 @media(prefers-reduced-motion:reduce){
   #bpDailyStrip .bp-day-tile.ready .bp-day-icon{animation:none!important}
 }
+
+/* Restore the Versus quick-use power-ups to one row beneath both boards.
+   style-27 positioned the dock as a vertical column over the board divider. */
+#arena.versus #boards #bpPowerQuickDock{
+  position:absolute!important;
+  top:auto!important;
+  bottom:-88px!important;
+  left:50%!important;
+  right:auto!important;
+  transform:translateX(-50%)!important;
+  width:max-content!important;
+  max-width:calc(100vw - 24px)!important;
+  max-height:none!important;
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:clamp(4px,1.8vw,10px)!important;
+  padding:9px 5px!important;
+  box-sizing:border-box!important;
+}
+#arena.versus #boards #bpPowerQuickDock[hidden]{display:none!important}
+#arena.versus #boards #bpPowerQuickDock .bp-power-quick{
+  flex:0 0 auto!important;
+  width:clamp(37px,10.5vw,66px)!important;
+  height:clamp(37px,10.5vw,66px)!important;
+  min-width:0!important;
+}
+#arena.versus #boards #bpPowerQuickDock .bp-power-quick-symbol{font-size:clamp(17px,5vw,26px)!important}
+#arena.versus #boards #bpPowerQuickDock .bp-power-quick-count{font-size:clamp(9px,2.7vw,12px)!important}
