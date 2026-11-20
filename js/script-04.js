@@ -1367,10 +1367,11 @@ canvas{width:100%!important;height:100%!important;display:block!important}
    let fittedHtml=previewHtml;
    let fittedCss=compactCss;
    if(approvedKey==='versus-timed'){
+    scene.classList.add('bp-versus-timed-preview');
     fittedHtml=fittedHtml
-     .replace('width="660" height="480"','width="660" height="620"')
+     .replace('width="660" height="480"','width="660" height="700"')
      .replace('const W=660,H=480,C=6,R=12,S=35,LEFT=43,RIGHT=393,Y=16',
-              'const W=660,H=620,C=6,R=12,S=43,LEFT=28,RIGHT=374,Y=18');
+              'const W=660,H=700,C=6,R=12,S=48,LEFT=17,RIGHT=355,Y=22');
     fittedCss+=`<style id="bp-campaign-tall-versus-timed">
 html,body{height:100%!important;overflow:hidden!important}
 body{position:relative!important}
@@ -1379,10 +1380,10 @@ body{position:relative!important}
 .labels{width:100%!important;margin:0 0 6px!important;flex:0 0 auto!important}
 /* The prototype footer was leaking into the campaign animation. */
 .footer,.note,.status,.eyebrow,.title{display:none!important}
-.wrap{width:100%!important;height:auto!important;min-height:0!important;max-height:calc(100% - 57px)!important;aspect-ratio:660/620!important;flex:0 1 auto!important;margin:0 auto!important;overflow:visible!important}
+.wrap{width:100%!important;height:auto!important;min-height:0!important;max-height:calc(100% - 57px)!important;aspect-ratio:660/700!important;flex:0 1 auto!important;margin:0 auto!important;overflow:visible!important}
 canvas{width:100%!important;height:100%!important;object-fit:contain!important}
 .scores{display:grid!important;flex:0 0 auto!important;width:100%!important;margin:2px 0 0!important;gap:8px!important;font-size:13px!important;line-height:1.2!important}
-.clock{display:block!important;position:absolute!important;top:68px!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;margin:0!important;padding:5px 9px!important;border:1px solid #7197d9!important;border-radius:10px!important;background:#132447e8!important;font-size:18px!important;line-height:1.1!important;white-space:nowrap!important}
+.clock{display:block!important;position:absolute!important;top:42px!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;margin:0!important;padding:5px 9px!important;border:1px solid #7197d9!important;border-radius:10px!important;background:#132447e8!important;font-size:18px!important;line-height:1.1!important;white-space:nowrap!important}
 .clock small{font-size:9px!important}
 </style>`;
    }
