@@ -37,3 +37,30 @@
 #bpCampaignOverlay .bp-campaign-level.selected .bp-star{
   font-size:clamp(22px,5.5vw,32px)!important;line-height:1!important;
 }
+
+/* Daily Rewards: restore the gold, animated gift for a claim-ready day only. */
+#bpDailyStrip .bp-day-tile.ready{
+  background:linear-gradient(145deg,#fff2a5 0%,#f5bf3d 32%,#c98212 72%,#7c410b 100%)!important;
+  border:2px solid #ffe990!important;
+  color:#442408!important;
+  box-shadow:inset 0 2px 10px #fff7,0 0 18px #ffc63d99,0 0 30px #ffb52a55!important;
+}
+#bpDailyStrip .bp-day-tile.ready .bp-day-number,
+#bpDailyStrip .bp-day-tile.ready .bp-day-amount,
+#bpDailyStrip .bp-day-tile.ready .bp-day-state{
+  color:#442408!important;text-shadow:0 1px 1px #fff9!important;font-weight:900!important;
+}
+#bpDailyStrip .bp-day-tile.ready .bp-day-icon{
+  display:inline-block!important;transform-origin:center bottom;
+  animation:bpDailyReadyGiftBounce 1.15s ease-in-out infinite!important;
+  filter:drop-shadow(0 5px 4px #6b3d2780);
+}
+@keyframes bpDailyReadyGiftBounce{
+  0%,100%{transform:translateY(0) scale(1)}
+  38%{transform:translateY(-13px) scale(1.08)}
+  60%{transform:translateY(0) scale(.96,1.04)}
+  75%{transform:translateY(-4px) scale(1.02)}
+}
+@media(prefers-reduced-motion:reduce){
+  #bpDailyStrip .bp-day-tile.ready .bp-day-icon{animation:none!important}
+}
