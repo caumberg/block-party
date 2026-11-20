@@ -32,7 +32,39 @@ function renderQuick(){
   const b=document.createElement('button');b.type='button';b.className='bp-power-quick';b.title=name+' · '+qty+' available';b.setAttribute('aria-label','Use '+name+', '+qty+' available');b.disabled=busy;
   const symbol=document.createElement('span');symbol.className='bp-power-quick-symbol';symbol.textContent=emoji;
   const count=document.createElement('span');count.className='bp-power-quick-count';count.textContent='×'+qty;
-  b.append(symbol,count);b.onclick=()=>use(id);dock.appendChild(b);
+  b.append(symbol,count);
+  // Deliberate drag-and-drop activation: tapping alone never consumes a power-up.
+  b.style.touchAction='none';
+  b.addEventListener('pointerdown',e=>{
+   if(busy||e.button>0)return;
+   e.preventDefault();
+   const startX=e.clientX,startY=e.clientY;
+   let moved=false;
+   const ghost=b.cloneNode(true);
+   ghost.style.cssText='position:fixed;z-index:100001;pointer-events:none;opacity:.88;transform:translate(-50%,-50%);width:'+b.offsetWidth+'px;height:'+b.offsetHeight+'px;left:'+startX+'px;top:'+startY+'px;filter:drop-shadow(0 0 12px #c88aff)';
+   document.body.appendChild(ghost);
+   const move=ev=>{
+    if(ev.pointerId!==e.pointerId)return;
+    if(Math.hypot(ev.clientX-startX,ev.clientY-startY)>12)moved=true;
+    ghost.style.left=ev.clientX+'px';ghost.style.top=ev.clientY+'px';
+   };
+   const end=ev=>{
+    if(ev.pointerId!==e.pointerId)return;
+    window.removeEventListener('pointermove',move);
+    window.removeEventListener('pointerup',end);
+    window.removeEventListener('pointercancel',cancel);
+    ghost.remove();
+    if(!moved||ev.type!=='pointerup')return;
+    const targets=[$('human'),$('computer')].filter(el=>el&&el.getClientRects().length);
+    const inside=targets.some(el=>{const r=el.getBoundingClientRect();return ev.clientX>=r.left&&ev.clientX<=r.right&&ev.clientY>=r.top&&ev.clientY<=r.bottom});
+    if(inside)use(id);
+   };
+   const cancel=ev=>{if(ev.pointerId===e.pointerId)end(ev)};
+   window.addEventListener('pointermove',move);
+   window.addEventListener('pointerup',end);
+   window.addEventListener('pointercancel',cancel);
+  });
+  dock.appendChild(b);
  }
  dock.hidden=!dock.childElementCount;
  // Solo: center the quick-use row beneath the board, not beside it.
