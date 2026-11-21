@@ -156,8 +156,23 @@
 }
 #arena.solo #boards{align-items:flex-start!important}
 
-/* Versus Timed preview: the class is on .bp-cinematic itself.
-   Keep the card compact and reserve space for its actual animation only. */
+/* Versus Timed campaign preview: stopwatch-centered 620px canvas.
+   No artificial stretching below the scores, and no inherited iframe height. */
+#bpCampaignOverlay #bpCampaignDetail:has(.bp-versus-timed-preview){
+  flex:0 0 auto!important;
+  height:auto!important;
+  min-height:0!important;
+  align-self:stretch!important;
+  justify-content:flex-start!important;
+  overflow:visible!important;
+}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-body:has(.bp-versus-timed-preview){
+  flex:0 0 auto!important;
+  height:auto!important;
+  min-height:0!important;
+  justify-content:flex-start!important;
+  gap:5px!important;
+}
 #bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview{
   display:flex!important;
   flex-direction:column!important;
@@ -165,24 +180,20 @@
   height:auto!important;
   min-height:0!important;
   overflow:visible!important;
+  padding-bottom:3px!important;
 }
 #bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{
   display:block!important;
   width:100%!important;
-  height:clamp(340px,43vh,410px)!important;
+  height:clamp(340px,43vh,390px)!important;
   min-height:0!important;
+  max-height:none!important;
   flex:0 0 auto!important;
   border:0!important;
   overflow:hidden!important;
 }
-#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-body:has(.bp-versus-timed-preview){
-  flex:0 0 auto!important;
-  min-height:0!important;
-  height:auto!important;
-  justify-content:flex-start!important;
-}
 @media(max-height:800px){
   #bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{
-    height:clamp(315px,42vh,385px)!important;
+    height:clamp(320px,42vh,370px)!important;
   }
 }
