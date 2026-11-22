@@ -1271,7 +1271,7 @@ body.bp-developer-active::after{content:"DEVELOPER MODE · TEST DATA";position:f
  <div class="bp-dev-uid" id="bpDeveloperUserId">Loading…</div><div class="bp-dev-actions"><button type="button" id="bpDeveloperCopyId">Copy User ID</button><button type="button" id="bpDeveloperClose">Close</button></div>
  <div class="bp-dev-actions"><button type="button" id="bpDeveloperEnter">Verify & Enter Developer Mode</button><button type="button" id="bpDeveloperExit" hidden>Exit Developer Mode</button></div>
  <p class="bp-dev-note" id="bpDeveloperStatus">Sign in with your existing anonymous Block Party session to verify developer access.</p>
- </div></div><div class="bp-version" aria-label="Game version">v2.4.108 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
+ </div></div><div class="bp-version" aria-label="Game version">v2.4.110 <button type="button" id="bpDeveloperModeOpen" class="bp-dev-link">Enter Developer Mode</button></div><div class="bp-menu-links"><button type="button" id="bpLeaderboardOpen">🏆 &nbsp; LEADERBOARDS</button><button type="button" id="tutorialOpen">ⓘ &nbsp; HOW TO PLAY</button><button type="button" id="bpWalletOpen">🪙 <span id="bpWalletMenuBalance">100</span><span id="bpIdleBadge" class="bp-idle-badge" hidden>!</span></button></div></div>
 </div></div>
 
 
@@ -4126,4 +4126,17 @@ window.bpCircuitPerfectionRefresh=()=>refresh(true);
 })();
 </script>
 
+<style id="bp-campaign-compact-v24110">
+#bpCampaignOverlay .bp-campaign-card{height:auto!important;max-height:calc(100dvh - 20px)!important;min-height:0!important;overflow:hidden!important}
+#bpCampaignOverlay .bp-campaign-workspace{flex:0 1 auto!important;height:auto!important;min-height:0!important;align-items:stretch!important;overflow:hidden!important}
+#bpCampaignOverlay .bp-campaign-rail,#bpCampaignOverlay .bp-campaign-right{height:auto!important;min-height:0!important;max-height:100%!important}
+#bpCampaignOverlay #bpCampaignGrid{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important}
+#bpCampaignOverlay #bpCampaignDetail{flex:0 1 auto!important;height:auto!important;min-height:0!important;overflow-y:auto!important;justify-content:flex-start!important;gap:5px!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){flex:0 0 auto!important;min-height:0!important;height:auto!important;overflow:visible!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{display:block!important;width:100%!important;height:clamp(225px,30dvh,300px)!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;margin:0!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:clamp(260px,34dvh,320px)!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-body,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-objectives{flex:0 0 auto!important;min-height:0!important;margin:0!important}
+#bpCampaignOverlay #bpCampaignDetail > button{position:relative!important;bottom:auto!important;margin:4px 0 0!important;flex-shrink:0!important}
+@media(max-height:720px){#bpCampaignOverlay .bp-campaign-card{max-height:calc(100dvh - 12px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:clamp(190px,31dvh,255px)!important}}
+</style>
 </html>
