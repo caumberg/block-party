@@ -14,8 +14,8 @@ test('all 13 scripts are referenced and exist', () => {
  assert.equal(scripts.length, 13);
  for (const file of scripts) assert.ok(fs.existsSync(path.join(root, file)), file);
 });
-test('all 42 stylesheets are referenced and exist', () => {
- assert.equal(styles.length, 42);
+test('all 43 stylesheets are referenced and exist', () => {
+ assert.equal(styles.length, 43);
  for (const file of styles) assert.ok(fs.existsSync(path.join(root, file)), file);
 });
 test('Level 150 does not require a four-block match', () => {
