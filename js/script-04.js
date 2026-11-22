@@ -1386,8 +1386,8 @@ body{position:relative!important}
 .wrap{width:100%!important;height:auto!important;min-height:0!important;max-height:calc(100% - 33px)!important;aspect-ratio:660/620!important;flex:0 1 auto!important;margin:0 auto!important;overflow:visible!important}
 canvas{width:100%!important;height:100%!important;object-fit:contain!important}
 .scores{display:grid!important;flex:0 0 auto!important;width:100%!important;margin:0!important;gap:8px!important;font-size:13px!important;line-height:1.2!important}
-.clock{display:block!important;position:absolute!important;top:42px!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;margin:0!important;padding:5px 9px!important;border:1px solid #7197d9!important;border-radius:10px!important;background:#132447e8!important;font-size:18px!important;line-height:1.1!important;white-space:nowrap!important}
-.clock small{font-size:9px!important}
+.clock{display:block!important;position:absolute!important;top:49px!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;margin:0!important;padding:4px 8px!important;border:1px solid #7197d9!important;border-radius:9px!important;background:#132447e8!important;font-size:15.3px!important;line-height:1.1!important;white-space:nowrap!important}
+.clock small{font-size:7.65px!important}
 </style>`;
    }
    // Campaign embeds are display-only: hide the prototype replay controls and
