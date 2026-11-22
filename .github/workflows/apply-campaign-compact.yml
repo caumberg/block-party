@@ -1,0 +1,47 @@
+name: Apply Campaign compact layout
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-campaign-compact.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Patch game layout
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          if 'bp-campaign-compact-v24110' in s:
+              print('Already applied')
+              exit()
+          assert 'v2.4.108 <button' in s
+          s = s.replace('v2.4.108 <button', 'v2.4.110 <button', 1)
+          css = """<style id="bp-campaign-compact-v24110">
+          #bpCampaignOverlay .bp-campaign-card{height:auto!important;max-height:calc(100dvh - 20px)!important;min-height:0!important;overflow:hidden!important}
+          #bpCampaignOverlay .bp-campaign-workspace{flex:0 1 auto!important;height:auto!important;min-height:0!important;align-items:stretch!important;overflow:hidden!important}
+          #bpCampaignOverlay .bp-campaign-rail,#bpCampaignOverlay .bp-campaign-right{height:auto!important;min-height:0!important;max-height:100%!important}
+          #bpCampaignOverlay #bpCampaignGrid{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important}
+          #bpCampaignOverlay #bpCampaignDetail{flex:0 1 auto!important;height:auto!important;min-height:0!important;overflow-y:auto!important;justify-content:flex-start!important;gap:5px!important}
+          #bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){flex:0 0 auto!important;min-height:0!important;height:auto!important;overflow:visible!important}
+          #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{display:block!important;width:100%!important;height:clamp(225px,30dvh,300px)!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;margin:0!important}
+          #bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:clamp(260px,34dvh,320px)!important}
+          #bpCampaignOverlay #bpCampaignDetail .bp-cinematic-body,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-objectives{flex:0 0 auto!important;min-height:0!important;margin:0!important}
+          #bpCampaignOverlay #bpCampaignDetail > button{position:relative!important;bottom:auto!important;margin:4px 0 0!important;flex-shrink:0!important}
+          @media(max-height:720px){#bpCampaignOverlay .bp-campaign-card{max-height:calc(100dvh - 12px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:clamp(190px,31dvh,255px)!important}}
+          </style>"""
+          assert '</html>' in s
+          s = s.replace('</html>', css + '\n</html>', 1)
+          p.write_text(s)
+      - name: Commit game update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "Compact Campaign previews and modal v2.4.110" && git push)
