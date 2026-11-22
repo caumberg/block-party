@@ -1374,7 +1374,7 @@ canvas{width:100%!important;height:100%!important;display:block!important}
               'const W=660,H=620,C=6,R=12,S=48,LEFT=17,RIGHT=355,Y=18')
      // The original stopwatch center was fixed at +105 for 35px tiles.
      // Center it over the new 288px-wide board instead of leaving it left-aligned.
-     .replace('const cx=x+105,cy=Y+118,rad=83','const cx=x+(C*S)/2,cy=Y+116,rad=76');
+     .replace('stopwatch(x,elapsed);',''); // Hide background stopwatch graphics only in Campaign Versus Timed
     fittedCss+=`<style id="bp-campaign-tall-versus-timed">
 html,body{height:100%!important;overflow:hidden!important}
 body{position:relative!important}
