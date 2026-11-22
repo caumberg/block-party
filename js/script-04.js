@@ -1400,6 +1400,19 @@ html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!im
 canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
 .footer,.footer button,.pill,button#replay,.note,.status{display:none!important;visibility:hidden!important}
 </style>`;
+   if(approvedKey==='versus-timed'){
+    // Keep the scoreboard in normal flow, reserving space below both boards.
+    // The canvas is fitted into the remaining area rather than cropping its bottom.
+    fittedCss+=`<style id="bp-versus-timed-scoreboard-fit-v24115">
+html,body,.shell{height:100%!important;overflow:hidden!important}
+.shell{display:flex!important;flex-direction:column!important;justify-content:center!important}
+.arena{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:stretch!important;height:100%!important;min-height:0!important;overflow:hidden!important;padding:2px 5px!important;gap:3px!important}
+.labels{flex:0 0 auto!important;margin:0 0 3px!important}
+.wrap{display:block!important;flex:0 1 auto!important;width:auto!important;height:auto!important;min-height:0!important;max-width:100%!important;max-height:calc(100% - 62px)!important;aspect-ratio:660/620!important;margin:0 auto!important;overflow:visible!important}
+canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
+.scores{display:grid!important;grid-template-columns:1fr 1fr!important;flex:0 0 22px!important;height:22px!important;min-height:22px!important;width:100%!important;align-items:center!important;gap:8px!important;margin:0!important;font-size:13px!important;line-height:20px!important;visibility:visible!important}
+</style>`;
+   }
    approved.srcdoc=approvedKey==='obstacles'?fittedHtml:fittedHtml.replace('</head>',fittedCss+'</head');
    scene.replaceChildren(sceneTop,approved);
   }
