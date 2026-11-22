@@ -1390,6 +1390,16 @@ canvas{width:100%!important;height:100%!important;object-fit:contain!important}
 .clock small{font-size:9px!important}
 </style>`;
    }
+   // Campaign embeds are display-only: hide the prototype replay controls and
+   // center each original canvas inside its compact, shared-height preview.
+   fittedCss+=`<style id="bp-campaign-preview-centering-v24111">
+html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!important}
+.shell{display:flex!important;flex-direction:column!important;justify-content:center!important}
+.arena{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;overflow:hidden!important}
+.wrap{flex:0 1 auto!important;min-height:0!important;max-width:100%!important;max-height:calc(100% - 30px)!important;margin:auto!important;align-self:center!important}
+canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
+.footer,.footer button,.pill,button#replay,.note,.status{display:none!important;visibility:hidden!important}
+</style>`;
    approved.srcdoc=approvedKey==='obstacles'?fittedHtml:fittedHtml.replace('</head>',fittedCss+'</head');
    scene.replaceChildren(sceneTop,approved);
   }
