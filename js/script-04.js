@@ -1428,6 +1428,21 @@ html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!im
 .clock small{font-size:7.65px!important}
 </style>`;
    }
+   if(approvedKey==='versus-timed'){
+    // The prototype countdown is a sibling of .arena, while scores are inside.
+    // Absolute slots eliminate the competing flex/grid height calculations.
+    fittedCss+=`<style id="bp-versus-timed-slotted-v24117">
+html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!important}
+.shell{position:relative!important;display:block!important;width:100%!important;height:100%!important}
+.arena{position:absolute!important;inset:0!important;display:block!important;box-sizing:border-box!important;width:100%!important;height:100%!important;padding:0!important;margin:0!important;overflow:hidden!important}
+.labels{position:absolute!important;top:1%!important;left:1%!important;width:98%!important;height:9%!important;display:grid!important;grid-template-columns:1fr 1fr!important;align-items:center!important;margin:0!important;z-index:2!important}
+.wrap{position:absolute!important;top:12%!important;bottom:11%!important;left:0!important;width:100%!important;height:77%!important;max-width:none!important;max-height:none!important;min-height:0!important;aspect-ratio:auto!important;margin:0!important;overflow:visible!important}
+.wrap canvas{width:100%!important;height:100%!important;display:block!important;object-fit:contain!important}
+.scores{position:absolute!important;bottom:1%!important;left:0!important;width:100%!important;height:9%!important;display:grid!important;grid-template-columns:1fr 1fr!important;align-items:center!important;justify-items:center!important;margin:0!important;padding:0!important;line-height:1.2!important;font-size:14px!important;visibility:visible!important;opacity:1!important;z-index:4!important}
+.clock{position:absolute!important;top:17%!important;left:50%!important;transform:translateX(-50%)!important;z-index:6!important;font-size:15.3px!important;line-height:1.1!important;padding:4px 8px!important;margin:0!important;white-space:nowrap!important}
+.clock small{font-size:7.65px!important}
+</style>`;
+   }
    approved.srcdoc=approvedKey==='obstacles'?fittedHtml:fittedHtml.replace('</head>',fittedCss+'</head');
    scene.replaceChildren(sceneTop,approved);
   }
