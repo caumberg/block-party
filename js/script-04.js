@@ -1413,6 +1413,21 @@ canvas{display:block!important;width:100%!important;height:100%!important;object
 .scores{display:grid!important;grid-template-columns:1fr 1fr!important;flex:0 0 22px!important;height:22px!important;min-height:22px!important;width:100%!important;align-items:center!important;gap:8px!important;margin:0!important;font-size:13px!important;line-height:20px!important;visibility:visible!important}
 </style>`;
    }
+   if(approvedKey==='versus-timed'){
+    // Compact, centered two-board preview matching the approved Level 158 layout.
+    // Keep scores below the boards, and float the countdown over the upper board area.
+    fittedCss+=`<style id="bp-versus-timed-approved-layout-v24116">
+html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!important}
+.shell{position:relative!important;display:block!important}
+.arena{position:relative!important;box-sizing:border-box!important;display:grid!important;grid-template-rows:24px minmax(0,1fr) 22px!important;align-items:stretch!important;justify-content:stretch!important;width:100%!important;height:100%!important;min-height:0!important;padding:3px 5px!important;gap:3px!important;overflow:hidden!important}
+.labels{grid-row:1!important;align-self:center!important;width:100%!important;margin:0!important;padding:0!important}
+.wrap{grid-row:2!important;box-sizing:border-box!important;display:block!important;width:auto!important;height:100%!important;max-width:100%!important;max-height:100%!important;aspect-ratio:660/620!important;min-height:0!important;margin:0 auto!important;overflow:hidden!important}
+.wrap canvas,canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
+.scores{grid-row:3!important;display:grid!important;grid-template-columns:1fr 1fr!important;align-self:center!important;width:100%!important;height:22px!important;min-height:22px!important;max-height:22px!important;line-height:22px!important;font-size:13px!important;margin:0!important;padding:0!important;visibility:visible!important}
+.clock{position:absolute!important;top:56px!important;left:50%!important;transform:translateX(-50%)!important;z-index:6!important;font-size:15.3px!important;padding:4px 8px!important;white-space:nowrap!important}
+.clock small{font-size:7.65px!important}
+</style>`;
+   }
    approved.srcdoc=approvedKey==='obstacles'?fittedHtml:fittedHtml.replace('</head>',fittedCss+'</head');
    scene.replaceChildren(sceneTop,approved);
   }
