@@ -14,11 +14,11 @@
 #bpCampaignOverlay .bp-campaign-quick-actions{flex:0 0 auto!important;margin-top:6px!important}
 @media(max-height:720px){#bpCampaignOverlay .bp-campaign-card{max-height:calc(100dvh - 12px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:clamp(165px,25dvh,215px)!important}}
 
-/* v2.4.116 — consistent compact Campaign dimensions, full preview content. */
-#bpCampaignOverlay #bpCampaignDetail{height:clamp(415px,57dvh,490px)!important;min-height:0!important;max-height:clamp(415px,57dvh,490px)!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){height:clamp(275px,37dvh,325px)!important;min-height:clamp(275px,37dvh,325px)!important;max-height:clamp(275px,37dvh,325px)!important;box-sizing:border-box!important;flex:0 0 auto!important;overflow:hidden!important}
+/* v2.4.117: same fully-contained preview dimensions for all Campaign levels. */
+#bpCampaignOverlay #bpCampaignDetail{height:clamp(395px,54dvh,460px)!important;min-height:0!important;max-height:clamp(395px,54dvh,460px)!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){height:clamp(270px,35dvh,315px)!important;min-height:clamp(270px,35dvh,315px)!important;max-height:clamp(270px,35dvh,315px)!important;box-sizing:border-box!important;flex:0 0 auto!important;overflow:hidden!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,
 #bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:100%!important;min-height:100%!important;max-height:100%!important;width:100%!important;display:block!important;flex:0 0 auto!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-cinematic-objectives{margin-top:auto!important}
 #bpCampaignOverlay #bpCampaignDetail > button{margin-top:5px!important}
-@media(max-height:720px){#bpCampaignOverlay #bpCampaignDetail{height:clamp(365px,59dvh,425px)!important;max-height:clamp(365px,59dvh,425px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){height:clamp(245px,37dvh,285px)!important;min-height:clamp(245px,37dvh,285px)!important;max-height:clamp(245px,37dvh,285px)!important}}
+@media(max-height:720px){#bpCampaignOverlay #bpCampaignDetail{height:clamp(365px,57dvh,420px)!important;max-height:clamp(365px,57dvh,420px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){height:clamp(250px,35dvh,290px)!important;min-height:clamp(250px,35dvh,290px)!important;max-height:clamp(250px,35dvh,290px)!important}}
