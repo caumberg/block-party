@@ -14,11 +14,14 @@
 #bpCampaignOverlay .bp-campaign-quick-actions{flex:0 0 auto!important;margin-top:6px!important}
 @media(max-height:720px){#bpCampaignOverlay .bp-campaign-card{max-height:calc(100dvh - 12px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:clamp(165px,25dvh,215px)!important}}
 
-/* v2.4.117: same fully-contained preview dimensions for all Campaign levels. */
-#bpCampaignOverlay #bpCampaignDetail{height:clamp(395px,54dvh,460px)!important;min-height:0!important;max-height:clamp(395px,54dvh,460px)!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){height:clamp(270px,35dvh,315px)!important;min-height:clamp(270px,35dvh,315px)!important;max-height:clamp(270px,35dvh,315px)!important;box-sizing:border-box!important;flex:0 0 auto!important;overflow:hidden!important}
+/* v2.4.118: One shared preview height, natural outer card height.
+   No hard-clipped Campaign detail or oversized iframe. */
+#bpCampaignOverlay #bpCampaignDetail{height:auto!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;overflow:visible!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;gap:5px!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-body{height:auto!important;min-height:0!important;flex:0 0 auto!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){height:auto!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;overflow:visible!important;display:flex!important;flex-direction:column!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,
-#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:100%!important;min-height:100%!important;max-height:100%!important;width:100%!important;display:block!important;flex:0 0 auto!important}
-#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-objectives{margin-top:auto!important}
-#bpCampaignOverlay #bpCampaignDetail > button{margin-top:5px!important}
-@media(max-height:720px){#bpCampaignOverlay #bpCampaignDetail{height:clamp(365px,57dvh,420px)!important;max-height:clamp(365px,57dvh,420px)!important}#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){height:clamp(250px,35dvh,290px)!important;min-height:clamp(250px,35dvh,290px)!important;max-height:clamp(250px,35dvh,290px)!important}}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{box-sizing:border-box!important;display:block!important;flex:0 0 310px!important;width:100%!important;height:310px!important;min-height:310px!important;max-height:310px!important;margin:0!important;border:0!important;overflow:hidden!important}
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic-objectives{flex:0 0 auto!important;margin:5px 0 0!important}
+#bpCampaignOverlay #bpCampaignDetail > button{position:relative!important;bottom:auto!important;flex:0 0 auto!important;margin:6px 0 0!important}
+@media(max-height:720px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:270px!important;min-height:270px!important;max-height:270px!important;flex-basis:270px!important}}
