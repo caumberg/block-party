@@ -1362,85 +1362,35 @@ canvas{width:100%!important;height:100%!important;display:block!important}
 #bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(340px,46vh,460px)!important;flex-shrink:0!important}
 @media(max-height:800px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview{height:clamp(300px,43vh,400px)!important}}
 </style>`;
-   // Versus Timed: restore the approved tall two-board cinematic, not just
-   // a taller iframe around the original wide/short canvas.
+   // One clean iframe layout. Keep the prototype's native 660x480 canvas:
+   // resizing its drawing coordinates was what made the boards oversized.
    let fittedHtml=previewHtml;
    let fittedCss=compactCss;
    if(approvedKey==='versus-timed'){
     scene.classList.add('bp-versus-timed-preview');
-    fittedHtml=fittedHtml
-     .replace('width="660" height="480"','width="660" height="620"')
-     .replace('const W=660,H=480,C=6,R=12,S=35,LEFT=43,RIGHT=393,Y=16',
-              'const W=660,H=620,C=6,R=12,S=48,LEFT=17,RIGHT=355,Y=18')
-     // The original stopwatch center was fixed at +105 for 35px tiles.
-     // Center it over the new 288px-wide board instead of leaving it left-aligned.
-     .replace('stopwatch(x,elapsed);',''); // Hide background stopwatch graphics only in Campaign Versus Timed
-    fittedCss+=`<style id="bp-campaign-tall-versus-timed">
-html,body{height:100%!important;overflow:hidden!important}
-body{position:relative!important}
-.shell{position:relative!important;display:flex!important;flex-direction:column!important}
-.arena{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;gap:0!important;padding:2px 5px!important}
-.labels{width:100%!important;margin:0 0 6px!important;flex:0 0 auto!important}
-/* The prototype footer was leaking into the campaign animation. */
-.footer,.note,.status,.eyebrow,.title{display:none!important}
-.wrap{width:100%!important;height:auto!important;min-height:0!important;max-height:calc(100% - 33px)!important;aspect-ratio:660/620!important;flex:0 1 auto!important;margin:0 auto!important;overflow:visible!important}
-canvas{width:100%!important;height:100%!important;object-fit:contain!important}
-.scores{display:grid!important;flex:0 0 auto!important;width:100%!important;margin:0!important;gap:8px!important;font-size:13px!important;line-height:1.2!important}
-.clock{display:block!important;position:absolute!important;top:49px!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;margin:0!important;padding:4px 8px!important;border:1px solid #7197d9!important;border-radius:9px!important;background:#132447e8!important;font-size:15.3px!important;line-height:1.1!important;white-space:nowrap!important}
+    fittedHtml=fittedHtml.replace('stopwatch(x,elapsed);','');
+    fittedCss=`<style id="bp-versus-timed-campaign-v24118">
+html,body{margin:0!important;width:100%!important;height:100%!important;overflow:hidden!important;background:transparent!important}
+body{display:block!important}
+.shell{position:relative!important;box-sizing:border-box!important;width:100%!important;height:100%!important;max-width:none!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.arena{box-sizing:border-box!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:4px 8px!important;border:0!important;background:transparent!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;overflow:hidden!important}
+.labels{width:100%!important;flex:0 0 22px!important;height:22px!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin:0!important}
+.labels span{box-sizing:border-box!important;font-size:10px!important;padding:3px 2px!important;line-height:14px!important}
+.wrap{position:relative!important;box-sizing:border-box!important;flex:0 1 auto!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:calc(100% - 55px)!important;aspect-ratio:660/480!important;margin:0 auto!important;overflow:hidden!important}
+.wrap canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
+.scores{box-sizing:border-box!important;flex:0 0 23px!important;display:grid!important;grid-template-columns:1fr 1fr!important;align-items:center!important;width:100%!important;height:23px!important;min-height:23px!important;gap:10px!important;margin:0!important;font-size:14px!important;line-height:20px!important;visibility:visible!important;opacity:1!important}
+.clock{position:absolute!important;top:21%!important;left:50%!important;transform:translateX(-50%)!important;z-index:5!important;box-sizing:border-box!important;margin:0!important;padding:4px 8px!important;border:1px solid #7197d9!important;border-radius:9px!important;background:#132447e8!important;font-size:15.3px!important;line-height:1.1!important;white-space:nowrap!important}
 .clock small{font-size:7.65px!important}
+.eyebrow,.title,.status,.footer,.note,.pill,button#replay{display:none!important}
 </style>`;
-   }
-   // Campaign embeds are display-only: hide the prototype replay controls and
-   // center each original canvas inside its compact, shared-height preview.
-   fittedCss+=`<style id="bp-campaign-preview-centering-v24111">
+   } else {
+    fittedCss+=`<style id="bp-campaign-other-preview-cleanup">
 html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!important}
-.shell{display:flex!important;flex-direction:column!important;justify-content:center!important}
-.arena{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;overflow:hidden!important}
-.wrap{flex:0 1 auto!important;min-height:0!important;max-width:100%!important;max-height:calc(100% - 30px)!important;margin:auto!important;align-self:center!important}
+.shell{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}
+.arena{min-height:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}
+.wrap{max-width:100%!important;max-height:calc(100% - 30px)!important;margin:auto!important}
 canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
-.footer,.footer button,.pill,button#replay,.note,.status{display:none!important;visibility:hidden!important}
-</style>`;
-   if(approvedKey==='versus-timed'){
-    // Keep the scoreboard in normal flow, reserving space below both boards.
-    // The canvas is fitted into the remaining area rather than cropping its bottom.
-    fittedCss+=`<style id="bp-versus-timed-scoreboard-fit-v24115">
-html,body,.shell{height:100%!important;overflow:hidden!important}
-.shell{display:flex!important;flex-direction:column!important;justify-content:center!important}
-.arena{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:stretch!important;height:100%!important;min-height:0!important;overflow:hidden!important;padding:2px 5px!important;gap:3px!important}
-.labels{flex:0 0 auto!important;margin:0 0 3px!important}
-.wrap{display:block!important;flex:0 1 auto!important;width:auto!important;height:auto!important;min-height:0!important;max-width:100%!important;max-height:calc(100% - 62px)!important;aspect-ratio:660/620!important;margin:0 auto!important;overflow:visible!important}
-canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
-.scores{display:grid!important;grid-template-columns:1fr 1fr!important;flex:0 0 22px!important;height:22px!important;min-height:22px!important;width:100%!important;align-items:center!important;gap:8px!important;margin:0!important;font-size:13px!important;line-height:20px!important;visibility:visible!important}
-</style>`;
-   }
-   if(approvedKey==='versus-timed'){
-    // Compact, centered two-board preview matching the approved Level 158 layout.
-    // Keep scores below the boards, and float the countdown over the upper board area.
-    fittedCss+=`<style id="bp-versus-timed-approved-layout-v24116">
-html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!important}
-.shell{position:relative!important;display:block!important}
-.arena{position:relative!important;box-sizing:border-box!important;display:grid!important;grid-template-rows:24px minmax(0,1fr) 22px!important;align-items:stretch!important;justify-content:stretch!important;width:100%!important;height:100%!important;min-height:0!important;padding:3px 5px!important;gap:3px!important;overflow:hidden!important}
-.labels{grid-row:1!important;align-self:center!important;width:100%!important;margin:0!important;padding:0!important}
-.wrap{grid-row:2!important;box-sizing:border-box!important;display:block!important;width:auto!important;height:100%!important;max-width:100%!important;max-height:100%!important;aspect-ratio:660/620!important;min-height:0!important;margin:0 auto!important;overflow:hidden!important}
-.wrap canvas,canvas{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
-.scores{grid-row:3!important;display:grid!important;grid-template-columns:1fr 1fr!important;align-self:center!important;width:100%!important;height:22px!important;min-height:22px!important;max-height:22px!important;line-height:22px!important;font-size:13px!important;margin:0!important;padding:0!important;visibility:visible!important}
-.clock{position:absolute!important;top:56px!important;left:50%!important;transform:translateX(-50%)!important;z-index:6!important;font-size:15.3px!important;padding:4px 8px!important;white-space:nowrap!important}
-.clock small{font-size:7.65px!important}
-</style>`;
-   }
-   if(approvedKey==='versus-timed'){
-    // The prototype countdown is a sibling of .arena, while scores are inside.
-    // Absolute slots eliminate the competing flex/grid height calculations.
-    fittedCss+=`<style id="bp-versus-timed-slotted-v24117">
-html,body,.shell{height:100%!important;min-height:0!important;overflow:hidden!important}
-.shell{position:relative!important;display:block!important;width:100%!important;height:100%!important}
-.arena{position:absolute!important;inset:0!important;display:block!important;box-sizing:border-box!important;width:100%!important;height:100%!important;padding:0!important;margin:0!important;overflow:hidden!important}
-.labels{position:absolute!important;top:1%!important;left:1%!important;width:98%!important;height:9%!important;display:grid!important;grid-template-columns:1fr 1fr!important;align-items:center!important;margin:0!important;z-index:2!important}
-.wrap{position:absolute!important;top:12%!important;bottom:11%!important;left:0!important;width:100%!important;height:77%!important;max-width:none!important;max-height:none!important;min-height:0!important;aspect-ratio:auto!important;margin:0!important;overflow:visible!important}
-.wrap canvas{width:100%!important;height:100%!important;display:block!important;object-fit:contain!important}
-.scores{position:absolute!important;bottom:1%!important;left:0!important;width:100%!important;height:9%!important;display:grid!important;grid-template-columns:1fr 1fr!important;align-items:center!important;justify-items:center!important;margin:0!important;padding:0!important;line-height:1.2!important;font-size:14px!important;visibility:visible!important;opacity:1!important;z-index:4!important}
-.clock{position:absolute!important;top:17%!important;left:50%!important;transform:translateX(-50%)!important;z-index:6!important;font-size:15.3px!important;line-height:1.1!important;padding:4px 8px!important;margin:0!important;white-space:nowrap!important}
-.clock small{font-size:7.65px!important}
+.footer,.footer button,.pill,button#replay,.note,.status{display:none!important}
 </style>`;
    }
    approved.srcdoc=approvedKey==='obstacles'?fittedHtml:fittedHtml.replace('</head>',fittedCss+'</head');
