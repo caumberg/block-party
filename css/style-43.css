@@ -25,3 +25,22 @@
 #bpCampaignOverlay #bpCampaignDetail > button{position:relative!important;bottom:auto!important;flex:0 0 auto!important;margin:6px 0 0!important}
 @media(max-height:720px){#bpCampaignOverlay #bpCampaignDetail .bp-approved-preview,
 #bpCampaignOverlay #bpCampaignDetail .bp-cinematic.bp-versus-timed-preview .bp-approved-preview{height:235px!important;min-height:235px!important;max-height:235px!important;flex-basis:235px!important}}
+
+/* Lock the blue Campaign preview container across all six game modes.
+   Keep the existing 255px / 235px iframe sizes and all preview content unchanged.
+   Allow room for the header, borders, and Versus Timed's 3px bottom padding. */
+#bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){
+  box-sizing:border-box!important;
+  height:300px!important;
+  min-height:300px!important;
+  max-height:300px!important;
+  flex:0 0 300px!important;
+}
+@media(max-height:720px){
+  #bpCampaignOverlay #bpCampaignDetail .bp-cinematic:has(.bp-approved-preview){
+    height:280px!important;
+    min-height:280px!important;
+    max-height:280px!important;
+    flex-basis:280px!important;
+  }
+}
