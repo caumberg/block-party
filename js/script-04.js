@@ -407,6 +407,7 @@ window.addEventListener('message',e=>{if(e.data?.bp!=='obstacle-finish'||bpCampa
  $('victoryDialog').hidden=false;if(!won)bpShowCampaignLoss();
 });
 
+let bpSprintTarget=0;
 let bpCampaignCpuRemaining=null;
 let bpSoloStartedAt=0;
 let bpCampaignSettings=null;
@@ -419,7 +420,9 @@ window.bpCampaignLaunchGame=function(l){
  $('diff').value=l.diff;$('aiDiff').value=l.cpu;$('duration').value=String(l.duration||180);
  start();
 };
-async function start(){if(!bpCampaignSettings&&!bpSelectionReady())return;if(window.bpGameStartBusy)return;window.bpGameStartBusy=true;const startButton=document.getElementById("start");if(startButton)startButton.disabled=true;try{if(window.bpDevActive&&!bpCampaignSettings){window.bpPowerSession={passive:null,active:[],used:[],assisted:false};}if(!bpCampaignSettings && window.bpPowerPrepareLaunch){const mode=$("mode").value,versus=$("play").value==="versus";const l={type:(versus?"versus-":"solo-")+(mode==="battle"?"battle":mode==="timed"?"timed":"line"),diff:$("diff").value};if(!await window.bpPowerPrepareLaunch(l)){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();return;}if(window.bpPowerSession?.passive){await window.bpCampaignRpc("bp_power_consume",{p_item:window.bpPowerSession.passive});}}if(!bpCampaignSettings && !( $("play").value==="solo" && $("mode").value==="line" && $("diff").value==="super-easy" )){if(!window.bpSpendGameEntry)throw Error("Token wallet is not ready. Please reload.");await window.bpSpendGameEntry();}}catch(e){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();const msg=e.message||"Unable to charge game entry";document.getElementById("bpWalletOpen").click();document.getElementById("bpWalletStatus").textContent=msg;return;}window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};settings.openingSeed=bpCampaignSettings?.seed??((Math.random()*4294967296)>>>0);bpVLineBegin();
+async function start(){if(!bpCampaignSettings&&!bpSelectionReady())return;if(window.bpGameStartBusy)return;window.bpGameStartBusy=true;const startButton=document.getElementById("start");if(startButton)startButton.disabled=true;try{if(window.bpDevActive&&!bpCampaignSettings){window.bpPowerSession={passive:null,active:[],used:[],assisted:false};}if(!bpCampaignSettings && window.bpPowerPrepareLaunch){const mode=$("mode").value,versus=$("play").value==="versus";const l={type:(versus?"versus-":"solo-")+(mode==="battle"?"battle":mode==="timed"?"timed":"line"),diff:$("diff").value};if(!await window.bpPowerPrepareLaunch(l)){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();return;}if(window.bpPowerSession?.passive){await window.bpCampaignRpc("bp_power_consume",{p_item:window.bpPowerSession.passive});}}if(!bpCampaignSettings && !( $("play").value==="solo" && $("mode").value==="line" && $("diff").value==="super-easy" )){if(!window.bpSpendGameEntry)throw Error("Token wallet is not ready. Please reload.");await window.bpSpendGameEntry();}}catch(e){window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();const msg=e.message||"Unable to charge game entry";document.getElementById("bpWalletOpen").click();document.getElementById("bpWalletStatus").textContent=msg;return;}window.bpGameStartBusy=false;if(startButton)bpUpdateStartAvailability();bpSoloStartedAt=performance.now();applyControlLayout();isVersus=$('play').value==='versus';settings={versus:isVersus,mode:$('mode').value==='battle'?'unlimited':$('mode').value,difficulty:$('diff').value,aiDifficulty:$('aiDiff').value,duration:Number($('duration').value)};bpSprintTarget=Number(bpCampaignSettings?.type==='versus-sprint'?bpCampaignSettings.target:0)||0;
+if(bpSprintTarget)settings.mode='sprint';
+settings.openingSeed=bpCampaignSettings?.seed??((Math.random()*4294967296)>>>0);bpVLineBegin();
 const bpLineVisible=isVersus&&settings.mode==='line';
 for(const id of ['bpHumanLineCount','bpCpuLineCount']){const el=$(id);el.hidden=!bpLineVisible;el.querySelector('b').textContent='—';}
 ready.clear();scores={human:0,cpu:0};ended={};$('soloGoal').textContent=({line:'Clear the line!',timed:'Get the highest score!',unlimited:'Survive as long as possible!'})[settings.mode]||'Survive!';hideVictory();started=true;$('menu').hidden=true;$('arena').hidden=false;$('arena').classList.add('bp-campaign-power');$('cpuZone').hidden=!isVersus;$('arena').classList.toggle('solo',!isVersus);$('arena').classList.toggle('versus',isVersus);$('arena').classList.toggle('timed-match',isVersus&&settings.mode==='timed');$('humanScore').className='';$('cpuScore').className='';$('humanZone').style.removeProperty('width');$('humanZone').style.removeProperty('height');$('humanZone').style.removeProperty('max-height');$('humanZone').style.removeProperty('flex');$('human').style.removeProperty('width');$('human').style.removeProperty('height');$('human').style.removeProperty('max-height');$('human').style.removeProperty('aspect-ratio');$('bottom').hidden=false;$('message').textContent='';layoutGame();initMiniLeaderboard();$('human').srcdoc=engineHTML;if(isVersus)$('cpu').srcdoc=engineHTML;else $('cpu').removeAttribute('srcdoc')}
@@ -524,7 +527,7 @@ window.addEventListener('message',e=>{if(!started||!e.data?.bp)return;const d=e.
   }
   return;
  }
- if(d.bp==='ready'){ready.add(d.who);if(isVersus){if(ready.has('human')&&ready.has('cpu')){tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});tell('human',{bp:'dev-mode',enabled:true});tell('cpu',{bp:'start',...settings,cpu:true});tell('cpu',{bp:'dev-mode',enabled:true})}}else{tell('human',{bp:'start',...settings,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});tell('human',{bp:'dev-mode',enabled:true});$('human').contentWindow.document.querySelector('.control-layout').style.display='none';$('human').contentWindow.document.querySelector('.game-actions').style.display='none';$('human').contentWindow.document.querySelector('.layout-setting').style.display='none'}}
+ if(d.bp==='ready'){ready.add(d.who);if(isVersus){if(ready.has('human')&&ready.has('cpu')){tell('human',{bp:'start',...settings,mode:settings.mode==='sprint'?'unlimited':settings.mode,cpu:false});tell('human',{bp:'power-config',passive:settings.mode==='sprint'?null:window.bpPowerSession?.passive||null});tell('human',{bp:'dev-mode',enabled:true});tell('cpu',{bp:'start',...settings,mode:settings.mode==='sprint'?'unlimited':settings.mode,cpu:true});tell('cpu',{bp:'dev-mode',enabled:true})}}else{tell('human',{bp:'start',...settings,mode:settings.mode==='sprint'?'unlimited':settings.mode,cpu:false});tell('human',{bp:'power-config',passive:window.bpPowerSession?.passive||null});tell('human',{bp:'dev-mode',enabled:true});$('human').contentWindow.document.querySelector('.control-layout').style.display='none';$('human').contentWindow.document.querySelector('.game-actions').style.display='none';$('human').contentWindow.document.querySelector('.layout-setting').style.display='none'}}
 if((d.bp==='stats'||d.bp==='end')&&bpVLineEnabled())bpVLineSample(d);
 // Capture the opponent's live line state for Campaign Versus Line Clear.
 if(bpCampaignSettings?.type==='versus-line' && d.who==='cpu' && d.lineMeasure &&
@@ -539,6 +542,9 @@ if(isVersus&&settings?.mode==='line'&&d.lineMeasure&&['human','cpu'].includes(d.
  if(el&&Number.isFinite(count)&&count>=0)el.querySelector('b').textContent=String(Math.floor(count));
 }
 scores[d.who]=Number(d.score)||0;if(isVersus){$('humanScore').textContent=scores.human.toLocaleString();$('cpuScore').textContent=scores.cpu.toLocaleString();if(settings&&settings.mode==='timed'){$('humanScore').className=scores.human>scores.cpu?'score-leader':scores.human<scores.cpu?'score-trailer':'';$('cpuScore').className=scores.cpu>scores.human?'score-leader':scores.cpu<scores.human?'score-trailer':''}}if(d.who==='human'){$('roundClock').textContent=d.clock;$('soloTime').textContent=d.clock;$('soloScore').textContent=String(d.score??0);}}
+if(d.bp==='stats'&&settings.mode==='sprint'&&['human','cpu'].includes(d.who)){
+ if(scores[d.who]>=bpSprintTarget&&!ended[d.who]){finish(d.who);return;}
+}
 if(d.bp==='chainFx'&&isVersus&&settings.mode==='unlimited'){
  const particleCount=bpAnimateAttack(d);
  bpPoisonLog.push({seq:++bpDiagSeq,at:new Date().toISOString(),who:d.from,event:'chain-stage-particles',
@@ -554,6 +560,7 @@ if(d.bp==='attack'&&isVersus&&settings.mode==='unlimited'){
 if(d.bp==='end'){
  scores[d.who]=Number.isFinite(Number(d.score))?Number(d.score):scores[d.who]||0;
  ended[d.who]=d.message;
+ if(settings.mode==='sprint'){if(scores[d.who]>=bpSprintTarget)finish(d.who);else if(d.who==='human')finish('cpu');return;}
  if(!isVersus){$('message').textContent=d.message;finishSolo(d.message,d.score);return}
  if(settings.mode==='line'){
   if(d.message==='Line cleared!')finish(d.who);
@@ -640,11 +647,11 @@ function celebrate(winner){
 function showVictory(winner){
  bpResetCampaignResult();
  if(bpCampaignSettings&&winner!=='human')bpShowCampaignLoss();
- if(bpCampaignSettings)window.bpCampaignOnResult?.({won:winner==='human',score:scores.human,cpuScore:settings.mode==='timed'?scores.cpu:null,cpuRemaining:bpCampaignSettings.type==='versus-line'?bpCampaignCpuRemaining:null,elapsedMs:performance.now()-bpSoloStartedAt});
+ if(bpCampaignSettings)window.bpCampaignOnResult?.({won:winner==='human',score:scores.human,cpuScore:['timed','sprint'].includes(settings.mode)?scores.cpu:null,cpuRemaining:bpCampaignSettings.type==='versus-line'?bpCampaignCpuRemaining:null,elapsedMs:performance.now()-bpSoloStartedAt});
  $('victoryTitle').textContent=winner==='human'?'YOU WIN!':winner==='cpu'?'COMPUTER WINS!':'IT’S A TIE!';
  $('victorySubtitle').textContent=settings.mode==='line'
   ?(winner==='human'?'You cleared the line before the computer!':winner==='cpu'?'The computer cleared the line first.':'Both players cleared the line together.')
-  :settings.mode==='timed'
+  :['timed','sprint'].includes(settings.mode)
   ?('You: '+scores.human.toLocaleString()+' points · Computer: '+scores.cpu.toLocaleString()+' points'+(winner==='tie'?' · Tied scores!':''))
   :(winner==='tie'?'Both players survived the round.':winner==='human'?'You outlasted the computer!':'The computer survived longer this time.');
  updateVictoryDiag();
