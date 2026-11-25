@@ -317,11 +317,30 @@ jobs:
         run: |
           set -euo pipefail
           cp android/app/build/outputs/apk/debug/app-debug.apk BlockParty-modular-development.apk
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" BlockParty-modular-development.apk --clobber
-          else
-            gh release create "$RELEASE_TAG" BlockParty-modular-development.apk \
-              --title "Block Party Modular Development APK" \
-              --notes "Development-only Android APK. Not the main release." \
-              --prerelease --target "$GITHUB_SHA"
-          fi
+          publish() {
+            if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+              gh release upload "$RELEASE_TAG" BlockParty-modular-development.apk --clobber
+            else
+              gh release create "$RELEASE_TAG" BlockParty-modular-development.apk \
+                --title "Block Party Modular Development APK" \
+                --notes "Development-only Android APK. Not the main release." \
+                --prerelease --target "$GITHUB_SHA"
+            fi
+          }
+          for attempt in 1 2 3; do
+            if publish; then
+              exit 0
+            fi
+            sleep "$((attempt * 15))"
+          done
+          echo "::warning::Stable development release upload failed; publishing a unique development release."
+          RELEASE_TAG="modular-dev-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          for attempt in 1 2 3; do
+            if publish; then
+              echo "Development APK: https://github.com/$GH_REPO/releases/tag/$RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep "$((attempt * 15))"
+          done
+          echo "::error::Release publishing failed; the verified APK remains available in the workflow artifacts."
+          exit 1
